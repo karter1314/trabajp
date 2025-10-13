@@ -8,6 +8,7 @@ Una interfaz moderna inspirada en el Sistema de Información de Apoyo a la Gesti
 - **Panel de control** con indicadores clave, tablas de seguimiento y alertas priorizadas.
 - **Navegación modular** para estudiantes, docentes, calificaciones, reportes y agenda, con tarjetas y tablas responsivas.
 - **Modales interactivos** para registrar estudiantes y docentes sin salir de la vista principal.
+- **Registro docente dinámico** que añade automáticamente nuevos profesores a la plantilla y confirma la acción con un aviso flotante.
 - **Diseño responsive** pensado para equipos directivos que utilizan tanto escritorio como tabletas.
 
 ## Uso
@@ -15,7 +16,7 @@ Una interfaz moderna inspirada en el Sistema de Información de Apoyo a la Gesti
 1. Abre el archivo `index.html` en tu navegador favorito.
 2. Completa el formulario de ingreso (no requiere credenciales reales) y presiona **Acceder** para visualizar el panel principal.
 3. Navega por los distintos módulos mediante la barra lateral.
-4. Utiliza los botones "Registrar estudiante" y "Nuevo docente" para abrir los modales de ejemplo.
+4. Utiliza los botones "Registrar estudiante" y "Nuevo docente" para abrir los modales de ejemplo. El registro de docentes actualizará la tabla de plantilla y mostrará una confirmación visual.
 
 ## Tecnologías
 

@@ -400,6 +400,33 @@ footer {
   padding: 0.6rem 0.4rem;
 }
 
+.contact-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.contact-column a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.contact-column a:hover {
+  text-decoration: underline;
+}
+
+.contact-column small {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.data-table .empty-state td {
+  text-align: center;
+  padding: 1.5rem 0.5rem;
+  color: var(--text-muted);
+}
+
 .filters {
   display: flex;
   gap: 0.75rem;
@@ -628,4 +655,52 @@ footer {
 
 body.modal-open {
   overflow: hidden;
+}
+
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: var(--text-primary);
+  box-shadow: 0 22px 45px -25px rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+  transform: translateY(20px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+  z-index: 100;
+}
+
+.toast::before {
+  content: '✔';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.18);
+  color: #15803d;
+  font-size: 0.9rem;
+}
+
+.toast.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+@media (max-width: 640px) {
+  .toast {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+  }
 }

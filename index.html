@@ -328,6 +328,64 @@
                 <button class="secondary-button">Descargar plan</button>
               </div>
             </div>
+            <div class="card">
+              <header>
+                <h3>Plantilla docente</h3>
+                <span class="chip info" id="teacher-count">3 docentes</span>
+              </header>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Docente</th>
+                    <th>Especialidad</th>
+                    <th>Disponibilidad</th>
+                    <th>Contacto</th>
+                  </tr>
+                </thead>
+                <tbody id="teacher-table-body">
+                  <tr>
+                    <td>Marcos Gamarra</td>
+                    <td>Matemática · Secundaria</td>
+                    <td><span class="chip success">Turno completo</span></td>
+                    <td>
+                      <div class="contact-column">
+                        <a href="mailto:mgamarra@colegio.edu.pe">mgamarra@colegio.edu.pe</a>
+                        <small>987 654 321</small>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Lourdes Pérez</td>
+                    <td>Comunicación · Primaria</td>
+                    <td><span class="chip info">Turno mañana</span></td>
+                    <td>
+                      <div class="contact-column">
+                        <a href="mailto:lperez@colegio.edu.pe">lperez@colegio.edu.pe</a>
+                        <small>986 111 222</small>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Jorge Maldonado</td>
+                    <td>Historia · Secundaria</td>
+                    <td><span class="chip warning">Turno tarde</span></td>
+                    <td>
+                      <div class="contact-column">
+                        <a href="mailto:jmaldonado@colegio.edu.pe">jmaldonado@colegio.edu.pe</a>
+                        <small>985 222 333</small>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="empty-state" id="teacher-empty-state" hidden>
+                    <td colspan="4">
+                      Aún no se ha registrado ningún docente nuevo en esta sesión.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </section>
 
           <section id="grades" class="panel">
@@ -512,7 +570,9 @@
       <div class="modal-dialog">
         <header>
           <h3>Nuevo estudiante</h3>
-          <button class="ghost-button" data-close>&times;</button>
+          <button type="button" class="ghost-button" data-close aria-label="Cerrar formulario">
+            &times;
+          </button>
         </header>
         <form class="modal-body">
           <div class="grid two-columns">
@@ -560,33 +620,36 @@
       <div class="modal-dialog">
         <header>
           <h3>Registrar docente</h3>
-          <button class="ghost-button" data-close>&times;</button>
+          <button type="button" class="ghost-button" data-close aria-label="Cerrar formulario">
+            &times;
+          </button>
         </header>
-        <form class="modal-body">
+        <form class="modal-body" data-form="teacher">
           <label class="field">
             <span>Nombre completo</span>
-            <input type="text" required />
+            <input type="text" name="name" required />
           </label>
           <div class="grid two-columns">
             <label class="field">
               <span>Especialidad</span>
-              <input type="text" required />
+              <input type="text" name="specialty" required />
             </label>
             <label class="field">
               <span>Teléfono</span>
-              <input type="tel" required />
+              <input type="tel" name="phone" required />
             </label>
           </div>
           <label class="field">
             <span>Correo institucional</span>
-            <input type="email" required />
+            <input type="email" name="email" required />
           </label>
           <label class="field">
             <span>Disponibilidad</span>
-            <select>
-              <option>Turno mañana</option>
-              <option>Turno tarde</option>
-              <option>Turno completo</option>
+            <select name="availability" required>
+              <option value="" disabled selected>Seleccionar</option>
+              <option value="Turno mañana">Turno mañana</option>
+              <option value="Turno tarde">Turno tarde</option>
+              <option value="Turno completo">Turno completo</option>
             </select>
           </label>
           <footer class="modal-footer">
@@ -596,6 +659,8 @@
         </form>
       </div>
     </div>
+
+    <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
 
     <script src="script.js"></script>
   </body>
