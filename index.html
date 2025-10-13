@@ -206,13 +206,10 @@
               <div>
                 <h2>Gestión de estudiantes</h2>
                 <p>
-                  Registra nuevos estudiantes, actualiza sus datos y monitorea su
-                  progreso académico.
+                  Gestiona la información de los estudiantes, actualiza sus datos y
+                  monitorea su progreso académico.
                 </p>
               </div>
-              <button class="primary-button" data-modal="student-modal">
-                Registrar estudiante
-              </button>
             </div>
             <div class="card">
               <header>
@@ -279,13 +276,10 @@
               <div>
                 <h2>Gestión de docentes</h2>
                 <p>
-                  Administra la información de tus docentes y asigna cursos de
-                  forma rápida.
+                  Administra la información de tus docentes y organiza su
+                  disponibilidad desde un solo lugar.
                 </p>
               </div>
-              <button class="primary-button" data-modal="teacher-modal">
-                Nuevo docente
-              </button>
             </div>
             <div class="grid two-columns">
               <div class="card">
@@ -331,7 +325,7 @@
             <div class="card">
               <header>
                 <h3>Plantilla docente</h3>
-                <span class="chip info" id="teacher-count">3 docentes</span>
+                  <span class="chip info">3 docentes</span>
               </header>
               <table class="data-table">
                 <thead>
@@ -342,7 +336,7 @@
                     <th>Contacto</th>
                   </tr>
                 </thead>
-                <tbody id="teacher-table-body">
+                <tbody>
                   <tr>
                     <td>Marcos Gamarra</td>
                     <td>Matemática · Secundaria</td>
@@ -374,13 +368,6 @@
                         <a href="mailto:jmaldonado@colegio.edu.pe">jmaldonado@colegio.edu.pe</a>
                         <small>985 222 333</small>
                       </div>
-                    </td>
-                  </tr>
-                </tbody>
-                <tbody>
-                  <tr class="empty-state" id="teacher-empty-state" hidden>
-                    <td colspan="4">
-                      Aún no se ha registrado ningún docente nuevo en esta sesión.
                     </td>
                   </tr>
                 </tbody>
@@ -565,102 +552,6 @@
         </main>
       </div>
     </div>
-
-    <div class="modal" id="student-modal" hidden>
-      <div class="modal-dialog">
-        <header>
-          <h3>Nuevo estudiante</h3>
-          <button type="button" class="ghost-button" data-close aria-label="Cerrar formulario">
-            &times;
-          </button>
-        </header>
-        <form class="modal-body">
-          <div class="grid two-columns">
-            <label class="field">
-              <span>Nombres</span>
-              <input type="text" required />
-            </label>
-            <label class="field">
-              <span>Apellidos</span>
-              <input type="text" required />
-            </label>
-          </div>
-          <div class="grid two-columns">
-            <label class="field">
-              <span>DNI</span>
-              <input type="text" required maxlength="8" />
-            </label>
-            <label class="field">
-              <span>Fecha de nacimiento</span>
-              <input type="date" required />
-            </label>
-          </div>
-          <label class="field">
-            <span>Grado y sección</span>
-            <select required>
-              <option value="">Seleccionar</option>
-              <option>1° Primaria - A</option>
-              <option>2° Primaria - B</option>
-              <option>3° Secundaria - C</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>Observaciones</span>
-            <textarea rows="3" placeholder="Notas adicionales"></textarea>
-          </label>
-          <footer class="modal-footer">
-            <button type="button" class="ghost-button" data-close>Cancelar</button>
-            <button type="submit" class="primary-button">Guardar</button>
-          </footer>
-        </form>
-      </div>
-    </div>
-
-    <div class="modal" id="teacher-modal" hidden>
-      <div class="modal-dialog">
-        <header>
-          <h3>Registrar docente</h3>
-          <button type="button" class="ghost-button" data-close aria-label="Cerrar formulario">
-            &times;
-          </button>
-        </header>
-        <form class="modal-body" data-form="teacher">
-          <label class="field">
-            <span>Nombre completo</span>
-            <input type="text" name="name" required />
-          </label>
-          <div class="grid two-columns">
-            <label class="field">
-              <span>Especialidad</span>
-              <input type="text" name="specialty" required />
-            </label>
-            <label class="field">
-              <span>Teléfono</span>
-              <input type="tel" name="phone" required />
-            </label>
-          </div>
-          <label class="field">
-            <span>Correo institucional</span>
-            <input type="email" name="email" required />
-          </label>
-          <label class="field">
-            <span>Disponibilidad</span>
-            <select name="availability" required>
-              <option value="" disabled selected>Seleccionar</option>
-              <option value="Turno mañana">Turno mañana</option>
-              <option value="Turno tarde">Turno tarde</option>
-              <option value="Turno completo">Turno completo</option>
-            </select>
-          </label>
-          <footer class="modal-footer">
-            <button type="button" class="ghost-button" data-close>Cancelar</button>
-            <button type="submit" class="primary-button">Guardar</button>
-          </footer>
-        </form>
-      </div>
-    </div>
-
-    <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
 
     <script src="script.js"></script>
   </body>
