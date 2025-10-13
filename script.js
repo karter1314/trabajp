@@ -21,6 +21,14 @@ const availabilityStyles = {
 
 let toastTimeoutId;
 
+if (loginScreen) {
+  loginScreen.hidden = false;
+}
+
+if (mainLayout) {
+  mainLayout.hidden = true;
+}
+
 modals.forEach((modal) => modal.setAttribute('aria-hidden', 'true'));
 
 const panelDescriptions = {
@@ -114,9 +122,20 @@ openModalButtons.forEach((button) => {
 });
 
 closeModalButtons.forEach((button) => {
-  button.addEventListener('click', () => {
+  button.addEventListener('click', (event) => {
+    event.preventDefault();
     closeModal(button.closest('.modal'));
   });
+});
+
+document.addEventListener('click', (event) => {
+  const closeTrigger = event.target.closest('[data-close]');
+  if (!closeTrigger) return;
+  const modal = closeTrigger.closest('.modal');
+  if (modal) {
+    event.preventDefault();
+    closeModal(modal);
+  }
 });
 
 modals.forEach((modal) => {
