@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SIAGIE+ Plataforma Educativa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div class="login-screen" id="login-screen">
+        <div class="login-content">
+          <div class="login-hero">
+            <h1>SIAGIE+</h1>
+            <p>
+              Gestiona matrículas, registros académicos y reportes institucionales
+              con una experiencia moderna, ágil e intuitiva.
+            </p>
+            <ul>
+              <li>Panel de seguimiento con indicadores clave</li>
+              <li>Gestión unificada de estudiantes y docentes</li>
+              <li>Automatización de procesos con alertas inteligentes</li>
+            </ul>
+          </div>
+          <form class="login-form" id="login-form">
+            <h2>Iniciar sesión</h2>
+            <label class="field">
+              <span>Correo institucional</span>
+              <input type="email" required placeholder="usuario@ie.gob.pe" />
+            </label>
+            <label class="field">
+              <span>Contraseña</span>
+              <input type="password" required placeholder="••••••••" />
+            </label>
+            <label class="remember">
+              <input type="checkbox" />
+              <span>Recordar dispositivo</span>
+            </label>
+            <button type="submit" class="primary-button">Acceder</button>
+            <a href="#" class="link">¿Olvidaste tu contraseña?</a>
+          </form>
+        </div>
+        <footer>
+          <small>Dirección Regional de Educación · Plataforma SIAGIE+</small>
+        </footer>
+      </div>
+
+      <div class="main-layout" id="main-layout" hidden>
+        <aside class="sidebar">
+          <div class="brand">SIAGIE+</div>
+          <nav>
+            <button class="nav-item active" data-target="dashboard">
+              <span class="icon">🏠</span>Inicio
+            </button>
+            <button class="nav-item" data-target="students">
+              <span class="icon">👩‍🎓</span>Estudiantes
+            </button>
+            <button class="nav-item" data-target="teachers">
+              <span class="icon">👨‍🏫</span>Docentes
+            </button>
+            <button class="nav-item" data-target="grades">
+              <span class="icon">📊</span>Calificaciones
+            </button>
+            <button class="nav-item" data-target="reports">
+              <span class="icon">📄</span>Reportes
+            </button>
+            <button class="nav-item" data-target="calendar">
+              <span class="icon">🗓️</span>Agenda
+            </button>
+          </nav>
+          <div class="sidebar-footer">
+            <button class="secondary-button" id="logout-button">Cerrar sesión</button>
+          </div>
+        </aside>
+
+        <main class="content">
+          <header class="toolbar">
+            <div>
+              <h1 id="section-title">Panel general</h1>
+              <p class="subtitle">
+                Visualiza el estado académico y administrativo de tu institución.
+              </p>
+            </div>
+            <div class="toolbar-actions">
+              <button class="ghost-button">Notificaciones</button>
+              <button class="ghost-button">Soporte</button>
+              <div class="user-chip">
+                <span class="avatar">FM</span>
+                <div>
+                  <strong>Flor Mendoza</strong>
+                  <small>Directora IE 3058</small>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <section id="dashboard" class="panel active">
+            <div class="grid">
+              <article class="card highlight">
+                <header>
+                  <h3>Matrículas activas</h3>
+                  <span class="status up">+5%</span>
+                </header>
+                <p class="stat">1,245</p>
+                <p class="caption">Estudiantes matriculados en el periodo actual.</p>
+              </article>
+              <article class="card highlight">
+                <header>
+                  <h3>Asistencia promedio</h3>
+                  <span class="status stable">94%</span>
+                </header>
+                <p class="stat">+2.3 pts</p>
+                <p class="caption">Comparado con el mes anterior.</p>
+              </article>
+              <article class="card highlight">
+                <header>
+                  <h3>Alertas pendientes</h3>
+                  <span class="status down">-3</span>
+                </header>
+                <p class="stat">12</p>
+                <p class="caption">Casos de seguimiento pendientes de atención.</p>
+              </article>
+            </div>
+
+            <div class="grid two-columns">
+              <section class="card">
+                <header>
+                  <h3>Seguimiento de matrículas</h3>
+                  <button class="ghost-button">Ver todo</button>
+                </header>
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Programa</th>
+                      <th>Vacantes</th>
+                      <th>Registrados</th>
+                      <th>Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Inicial 3 años</td>
+                      <td>120</td>
+                      <td>118</td>
+                      <td><span class="chip success">Completo</span></td>
+                    </tr>
+                    <tr>
+                      <td>Primaria</td>
+                      <td>360</td>
+                      <td>344</td>
+                      <td><span class="chip warning">Casi lleno</span></td>
+                    </tr>
+                    <tr>
+                      <td>Secundaria</td>
+                      <td>400</td>
+                      <td>362</td>
+                      <td><span class="chip info">Inscripciones abiertas</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+
+              <section class="card">
+                <header>
+                  <h3>Alertas recientes</h3>
+                  <button class="ghost-button">Gestionar</button>
+                </header>
+                <ul class="timeline">
+                  <li>
+                    <span class="tag warning">Asistencia</span>
+                    <div>
+                      <strong>Curso: Matemática 4°</strong>
+                      <p>Se registró 3 inasistencias consecutivas de Ana C.</p>
+                      <small>Hace 2 horas</small>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="tag info">Evaluación</span>
+                    <div>
+                      <strong>Prueba diagnóstica</strong>
+                      <p>Los resultados están disponibles para revisión.</p>
+                      <small>Hace 5 horas</small>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="tag success">Matrícula</span>
+                    <div>
+                      <strong>Alumno regularizado</strong>
+                      <p>Se completó el expediente de José M.</p>
+                      <small>Ayer</small>
+                    </div>
+                  </li>
+                </ul>
+              </section>
+            </div>
+          </section>
+
+          <section id="students" class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Gestión de estudiantes</h2>
+                <p>
+                  Registra nuevos estudiantes, actualiza sus datos y monitorea su
+                  progreso académico.
+                </p>
+              </div>
+              <button class="primary-button" data-modal="student-modal">
+                Registrar estudiante
+              </button>
+            </div>
+            <div class="card">
+              <header>
+                <h3>Listado de estudiantes</h3>
+                <div class="filters">
+                  <input type="search" placeholder="Buscar por nombre o DNI" />
+                  <select>
+                    <option>Todos los grados</option>
+                    <option>Inicial</option>
+                    <option>Primaria</option>
+                    <option>Secundaria</option>
+                  </select>
+                  <select>
+                    <option>Todos los estados</option>
+                    <option>Regular</option>
+                    <option>Pendiente</option>
+                    <option>Traslado</option>
+                  </select>
+                </div>
+              </header>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Estudiante</th>
+                    <th>Grado</th>
+                    <th>Sección</th>
+                    <th>Estado</th>
+                    <th>Tutor</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Andrea Paredes</td>
+                    <td>5° Primaria</td>
+                    <td>A</td>
+                    <td><span class="chip success">Regular</span></td>
+                    <td>María L.</td>
+                    <td><button class="ghost-button">Ver ficha</button></td>
+                  </tr>
+                  <tr>
+                    <td>Carlos Ramos</td>
+                    <td>3° Secundaria</td>
+                    <td>B</td>
+                    <td><span class="chip warning">Pendiente</span></td>
+                    <td>Jorge M.</td>
+                    <td><button class="ghost-button">Ver ficha</button></td>
+                  </tr>
+                  <tr>
+                    <td>Ana Castillo</td>
+                    <td>2° Primaria</td>
+                    <td>C</td>
+                    <td><span class="chip info">Evaluación</span></td>
+                    <td>Laura F.</td>
+                    <td><button class="ghost-button">Ver ficha</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="teachers" class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Gestión de docentes</h2>
+                <p>
+                  Administra la información de tus docentes y asigna cursos de
+                  forma rápida.
+                </p>
+              </div>
+              <button class="primary-button" data-modal="teacher-modal">
+                Nuevo docente
+              </button>
+            </div>
+            <div class="grid two-columns">
+              <div class="card">
+                <header>
+                  <h3>Docentes destacados</h3>
+                  <button class="ghost-button">Ver todo</button>
+                </header>
+                <ul class="list">
+                  <li>
+                    <span class="avatar small">MG</span>
+                    <div>
+                      <strong>Marcos Gamarra</strong>
+                      <small>Matemática · Secundaria</small>
+                    </div>
+                    <span class="chip success">98% satisfacción</span>
+                  </li>
+                  <li>
+                    <span class="avatar small">LP</span>
+                    <div>
+                      <strong>Lourdes Pérez</strong>
+                      <small>Comunicación · Primaria</small>
+                    </div>
+                    <span class="chip info">Proyecto STEAM</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="card">
+                <header>
+                  <h3>Necesidades de capacitación</h3>
+                </header>
+                <p>
+                  Basado en la autoevaluación de desempeño y los planes de
+                  mejora, recomendamos priorizar talleres en:
+                </p>
+                <ul class="bullets">
+                  <li>Integración de tecnologías educativas</li>
+                  <li>Evaluación formativa con rúbricas digitales</li>
+                  <li>Atención a la diversidad y educación inclusiva</li>
+                </ul>
+                <button class="secondary-button">Descargar plan</button>
+              </div>
+            </div>
+          </section>
+
+          <section id="grades" class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Registro de calificaciones</h2>
+                <p>
+                  Captura y consolida las calificaciones por competencias de cada
+                  área curricular.
+                </p>
+              </div>
+              <button class="primary-button">Importar desde Excel</button>
+            </div>
+            <div class="card">
+              <header>
+                <h3>Calificaciones recientes</h3>
+                <div class="filters">
+                  <select>
+                    <option>Seleccionar periodo</option>
+                    <option>Trimestre 1</option>
+                    <option>Trimestre 2</option>
+                    <option>Trimestre 3</option>
+                  </select>
+                  <select>
+                    <option>Área curricular</option>
+                    <option>Matemática</option>
+                    <option>Comunicación</option>
+                    <option>Ciencia y Tecnología</option>
+                  </select>
+                </div>
+              </header>
+              <table class="data-table compact">
+                <thead>
+                  <tr>
+                    <th>Estudiante</th>
+                    <th>Competencia 1</th>
+                    <th>Competencia 2</th>
+                    <th>Competencia 3</th>
+                    <th>Situación final</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Andrea Paredes</td>
+                    <td>AD</td>
+                    <td>A</td>
+                    <td>AD</td>
+                    <td><span class="chip success">Destacado</span></td>
+                  </tr>
+                  <tr>
+                    <td>Carlos Ramos</td>
+                    <td>B</td>
+                    <td>B</td>
+                    <td>AD</td>
+                    <td><span class="chip info">Satisfactorio</span></td>
+                  </tr>
+                  <tr>
+                    <td>Lucía Torres</td>
+                    <td>AD</td>
+                    <td>A</td>
+                    <td>A</td>
+                    <td><span class="chip warning">En progreso</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="reports" class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Reportes y analítica</h2>
+                <p>
+                  Genera reportes institucionales, indicadores MINEDU y seguimientos
+                  personalizados.
+                </p>
+              </div>
+              <button class="primary-button">Nuevo reporte</button>
+            </div>
+            <div class="grid three-columns">
+              <article class="card report">
+                <header>
+                  <h3>Consolidado anual</h3>
+                  <span class="chip info">Actualizado</span>
+                </header>
+                <p>
+                  Panorama general del rendimiento, asistencia y promociones por
+                  grado.
+                </p>
+                <button class="secondary-button">Descargar</button>
+              </article>
+              <article class="card report">
+                <header>
+                  <h3>Alertas tempranas</h3>
+                  <span class="chip warning">En seguimiento</span>
+                </header>
+                <p>
+                  Identifica estudiantes con riesgo académico y orienta acciones de
+                  tutoría.
+                </p>
+                <button class="secondary-button">Ver detalles</button>
+              </article>
+              <article class="card report">
+                <header>
+                  <h3>Clima institucional</h3>
+                  <span class="chip success">78%</span>
+                </header>
+                <p>
+                  Resultados de encuestas de satisfacción de familias y docentes.
+                </p>
+                <button class="secondary-button">Explorar</button>
+              </article>
+            </div>
+          </section>
+
+          <section id="calendar" class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Agenda institucional</h2>
+                <p>
+                  Coordina actividades académicas, evaluaciones y eventos
+                  comunitarios desde un único calendario.
+                </p>
+              </div>
+              <button class="primary-button">Crear evento</button>
+            </div>
+            <div class="grid two-columns">
+              <div class="card">
+                <header>
+                  <h3>Próximos hitos</h3>
+                </header>
+                <ul class="timeline compact">
+                  <li>
+                    <span class="tag info">Evaluación</span>
+                    <div>
+                      <strong>Simulacro de ECE</strong>
+                      <p>Secundaria · 11 de abril</p>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="tag success">Evento</span>
+                    <div>
+                      <strong>Feria de proyectos STEAM</strong>
+                      <p>Primaria · 18 de abril</p>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="tag warning">Recordatorio</span>
+                    <div>
+                      <strong>Entrega de libretas</strong>
+                      <p>Todos los niveles · 25 de abril</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="card calendar">
+                <header>
+                  <h3>Abril 2024</h3>
+                  <div class="calendar-controls">
+                    <button class="ghost-button">◀</button>
+                    <button class="ghost-button">▶</button>
+                  </div>
+                </header>
+                <div class="calendar-grid">
+                  <span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span>
+                  <span class="muted">1</span><span class="muted">2</span><span class="muted">3</span
+                  ><span class="muted">4</span><span class="muted">5</span><span class="muted">6</span
+                  ><span class="muted">7</span><span>8</span><span>9</span><span>10</span><span>11</span
+                  ><span class="event">12</span><span>13</span><span>14</span><span>15</span><span>16</span
+                  ><span class="event">17</span><span>18</span><span>19</span><span>20</span><span>21</span
+                  ><span>22</span><span>23</span><span class="event">24</span><span>25</span><span>26</span
+                  ><span>27</span><span>28</span><span>29</span><span>30</span><span class="muted">31</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <div class="modal" id="student-modal" hidden>
+      <div class="modal-dialog">
+        <header>
+          <h3>Nuevo estudiante</h3>
+          <button class="ghost-button" data-close>&times;</button>
+        </header>
+        <form class="modal-body">
+          <div class="grid two-columns">
+            <label class="field">
+              <span>Nombres</span>
+              <input type="text" required />
+            </label>
+            <label class="field">
+              <span>Apellidos</span>
+              <input type="text" required />
+            </label>
+          </div>
+          <div class="grid two-columns">
+            <label class="field">
+              <span>DNI</span>
+              <input type="text" required maxlength="8" />
+            </label>
+            <label class="field">
+              <span>Fecha de nacimiento</span>
+              <input type="date" required />
+            </label>
+          </div>
+          <label class="field">
+            <span>Grado y sección</span>
+            <select required>
+              <option value="">Seleccionar</option>
+              <option>1° Primaria - A</option>
+              <option>2° Primaria - B</option>
+              <option>3° Secundaria - C</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Observaciones</span>
+            <textarea rows="3" placeholder="Notas adicionales"></textarea>
+          </label>
+          <footer class="modal-footer">
+            <button type="button" class="ghost-button" data-close>Cancelar</button>
+            <button type="submit" class="primary-button">Guardar</button>
+          </footer>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal" id="teacher-modal" hidden>
+      <div class="modal-dialog">
+        <header>
+          <h3>Registrar docente</h3>
+          <button class="ghost-button" data-close>&times;</button>
+        </header>
+        <form class="modal-body">
+          <label class="field">
+            <span>Nombre completo</span>
+            <input type="text" required />
+          </label>
+          <div class="grid two-columns">
+            <label class="field">
+              <span>Especialidad</span>
+              <input type="text" required />
+            </label>
+            <label class="field">
+              <span>Teléfono</span>
+              <input type="tel" required />
+            </label>
+          </div>
+          <label class="field">
+            <span>Correo institucional</span>
+            <input type="email" required />
+          </label>
+          <label class="field">
+            <span>Disponibilidad</span>
+            <select>
+              <option>Turno mañana</option>
+              <option>Turno tarde</option>
+              <option>Turno completo</option>
+            </select>
+          </label>
+          <footer class="modal-footer">
+            <button type="button" class="ghost-button" data-close>Cancelar</button>
+            <button type="submit" class="primary-button">Guardar</button>
+          </footer>
+        </form>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
