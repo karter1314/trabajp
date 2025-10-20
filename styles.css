@@ -444,6 +444,12 @@ footer {
   border-radius: var(--radius-sm);
   padding: 0.6rem 0.75rem;
   background: #f9fafb;
+  color: var(--text);
+}
+
+.filters select option {
+  color: var(--text);
+  background: #ffffff;
 }
 
 .timeline {
