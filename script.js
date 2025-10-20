@@ -6,6 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const subtitle = document.querySelector('.subtitle');
   const navButtons = document.querySelectorAll('.nav-item');
   const logoutButton = document.getElementById('logout-button');
+  const emailInput = loginForm?.querySelector('input[type="email"]');
+  const passwordInput = loginForm?.querySelector('input[type="password"]');
+  const STORAGE_KEY = 'siagiePlusCredentials';
+  const storage = getStorage();
 
   const panelDescriptions = {
     dashboard: 'Visualiza el estado académico y administrativo de tu institución.',
@@ -23,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const body = document.body;
 
+  restoreSavedCredentials();
   setInitialView();
   attachEventHandlers();
 
@@ -41,11 +46,18 @@ document.addEventListener('DOMContentLoaded', () => {
   function attachEventHandlers() {
     loginForm?.addEventListener('submit', (event) => {
       event.preventDefault();
+      persistCredentials();
       setAuthenticatedState(true);
     });
 
     logoutButton?.addEventListener('click', () => {
       setAuthenticatedState(false);
+    });
+
+    [emailInput, passwordInput].forEach((input) => {
+      input?.addEventListener('input', () => {
+        persistCredentials();
+      });
     });
 
     navButtons.forEach((button) => {
@@ -91,6 +103,61 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       body.style.alignItems = 'center';
       body.style.justifyContent = 'center';
+    }
+  }
+
+  function restoreSavedCredentials() {
+    if (!storage) return;
+
+    const saved = readStoredCredentials();
+
+    if (saved?.email && emailInput) {
+      emailInput.value = saved.email;
+    }
+
+    if (typeof saved?.password === 'string' && passwordInput) {
+      passwordInput.value = saved.password;
+    }
+  }
+
+  function persistCredentials() {
+    if (!storage) return;
+
+    const credentials = {
+      email: emailInput?.value ?? '',
+      password: passwordInput?.value ?? ''
+    };
+
+    try {
+      storage.setItem(STORAGE_KEY, JSON.stringify(credentials));
+    } catch (error) {
+      console.error('No se pudieron guardar las credenciales.', error);
+    }
+  }
+
+  function readStoredCredentials() {
+    try {
+      const raw = storage?.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (error) {
+      console.warn('No se pudieron leer las credenciales guardadas.', error);
+      return null;
+    }
+  }
+
+  function getStorage() {
+    try {
+      if (typeof window === 'undefined' || !('localStorage' in window)) {
+        return null;
+      }
+
+      const testKey = '__siagie-test__';
+      window.localStorage.setItem(testKey, '1');
+      window.localStorage.removeItem(testKey);
+      return window.localStorage;
+    } catch (error) {
+      console.warn('El almacenamiento local no está disponible.', error);
+      return null;
     }
   }
 });

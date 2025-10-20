@@ -1,9 +1,10 @@
 :root {
   --bg: #f5f7fb;
   --surface: #ffffff;
-  --primary: #0048ff;
-  --primary-dark: #0036c1;
-  --accent: #00d7c5;
+  --primary: #0f9d58;
+  --primary-dark: #0b7d44;
+  --primary-rgb: 15, 157, 88;
+  --accent: #9be15d;
   --text: #1f2937;
   --text-muted: #6b7280;
   --border: #e5e7eb;
@@ -45,7 +46,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   padding: clamp(2rem, 4vw, 3.5rem);
-  background: linear-gradient(135deg, #04184d 0%, #001a9f 40%, #00b0ff 100%);
+  background: linear-gradient(135deg, #034d1f 0%, #0f9d58 45%, #7ad67d 100%);
   color: #f9fafb;
 }
 
@@ -150,21 +151,21 @@ body {
 .primary-button {
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: #fff;
-  box-shadow: 0 20px 30px -18px rgba(0, 72, 255, 0.8);
+  box-shadow: 0 20px 30px -18px rgba(var(--primary-rgb), 0.45);
 }
 
 .primary-button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 18px 28px -16px rgba(0, 72, 255, 0.7);
+  box-shadow: 0 18px 28px -16px rgba(var(--primary-rgb), 0.5);
 }
 
 .secondary-button {
-  background: rgba(0, 72, 255, 0.14);
+  background: rgba(var(--primary-rgb), 0.14);
   color: var(--primary);
 }
 
 .secondary-button:hover {
-  background: rgba(0, 72, 255, 0.22);
+  background: rgba(var(--primary-rgb), 0.22);
 }
 
 .ghost-button {
@@ -282,7 +283,7 @@ footer {
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: rgba(0, 72, 255, 0.12);
+  background: rgba(var(--primary-rgb), 0.12);
   color: var(--primary);
   font-weight: 600;
 }
@@ -333,8 +334,8 @@ footer {
 }
 
 .card.highlight {
-  border: 1px solid rgba(0, 72, 255, 0.12);
-  background: linear-gradient(160deg, rgba(0, 72, 255, 0.12) 0%, #fff 60%);
+  border: 1px solid rgba(var(--primary-rgb), 0.12);
+  background: linear-gradient(160deg, rgba(var(--primary-rgb), 0.12) 0%, #fff 60%);
 }
 
 .stat {
@@ -563,7 +564,7 @@ footer {
 }
 
 .calendar-grid span.event {
-  background: rgba(0, 72, 255, 0.18);
+  background: rgba(var(--primary-rgb), 0.18);
   color: var(--primary);
   font-weight: 600;
 }
