@@ -90,6 +90,13 @@
             </button>
             <button
               class="nav-item"
+              data-target="teacher-hub"
+              data-roles="teacher"
+            >
+              <span class="icon">📚</span>Aulas y calificaciones
+            </button>
+            <button
+              class="nav-item"
               data-target="students"
               data-roles="admin,teacher"
             >
@@ -255,6 +262,131 @@
                   </li>
                 </ul>
               </section>
+            </div>
+          </section>
+
+          <section id="teacher-hub" class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Espacio docente</h2>
+                <p>
+                  Consulta tu horario, registra calificaciones y reporta incidencias
+                  en los datos de tus estudiantes.
+                </p>
+              </div>
+            </div>
+            <div class="grid two-columns stack-on-mobile">
+              <article class="card">
+                <header>
+                  <h3>Horarios por aula</h3>
+                  <span class="chip info" id="schedule-room">Aula 204</span>
+                </header>
+                <div class="compact-field">
+                  <span>Día de la semana</span>
+                  <select id="schedule-day"></select>
+                </div>
+                <table class="data-table compact">
+                  <thead>
+                    <tr>
+                      <th>Hora</th>
+                      <th>Curso</th>
+                      <th>Sección</th>
+                      <th>Aula</th>
+                    </tr>
+                  </thead>
+                  <tbody id="schedule-body"></tbody>
+                </table>
+              </article>
+
+              <article class="card">
+                <header>
+                  <h3>Registro rápido de calificaciones</h3>
+                  <button type="button" class="ghost-button" id="grade-reset">
+                    Reiniciar
+                  </button>
+                </header>
+                <form id="grade-form" class="stacked-form" autocomplete="off">
+                  <div class="compact-field">
+                    <span>Curso asignado</span>
+                    <select id="grade-course" required></select>
+                  </div>
+                  <table class="data-table compact">
+                    <thead>
+                      <tr>
+                        <th>Estudiante</th>
+                        <th>Grupo</th>
+                        <th>Calificación final</th>
+                      </tr>
+                    </thead>
+                    <tbody id="grade-table-body"></tbody>
+                  </table>
+                  <div class="form-actions">
+                    <button type="submit" class="primary-button">
+                      Guardar calificaciones
+                    </button>
+                    <span class="form-feedback" id="grade-feedback" aria-live="polite"></span>
+                  </div>
+                </form>
+                <div class="card-subsection">
+                  <h4>Últimas entregas</h4>
+                  <ul id="grade-history" class="timeline compact"></ul>
+                  <p id="grade-history-empty" class="empty-state">
+                    Aún no registras calificaciones en esta sesión.
+                  </p>
+                </div>
+              </article>
+
+              <article class="card wide">
+                <header>
+                  <h3>Reportar error en datos estudiantiles</h3>
+                </header>
+                <form id="data-issue-form" class="stacked-form" autocomplete="off">
+                  <div class="form-field">
+                    <span>Nombre del estudiante</span>
+                    <input
+                      type="text"
+                      name="studentName"
+                      placeholder="Ej. Andrea Paredes"
+                      required
+                    />
+                  </div>
+                  <div class="form-field">
+                    <span>Tipo de incidencia</span>
+                    <select name="issueType" required>
+                      <option value="Datos personales">Datos personales</option>
+                      <option value="Documento de identidad">
+                        Documento de identidad
+                      </option>
+                      <option value="Calificaciones registradas">
+                        Calificaciones registradas
+                      </option>
+                      <option value="Otro">Otro</option>
+                    </select>
+                  </div>
+                  <div class="form-field">
+                    <span>Detalle del problema</span>
+                    <textarea
+                      name="issueDetail"
+                      rows="3"
+                      placeholder="Describe el dato que requiere corrección"
+                      required
+                    ></textarea>
+                  </div>
+                  <div class="form-actions">
+                    <button type="submit" class="secondary-button">
+                      Enviar solicitud
+                    </button>
+                    <span class="form-feedback" id="issue-feedback" aria-live="polite"></span>
+                  </div>
+                </form>
+                <div class="card-subsection">
+                  <h4>Solicitudes recientes</h4>
+                  <ul id="data-issue-list" class="issue-list"></ul>
+                  <p id="data-issue-empty" class="empty-state">
+                    No se han reportado inconsistencias todavía.
+                  </p>
+                </div>
+              </article>
             </div>
           </section>
 

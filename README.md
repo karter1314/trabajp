@@ -6,6 +6,7 @@ Una interfaz moderna inspirada en el Sistema de Información de Apoyo a la Gesti
 
 - **Pantalla de acceso renovada** con diseño gradiente, tarjetas informativas y soporte para recordatorio de dispositivo.
 - **Accesos diferenciados** para administrativos, docentes y estudiantes con pestañas dedicadas que recuerdan las credenciales de cada perfil.
+- **Espacio docente** con horarios por aula, registro rápido de calificaciones y formulario para reportar inconsistencias en los datos de estudiantes.
 - **Panel de control** con indicadores clave, tablas de seguimiento y alertas priorizadas.
 - **Navegación modular** para estudiantes, docentes, calificaciones, reportes y agenda, con tarjetas y tablas responsivas.
 - **Paneles informativos** con filtros simulados para explorar matrículas, calificaciones y plantilla docente.
@@ -18,6 +19,7 @@ Una interfaz moderna inspirada en el Sistema de Información de Apoyo a la Gesti
 2. Elige el tipo de acceso (administrativo, docente o estudiante), completa el formulario de ingreso (no requiere credenciales reales) y presiona **Acceder** para visualizar el panel principal correspondiente.
 3. Navega por los distintos módulos mediante la barra lateral para consultar la información de ejemplo.
    - Si ingresas como administrativo, utiliza el panel **Gestión de accesos** para dar de alta a nuevos docentes o estudiantes y ajustar su información antes de habilitarlos.
+   - Si ingresas como docente, consulta el panel **Aulas y calificaciones** para revisar tu horario, registrar notas de tus grupos y solicitar correcciones de datos cuando sea necesario.
 
 ## Tecnologías
 

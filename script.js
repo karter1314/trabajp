@@ -25,6 +25,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const studentsDynamicBody = document.getElementById('students-dynamic');
   const teachersDynamicBody = document.getElementById('teachers-dynamic');
   const teacherCount = document.getElementById('teacher-count');
+  const scheduleDaySelect = document.getElementById('schedule-day');
+  const scheduleBody = document.getElementById('schedule-body');
+  const scheduleRoom = document.getElementById('schedule-room');
+  const gradeForm = document.getElementById('grade-form');
+  const gradeCourseSelect = document.getElementById('grade-course');
+  const gradeTableBody = document.getElementById('grade-table-body');
+  const gradeFeedback = document.getElementById('grade-feedback');
+  const gradeResetButton = document.getElementById('grade-reset');
+  const gradeHistoryList = document.getElementById('grade-history');
+  const gradeHistoryEmpty = document.getElementById('grade-history-empty');
+  const dataIssueForm = document.getElementById('data-issue-form');
+  const dataIssueList = document.getElementById('data-issue-list');
+  const dataIssueEmpty = document.getElementById('data-issue-empty');
+  const issueFeedback = document.getElementById('issue-feedback');
   const STORAGE_KEY = 'siagiePlusCredentials';
 
   const storage = getStorage();
@@ -47,6 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const statusOptions = ['Regular', 'Pendiente', 'Traslado', 'Evaluación'];
 
+  const gradeScale = ['AD', 'A', 'B', 'C'];
+
   const availabilityOptions = [
     'Turno completo',
     'Turno mañana',
@@ -56,12 +72,168 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const BASE_TEACHER_COUNT = document.querySelectorAll('#teachers-base tr').length;
 
+  const teacherSchedule = [
+    {
+      id: 'lunes',
+      label: 'Lunes',
+      sessions: [
+        {
+          time: '07:30 - 09:00',
+          course: 'Comunicación',
+          section: '2.º Secundaria B',
+          room: 'Aula 204'
+        },
+        {
+          time: '09:15 - 10:45',
+          course: 'Comunicación',
+          section: '3.º Secundaria A',
+          room: 'Laboratorio de idiomas'
+        },
+        {
+          time: '11:15 - 12:30',
+          course: 'Tutoría',
+          section: '1.º Secundaria C',
+          room: 'Aula 108'
+        }
+      ]
+    },
+    {
+      id: 'martes',
+      label: 'Martes',
+      sessions: [
+        {
+          time: '08:00 - 09:30',
+          course: 'Comunicación',
+          section: '4.º Secundaria A',
+          room: 'Aula 305'
+        },
+        {
+          time: '09:45 - 11:15',
+          course: 'Proyecto STEAM',
+          section: '2.º Secundaria B',
+          room: 'Sala de innovación'
+        }
+      ]
+    },
+    {
+      id: 'miercoles',
+      label: 'Miércoles',
+      sessions: [
+        {
+          time: '07:30 - 09:00',
+          course: 'Comunicación',
+          section: '2.º Secundaria B',
+          room: 'Aula 204'
+        },
+        {
+          time: '09:15 - 10:45',
+          course: 'Comunicación',
+          section: '5.º Secundaria C',
+          room: 'Aula 401'
+        },
+        {
+          time: '11:00 - 11:45',
+          course: 'Consejería',
+          section: 'Docentes noveles',
+          room: 'Sala de profesores'
+        }
+      ]
+    },
+    {
+      id: 'jueves',
+      label: 'Jueves',
+      sessions: [
+        {
+          time: '08:00 - 09:30',
+          course: 'Comunicación',
+          section: '3.º Secundaria B',
+          room: 'Aula 210'
+        },
+        {
+          time: '09:45 - 11:15',
+          course: 'Comunicación',
+          section: '5.º Secundaria C',
+          room: 'Aula 401'
+        }
+      ]
+    },
+    {
+      id: 'viernes',
+      label: 'Viernes',
+      sessions: [
+        {
+          time: '07:30 - 09:00',
+          course: 'Comunicación',
+          section: '1.º Secundaria C',
+          room: 'Aula 108'
+        },
+        {
+          time: '09:15 - 10:45',
+          course: 'Comunicación',
+          section: '4.º Secundaria A',
+          room: 'Aula 305'
+        },
+        {
+          time: '11:00 - 11:45',
+          course: 'Reunión con familias',
+          section: '2.º Secundaria B',
+          room: 'Sala de reuniones'
+        }
+      ]
+    }
+  ];
+
+  const teacherCourses = [
+    {
+      id: 'comunicacion-2b',
+      name: 'Comunicación · 2.º Secundaria B',
+      group: '2.º Secundaria B',
+      room: 'Aula 204',
+      students: [
+        { id: 'andrea-paredes', name: 'Andrea Paredes', grade: 'AD' },
+        { id: 'carlos-ramos', name: 'Carlos Ramos', grade: 'B' },
+        { id: 'lucia-torres', name: 'Lucía Torres', grade: 'A' },
+        { id: 'valeria-nunez', name: 'Valeria Núñez', grade: 'A' },
+        { id: 'diego-herrera', name: 'Diego Herrera', grade: 'B' }
+      ]
+    },
+    {
+      id: 'comunicacion-4a',
+      name: 'Comunicación · 4.º Secundaria A',
+      group: '4.º Secundaria A',
+      room: 'Aula 305',
+      students: [
+        { id: 'sofia-leon', name: 'Sofía León', grade: 'AD' },
+        { id: 'renato-ibanez', name: 'Renato Ibañez', grade: 'A' },
+        { id: 'ana-castro', name: 'Ana Castro', grade: 'A' },
+        { id: 'gabriel-lopez', name: 'Gabriel López', grade: 'B' }
+      ]
+    },
+    {
+      id: 'comunicacion-5c',
+      name: 'Comunicación · 5.º Secundaria C',
+      group: '5.º Secundaria C',
+      room: 'Aula 401',
+      students: [
+        { id: 'mariana-silva', name: 'Mariana Silva', grade: 'A' },
+        { id: 'jorge-vizcarra', name: 'Jorge Vizcarra', grade: 'B' },
+        { id: 'paula-gomez', name: 'Paula Gómez', grade: 'AD' },
+        { id: 'sebastian-cortes', name: 'Sebastián Cortés', grade: 'A' }
+      ]
+    }
+  ];
+
+  const gradeHistory = [];
+  const dataIssueRequests = [];
+
   const panelDescriptions = {
     dashboard: 'Visualiza el estado académico y administrativo de tu institución.',
     students:
       'Gestiona la información de los estudiantes, actualiza sus datos y monitorea su progreso académico.',
     teachers:
       'Administra la información de tus docentes y organiza su disponibilidad desde un solo lugar.',
+    'teacher-hub':
+      'Organiza tus clases, registra calificaciones y comunica incidencias de datos de los estudiantes.',
     grades:
       'Captura y consolida las calificaciones por competencias de cada área curricular.',
     reports:
@@ -76,6 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dashboard: 'Panel general',
     students: 'Gestión de estudiantes',
     teachers: 'Gestión de docentes',
+    'teacher-hub': 'Aulas y calificaciones',
     grades: 'Registro de calificaciones',
     reports: 'Reportes y analítica',
     calendar: 'Agenda institucional',
@@ -105,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
         detail: 'Docente de Comunicación',
         initials: 'MR'
       },
-      defaultSection: 'grades'
+      defaultSection: 'teacher-hub'
     },
     student: {
       heading: 'Acceso estudiante',
@@ -136,6 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateRoleUI();
   populateCredentialsFields();
   setInitialView();
+  initializeTeacherWorkspace();
   attachEventHandlers();
   toggleRoleFields(accessRoleSelect?.value ?? 'student');
   updateCounters();
@@ -201,6 +375,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     assignmentList?.addEventListener('change', handleAssignmentInteraction);
     assignmentList?.addEventListener('input', handleAssignmentInteraction);
+
+    scheduleDaySelect?.addEventListener('change', () => {
+      renderSchedule(scheduleDaySelect.value);
+    });
+
+    gradeCourseSelect?.addEventListener('change', () => {
+      renderGradeTable(gradeCourseSelect.value);
+      clearGradeFeedback();
+    });
+
+    gradeResetButton?.addEventListener('click', () => {
+      resetGradeSelections();
+      clearGradeFeedback();
+    });
+
+    gradeForm?.addEventListener('submit', handleGradeFormSubmit);
+
+    dataIssueForm?.addEventListener('submit', handleDataIssueSubmit);
   }
 
   function setAuthenticatedState(isAuthenticated) {
@@ -322,6 +514,381 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (sectionToActivate) {
       activateSection(sectionToActivate);
+    }
+  }
+
+  function initializeTeacherWorkspace() {
+    populateScheduleSelect();
+    populateGradeCourses();
+    clearGradeFeedback();
+    if (issueFeedback) {
+      issueFeedback.textContent = '';
+      issueFeedback.classList.remove('success', 'error');
+    }
+    updateGradeHistory();
+    updateDataIssueList();
+  }
+
+  function populateScheduleSelect() {
+    if (!scheduleDaySelect) {
+      return;
+    }
+
+    const options = teacherSchedule
+      .map((day) => `<option value="${escapeAttribute(day.id)}">${escapeHtml(day.label)}</option>`)
+      .join('');
+    scheduleDaySelect.innerHTML = options;
+
+    const availableDays = teacherSchedule.map((day) => day.id);
+    const currentValue = availableDays.includes(scheduleDaySelect.value)
+      ? scheduleDaySelect.value
+      : availableDays[0];
+
+    if (currentValue) {
+      scheduleDaySelect.value = currentValue;
+      renderSchedule(currentValue);
+    }
+  }
+
+  function renderSchedule(dayId) {
+    if (!scheduleBody) {
+      return;
+    }
+
+    const day = teacherSchedule.find((item) => item.id === dayId);
+
+    if (!day || day.sessions.length === 0) {
+      scheduleBody.innerHTML =
+        '<tr class="empty-state"><td colspan="4">No hay sesiones programadas.</td></tr>';
+      updateScheduleRoomLabel([]);
+      return;
+    }
+
+    const rows = day.sessions
+      .map(
+        (session) => `
+          <tr>
+            <td>${escapeHtml(session.time)}</td>
+            <td>${escapeHtml(session.course)}</td>
+            <td>${escapeHtml(session.section)}</td>
+            <td>${escapeHtml(session.room)}</td>
+          </tr>
+        `
+      )
+      .join('');
+
+    scheduleBody.innerHTML = rows;
+    updateScheduleRoomLabel(day.sessions);
+  }
+
+  function updateScheduleRoomLabel(sessions) {
+    if (!scheduleRoom) {
+      return;
+    }
+
+    if (!sessions || sessions.length === 0) {
+      scheduleRoom.textContent = 'Sin aula asignada';
+      return;
+    }
+
+    const uniqueRooms = Array.from(
+      new Set(sessions.map((session) => session.room).filter(Boolean))
+    );
+
+    scheduleRoom.textContent =
+      uniqueRooms.length === 1 ? uniqueRooms[0] : 'Varias aulas';
+  }
+
+  function populateGradeCourses() {
+    if (!gradeCourseSelect) {
+      return;
+    }
+
+    const options = teacherCourses
+      .map(
+        (course) =>
+          `<option value="${escapeAttribute(course.id)}">${escapeHtml(course.name)}</option>`
+      )
+      .join('');
+    gradeCourseSelect.innerHTML = options;
+
+    const availableCourses = teacherCourses.map((course) => course.id);
+    const currentValue = availableCourses.includes(gradeCourseSelect.value)
+      ? gradeCourseSelect.value
+      : availableCourses[0];
+
+    if (currentValue) {
+      gradeCourseSelect.value = currentValue;
+      renderGradeTable(currentValue);
+    } else if (gradeTableBody) {
+      gradeTableBody.innerHTML =
+        '<tr class="empty-state"><td colspan="3">Sin estudiantes registrados.</td></tr>';
+    }
+  }
+
+  function renderGradeTable(courseId) {
+    if (!gradeTableBody) {
+      return;
+    }
+
+    const course = teacherCourses.find((item) => item.id === courseId);
+
+    if (!course) {
+      gradeTableBody.innerHTML =
+        '<tr class="empty-state"><td colspan="3">Selecciona un curso para comenzar.</td></tr>';
+      return;
+    }
+
+    if (!course.students.length) {
+      gradeTableBody.innerHTML =
+        '<tr class="empty-state"><td colspan="3">Aún no hay estudiantes asignados.</td></tr>';
+      return;
+    }
+
+    gradeTableBody.innerHTML = course.students
+      .map((student) => {
+        const currentGrade = gradeScale.includes(student.grade)
+          ? student.grade
+          : gradeScale[1];
+        const options = gradeScale
+          .map(
+            (grade) =>
+              `<option value="${grade}" ${grade === currentGrade ? 'selected' : ''}>${grade}</option>`
+          )
+          .join('');
+
+        return `
+          <tr data-student-id="${escapeAttribute(student.id)}">
+            <td>${escapeHtml(student.name)}</td>
+            <td>${escapeHtml(course.group)}</td>
+            <td>
+              <select class="grade-select" data-student-id="${escapeAttribute(student.id)}">
+                ${options}
+              </select>
+            </td>
+          </tr>
+        `;
+      })
+      .join('');
+  }
+
+  function resetGradeSelections() {
+    if (!gradeCourseSelect) {
+      return;
+    }
+    renderGradeTable(gradeCourseSelect.value);
+  }
+
+  function clearGradeFeedback() {
+    if (!gradeFeedback) {
+      return;
+    }
+
+    gradeFeedback.textContent = '';
+    gradeFeedback.classList.remove('success', 'error');
+  }
+
+  function handleGradeFormSubmit(event) {
+    event.preventDefault();
+
+    if (!gradeCourseSelect || !gradeTableBody) {
+      return;
+    }
+
+    const course = teacherCourses.find((item) => item.id === gradeCourseSelect.value);
+
+    if (!course) {
+      clearGradeFeedback();
+      return;
+    }
+
+    const gradeInputs = Array.from(
+      gradeTableBody.querySelectorAll('select[data-student-id]')
+    );
+
+    if (!gradeInputs.length) {
+      clearGradeFeedback();
+      return;
+    }
+
+    const entries = gradeInputs.map((input) => {
+      const studentId = input.dataset.studentId || '';
+      const student = course.students.find((item) => item.id === studentId);
+      const value = gradeScale.includes(input.value) ? input.value : gradeScale[1];
+
+      if (student) {
+        student.grade = value;
+      }
+
+      return {
+        id: studentId,
+        name: student?.name ?? 'Estudiante',
+        grade: value
+      };
+    });
+
+    if (gradeFeedback) {
+      gradeFeedback.textContent = `Calificaciones enviadas para ${course.name}.`;
+      gradeFeedback.classList.remove('error');
+      gradeFeedback.classList.add('success');
+    }
+
+    const now = new Date();
+    const summaryItems = entries.map((entry) => {
+      const firstName = entry.name.split(' ')[0] || entry.name;
+      return `${firstName} (${entry.grade})`;
+    });
+
+    gradeHistory.unshift({
+      id: `grade-${now.getTime()}`,
+      courseName: course.name,
+      timestamp: now,
+      summary: summaryItems,
+      total: entries.length
+    });
+
+    if (gradeHistory.length > 5) {
+      gradeHistory.pop();
+    }
+
+    updateGradeHistory();
+    renderGradeTable(course.id);
+  }
+
+  function updateGradeHistory() {
+    if (!gradeHistoryList || !gradeHistoryEmpty) {
+      return;
+    }
+
+    if (!gradeHistory.length) {
+      gradeHistoryList.innerHTML = '';
+      gradeHistoryList.hidden = true;
+      gradeHistoryEmpty.hidden = false;
+      return;
+    }
+
+    gradeHistoryList.hidden = false;
+    gradeHistoryEmpty.hidden = true;
+
+    gradeHistoryList.innerHTML = gradeHistory
+      .map((entry) => {
+        const formattedDate = formatDateTime(entry.timestamp);
+        const details = buildGradeSummary(entry.summary, entry.total);
+        return `
+          <li>
+            <span class="tag success">Enviado</span>
+            <div>
+              <strong>${escapeHtml(entry.courseName)}</strong>
+              <small>${escapeHtml(formattedDate)} · ${entry.total} estudiantes</small>
+              <p>${escapeHtml(details)}</p>
+            </div>
+          </li>
+        `;
+      })
+      .join('');
+  }
+
+  function buildGradeSummary(items, total) {
+    if (!items || !items.length) {
+      return 'Registros actualizados.';
+    }
+
+    const visible = items.slice(0, 3);
+    const remaining = Math.max(total - visible.length, 0);
+    return remaining > 0
+      ? `${visible.join(', ')} y ${remaining} más`
+      : visible.join(', ');
+  }
+
+  function handleDataIssueSubmit(event) {
+    event.preventDefault();
+
+    if (!dataIssueForm) {
+      return;
+    }
+
+    const formData = new FormData(dataIssueForm);
+    const studentName = (formData.get('studentName') || '').toString().trim();
+    const issueType = (formData.get('issueType') || '').toString().trim();
+    const issueDetail = (formData.get('issueDetail') || '').toString().trim();
+
+    if (!studentName || !issueType || !issueDetail) {
+      if (issueFeedback) {
+        issueFeedback.textContent = 'Completa todos los campos antes de enviar.';
+        issueFeedback.classList.remove('success');
+        issueFeedback.classList.add('error');
+      }
+      return;
+    }
+
+    const timestamp = new Date();
+
+    dataIssueRequests.unshift({
+      id: `issue-${timestamp.getTime()}`,
+      studentName,
+      issueType,
+      detail: issueDetail,
+      timestamp
+    });
+
+    if (dataIssueRequests.length > 6) {
+      dataIssueRequests.pop();
+    }
+
+    dataIssueForm.reset();
+
+    if (issueFeedback) {
+      issueFeedback.textContent = `Se envió la incidencia para ${studentName}.`;
+      issueFeedback.classList.remove('error');
+      issueFeedback.classList.add('success');
+    }
+
+    updateDataIssueList();
+  }
+
+  function updateDataIssueList() {
+    if (!dataIssueList || !dataIssueEmpty) {
+      return;
+    }
+
+    if (!dataIssueRequests.length) {
+      dataIssueList.innerHTML = '';
+      dataIssueList.hidden = true;
+      dataIssueEmpty.hidden = false;
+      return;
+    }
+
+    dataIssueList.hidden = false;
+    dataIssueEmpty.hidden = true;
+
+    dataIssueList.innerHTML = dataIssueRequests
+      .map(
+        (request) => `
+          <li class="issue-item">
+            <strong>${escapeHtml(request.studentName)}</strong>
+            <small>${escapeHtml(request.issueType)} · ${escapeHtml(
+              formatDateTime(request.timestamp)
+            )}</small>
+            <p>${escapeHtml(request.detail)}</p>
+            <span class="issue-status">Enviado a secretaría</span>
+          </li>
+        `
+      )
+      .join('');
+  }
+
+  function formatDateTime(value) {
+    if (!(value instanceof Date)) {
+      return '';
+    }
+
+    try {
+      return new Intl.DateTimeFormat('es-PE', {
+        dateStyle: 'short',
+        timeStyle: 'short'
+      }).format(value);
+    } catch (error) {
+      return value.toLocaleString();
     }
   }
 
