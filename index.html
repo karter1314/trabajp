@@ -104,6 +104,13 @@
             </button>
             <button
               class="nav-item"
+              data-target="access-management"
+              data-roles="admin"
+            >
+              <span class="icon">🛡️</span>Gestión de accesos
+            </button>
+            <button
+              class="nav-item"
               data-target="grades"
               data-roles="admin,teacher,student"
             >
@@ -291,7 +298,7 @@
                     <th>Acciones</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="students-base">
                   <tr>
                     <td>Andrea Paredes</td>
                     <td>5° Primaria</td>
@@ -341,6 +348,7 @@
                     <td><button class="ghost-button">Ver ficha</button></td>
                   </tr>
                 </tbody>
+                <tbody id="students-dynamic"></tbody>
               </table>
             </div>
           </section>
@@ -407,7 +415,7 @@
             <div class="card">
               <header>
                 <h3>Plantilla docente</h3>
-                  <span class="chip info">5 docentes</span>
+                  <span class="chip info" id="teacher-count">5 docentes</span>
               </header>
               <table class="data-table">
                 <thead>
@@ -418,7 +426,7 @@
                     <th>Contacto</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="teachers-base">
                   <tr>
                     <td>Marcos Gamarra</td>
                     <td>Matemática · Secundaria</td>
@@ -475,7 +483,113 @@
                     </td>
                   </tr>
                 </tbody>
+                <tbody id="teachers-dynamic"></tbody>
               </table>
+            </div>
+          </section>
+
+          <section id="access-management" class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Gestión de accesos institucionales</h2>
+                <p>
+                  Registra nuevas cuentas, define si serán estudiantes o docentes y
+                  ajusta sus datos antes de habilitarlas en los módulos.
+                </p>
+              </div>
+            </div>
+            <div class="grid two-columns">
+              <div class="card">
+                <header>
+                  <h3>Registrar nueva persona</h3>
+                  <span class="chip info">Alta inmediata</span>
+                </header>
+                <form id="access-form" class="stacked-form">
+                  <label class="field form-field">
+                    <span>Nombre completo</span>
+                    <input type="text" name="fullName" required placeholder="Nombres y apellidos" />
+                  </label>
+                  <label class="field form-field">
+                    <span>Documento o correo</span>
+                    <input type="text" name="identifier" required placeholder="DNI o correo institucional" />
+                  </label>
+                  <label class="field form-field">
+                    <span>Rol inicial</span>
+                    <select name="role" id="access-role">
+                      <option value="student">Estudiante</option>
+                      <option value="teacher">Docente</option>
+                    </select>
+                  </label>
+                  <div class="role-fields" data-role-fields="student">
+                    <label class="field form-field">
+                      <span>Grado</span>
+                      <select name="studentGrade">
+                        <option value="Inicial">Inicial</option>
+                        <option value="1° Primaria">1° Primaria</option>
+                        <option value="2° Primaria">2° Primaria</option>
+                        <option value="3° Primaria">3° Primaria</option>
+                        <option value="4° Primaria">4° Primaria</option>
+                        <option value="5° Primaria">5° Primaria</option>
+                        <option value="6° Primaria">6° Primaria</option>
+                        <option value="1° Secundaria">1° Secundaria</option>
+                        <option value="2° Secundaria">2° Secundaria</option>
+                        <option value="3° Secundaria">3° Secundaria</option>
+                        <option value="4° Secundaria">4° Secundaria</option>
+                        <option value="5° Secundaria">5° Secundaria</option>
+                      </select>
+                    </label>
+                    <label class="field form-field">
+                      <span>Sección</span>
+                      <input type="text" name="studentSection" placeholder="A, B, C..." />
+                    </label>
+                    <label class="field form-field">
+                      <span>Estado</span>
+                      <select name="studentStatus">
+                        <option value="Regular">Regular</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Traslado">Traslado</option>
+                        <option value="Evaluación">Evaluación</option>
+                      </select>
+                    </label>
+                    <label class="field form-field">
+                      <span>Tutor asignado</span>
+                      <input type="text" name="studentTutor" placeholder="Nombre del tutor" />
+                    </label>
+                  </div>
+                  <div class="role-fields" data-role-fields="teacher" hidden>
+                    <label class="field form-field">
+                      <span>Área o especialidad</span>
+                      <input type="text" name="teacherSpecialty" placeholder="Ej. Matemática · Secundaria" />
+                    </label>
+                    <label class="field form-field">
+                      <span>Disponibilidad</span>
+                      <select name="teacherAvailability">
+                        <option value="Turno completo">Turno completo</option>
+                        <option value="Turno mañana">Turno mañana</option>
+                        <option value="Turno tarde">Turno tarde</option>
+                        <option value="Horas parciales">Horas parciales</option>
+                      </select>
+                    </label>
+                    <label class="field form-field">
+                      <span>Correo institucional</span>
+                      <input type="email" name="teacherEmail" placeholder="usuario@colegio.edu.pe" />
+                    </label>
+                    <label class="field form-field">
+                      <span>Teléfono</span>
+                      <input type="tel" name="teacherPhone" placeholder="987 654 321" />
+                    </label>
+                  </div>
+                  <button type="submit" class="primary-button">Registrar acceso</button>
+                </form>
+              </div>
+              <div class="card">
+                <header>
+                  <h3>Incorporaciones recientes</h3>
+                  <span class="chip info" id="pending-count">0 registros</span>
+                </header>
+                <p class="empty-state" id="no-records">Aún no hay personas registradas por administración.</p>
+                <ul class="assignment-list" id="assignment-list"></ul>
+              </div>
             </div>
           </section>
 
