@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const roleDescription = document.getElementById('role-description');
   const loginRoleInput = document.getElementById('login-role');
   const loginSubmit = document.getElementById('login-submit');
+  const loginFeedback = document.getElementById('login-feedback');
   const adminAvatar = adminLayout?.querySelector('.user-chip .avatar');
   const adminName = adminLayout?.querySelector('.user-chip strong');
   const adminRole = adminLayout?.querySelector('.user-chip small');
@@ -301,10 +302,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  const allowedAccounts = {
+    admin: { email: 'bj210806@gmail.com' },
+    teacher: { email: 'clasico3040@gmail.com' },
+    student: { email: 'karter1314@gmail.com' }
+  };
+
   const credentialsByRole = {
-    admin: { email: '', password: '' },
-    teacher: { email: '', password: '' },
-    student: { email: '', password: '' }
+    admin: { email: allowedAccounts.admin.email, password: '' },
+    teacher: { email: allowedAccounts.teacher.email, password: '' },
+    student: { email: allowedAccounts.student.email, password: '' }
   };
 
   let activeRole = 'admin';
@@ -334,9 +341,12 @@ document.addEventListener('DOMContentLoaded', () => {
   function attachEventHandlers() {
     loginForm?.addEventListener('submit', (event) => {
       event.preventDefault();
-      captureCurrentCredentials();
-      persistState();
-      setAuthenticatedState(true);
+      if (validateCredentials()) {
+        captureCurrentCredentials();
+        persistState();
+        setAuthenticatedState(true);
+        showLoginFeedback('Acceso concedido.', 'success');
+      }
     });
 
     logoutButtons.forEach((button) => {
@@ -363,6 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
         activeRole = role;
         updateRoleUI();
         populateCredentialsFields();
+        showLoginFeedback('', '');
         persistState();
       });
     });
@@ -411,6 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
       body.style.alignItems = 'stretch';
       body.style.justifyContent = 'stretch';
       showLayoutForRole(activeRole);
+      showLoginFeedback('', '');
     } else {
       body.style.alignItems = 'center';
       body.style.justifyContent = 'center';
@@ -453,9 +465,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function populateCredentialsFields() {
-    const record = credentialsByRole[activeRole] ?? { email: '', password: '' };
+    const defaultEmail = allowedAccounts[activeRole]?.email ?? '';
+    const record = credentialsByRole[activeRole] ?? {
+      email: defaultEmail,
+      password: ''
+    };
     if (emailInput) {
-      emailInput.value = record.email ?? '';
+      const value = record.email ?? defaultEmail;
+      emailInput.value = value;
     }
 
     if (passwordInput) {
@@ -468,10 +485,51 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    const trimmedEmail = (emailInput?.value ?? '').trim();
     credentialsByRole[activeRole] = {
-      email: emailInput?.value ?? '',
+      email: trimmedEmail || allowedAccounts[activeRole]?.email || '',
       password: passwordInput?.value ?? ''
     };
+  }
+
+  function validateCredentials() {
+    if (!emailInput || !passwordInput) {
+      return false;
+    }
+
+    const account = allowedAccounts[activeRole];
+    const enteredEmail = emailInput.value.trim().toLowerCase();
+    const enteredPassword = passwordInput.value.trim();
+
+    if (!enteredEmail || !enteredPassword) {
+      showLoginFeedback('Completa tu correo y contraseña institucional.', 'error');
+      return false;
+    }
+
+    if (!account || enteredEmail !== account.email.toLowerCase()) {
+      showLoginFeedback(
+        'El correo no coincide con las credenciales autorizadas para este rol.',
+        'error'
+      );
+      return false;
+    }
+
+    return true;
+  }
+
+  function showLoginFeedback(message, variant) {
+    if (!loginFeedback) {
+      return;
+    }
+
+    loginFeedback.textContent = message;
+    loginFeedback.classList.remove('error', 'success');
+
+    if (variant === 'error') {
+      loginFeedback.classList.add('error');
+    } else if (variant === 'success') {
+      loginFeedback.classList.add('success');
+    }
   }
 
   function applyRoleProfile(role) {
@@ -1462,7 +1520,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     Object.keys(credentialsByRole).forEach((role) => {
       credentialsByRole[role] = {
-        email: saved.credentials?.[role]?.email ?? '',
+        email:
+          saved.credentials?.[role]?.email ?? allowedAccounts[role]?.email ?? '',
         password: saved.credentials?.[role]?.password ?? ''
       };
     });

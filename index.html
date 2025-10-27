@@ -28,7 +28,7 @@
               <li>Automatización de procesos con alertas inteligentes</li>
             </ul>
           </div>
-          <form class="login-form" id="login-form">
+          <form class="login-form" id="login-form" novalidate>
             <h2>Selecciona tu acceso</h2>
             <div class="role-switcher" role="tablist">
               <button
@@ -56,11 +56,21 @@
             <input type="hidden" name="role" id="login-role" value="admin" />
             <label class="field">
               <span>Correo institucional</span>
-              <input type="email" required placeholder="usuario@ie.gob.pe" />
+              <input
+                type="email"
+                required
+                placeholder="usuario@ie.gob.pe"
+                autocomplete="username"
+              />
             </label>
             <label class="field">
               <span>Contraseña</span>
-              <input type="password" required placeholder="••••••••" />
+              <input
+                type="password"
+                required
+                placeholder="••••••••"
+                autocomplete="current-password"
+              />
             </label>
             <label class="remember">
               <input type="checkbox" />
@@ -69,6 +79,7 @@
             <button type="submit" class="primary-button" id="login-submit">
               Acceder como administrativo
             </button>
+            <p class="form-feedback" id="login-feedback" aria-live="assertive"></p>
             <a href="#" class="link">¿Olvidaste tu contraseña?</a>
           </form>
         </div>

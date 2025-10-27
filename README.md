@@ -15,7 +15,10 @@ Una interfaz moderna inspirada en el Sistema de Información de Apoyo a la Gesti
 ## Uso
 
 1. Abre el archivo `index.html` en tu navegador favorito.
-2. Elige el tipo de acceso (administrativo, docente o estudiante), completa el formulario de ingreso (no requiere credenciales reales) y presiona **Acceder**.
+2. Elige el tipo de acceso (administrativo, docente o estudiante), ingresa el correo institucional sugerido para cada rol y presiona **Acceder**.
+   - Administrativo: `bj210806@gmail.com`
+   - Docente: `clasico3040@gmail.com`
+   - Estudiante: `karter1314@gmail.com`
 3. Según el perfil seleccionado se mostrará la interfaz dedicada:
    - **Administrativos**: acceden a un panel con barra lateral verde para recorrer módulos de matrículas, docentes, reportes, agenda y la sección de **Gestión de accesos**.
    - **Docentes**: ingresan al **Espacio docente**, donde pueden revisar horarios, registrar calificaciones y enviar reportes de incidencias en un entorno independiente.

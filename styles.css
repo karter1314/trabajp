@@ -92,6 +92,20 @@ body {
   box-shadow: 0 25px 40px -25px rgba(15, 23, 42, 0.6);
 }
 
+.form-feedback {
+  font-size: 0.95rem;
+  text-align: center;
+  min-height: 1.25rem;
+}
+
+.form-feedback.error {
+  color: #fee2e2;
+}
+
+.form-feedback.success {
+  color: #d1fae5;
+}
+
 .login-form h2 {
   font-size: 1.65rem;
 }
