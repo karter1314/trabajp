@@ -1,11 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('login-form');
   const loginScreen = document.getElementById('login-screen');
-  const mainLayout = document.getElementById('main-layout');
-  const sectionTitle = document.getElementById('section-title');
-  const subtitle = document.querySelector('.subtitle');
-  const navButtons = Array.from(document.querySelectorAll('.nav-item'));
-  const logoutButton = document.getElementById('logout-button');
+  const adminLayout = document.getElementById('admin-layout');
+  const teacherLayout = document.getElementById('teacher-layout');
+  const studentLayout = document.getElementById('student-layout');
+  const sectionTitle = adminLayout?.querySelector('#section-title');
+  const subtitle = adminLayout?.querySelector('.subtitle');
+  const adminNavButtons = adminLayout
+    ? Array.from(adminLayout.querySelectorAll('.nav-item'))
+    : [];
+  const logoutButtons = Array.from(document.querySelectorAll('[data-logout]'));
   const emailInput = loginForm?.querySelector('input[type="email"]');
   const passwordInput = loginForm?.querySelector('input[type="password"]');
   const roleTabs = document.querySelectorAll('.role-tab');
@@ -13,9 +17,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const roleDescription = document.getElementById('role-description');
   const loginRoleInput = document.getElementById('login-role');
   const loginSubmit = document.getElementById('login-submit');
-  const userAvatar = document.querySelector('.user-chip .avatar');
-  const userName = document.querySelector('.user-chip strong');
-  const userRole = document.querySelector('.user-chip small');
+  const adminAvatar = adminLayout?.querySelector('.user-chip .avatar');
+  const adminName = adminLayout?.querySelector('.user-chip strong');
+  const adminRole = adminLayout?.querySelector('.user-chip small');
+  const teacherAvatar = document.getElementById('teacher-avatar');
+  const teacherName = document.getElementById('teacher-name');
+  const teacherDetail = document.getElementById('teacher-detail');
+  const studentAvatar = document.getElementById('student-avatar');
+  const studentName = document.getElementById('student-name');
+  const studentDetail = document.getElementById('student-detail');
   const accessForm = document.getElementById('access-form');
   const accessRoleSelect = document.getElementById('access-role');
   const roleFieldBlocks = document.querySelectorAll('[data-role-fields]');
@@ -232,8 +242,6 @@ document.addEventListener('DOMContentLoaded', () => {
       'Gestiona la información de los estudiantes, actualiza sus datos y monitorea su progreso académico.',
     teachers:
       'Administra la información de tus docentes y organiza su disponibilidad desde un solo lugar.',
-    'teacher-hub':
-      'Organiza tus clases, registra calificaciones y comunica incidencias de datos de los estudiantes.',
     grades:
       'Captura y consolida las calificaciones por competencias de cada área curricular.',
     reports:
@@ -248,7 +256,6 @@ document.addEventListener('DOMContentLoaded', () => {
     dashboard: 'Panel general',
     students: 'Gestión de estudiantes',
     teachers: 'Gestión de docentes',
-    'teacher-hub': 'Aulas y calificaciones',
     grades: 'Registro de calificaciones',
     reports: 'Reportes y analítica',
     calendar: 'Agenda institucional',
@@ -290,7 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
         detail: 'Estudiante 4.º de secundaria',
         initials: 'LH'
       },
-      defaultSection: 'grades'
+      defaultSection: 'student-overview'
     }
   };
 
@@ -319,9 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
       loginScreen.hidden = false;
     }
 
-    if (mainLayout) {
-      mainLayout.hidden = true;
-    }
+    hideAllLayouts();
     body.style.alignItems = 'center';
     body.style.justifyContent = 'center';
   }
@@ -334,8 +339,10 @@ document.addEventListener('DOMContentLoaded', () => {
       setAuthenticatedState(true);
     });
 
-    logoutButton?.addEventListener('click', () => {
-      setAuthenticatedState(false);
+    logoutButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        setAuthenticatedState(false);
+      });
     });
 
     [emailInput, passwordInput].forEach((input) => {
@@ -360,10 +367,10 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    navButtons.forEach((button) => {
+    adminNavButtons.forEach((button) => {
       button.addEventListener('click', () => {
         if (button.hidden) return;
-        activateSection(button.dataset.target);
+        activateAdminSection(button.dataset.target);
       });
     });
 
@@ -396,19 +403,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function setAuthenticatedState(isAuthenticated) {
-    if (!loginScreen || !mainLayout) return;
+    if (!loginScreen) return;
 
     loginScreen.hidden = isAuthenticated;
-    mainLayout.hidden = !isAuthenticated;
 
     if (isAuthenticated) {
       body.style.alignItems = 'stretch';
       body.style.justifyContent = 'stretch';
-      applyRoleProfile(activeRole);
+      showLayoutForRole(activeRole);
     } else {
       body.style.alignItems = 'center';
       body.style.justifyContent = 'center';
-      configureNavigationForRole(activeRole);
+      hideAllLayouts();
+      if (activeRole === 'admin') {
+        configureAdminNavigation(roleMetadata.admin.defaultSection);
+      }
       updateRoleUI();
       populateCredentialsFields();
     }
@@ -471,30 +480,129 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    if (userName) {
-      userName.textContent = metadata.user.name;
+    if (role === 'admin') {
+      if (adminName) {
+        adminName.textContent = metadata.user.name;
+      }
+
+      if (adminRole) {
+        adminRole.textContent = metadata.user.detail;
+      }
+
+      if (adminAvatar) {
+        adminAvatar.textContent = metadata.user.initials;
+      }
+
+      configureAdminNavigation(metadata.defaultSection);
+      return;
     }
 
-    if (userRole) {
-      userRole.textContent = metadata.user.detail;
+    if (role === 'teacher') {
+      if (teacherName) {
+        teacherName.textContent = metadata.user.name;
+      }
+
+      if (teacherDetail) {
+        teacherDetail.textContent = metadata.user.detail;
+      }
+
+      if (teacherAvatar) {
+        teacherAvatar.textContent = metadata.user.initials;
+      }
+
+      clearGradeFeedback();
+      if (issueFeedback) {
+        issueFeedback.textContent = '';
+        issueFeedback.classList.remove('success', 'error');
+      }
+
+      if (scheduleDaySelect) {
+        if (!scheduleDaySelect.value && teacherSchedule.length) {
+          scheduleDaySelect.value = teacherSchedule[0].id;
+        }
+        renderSchedule(scheduleDaySelect.value || teacherSchedule[0]?.id);
+      }
+
+      if (gradeCourseSelect) {
+        const selectedCourse = gradeCourseSelect.value || teacherCourses[0]?.id;
+        if (selectedCourse && gradeCourseSelect.value !== selectedCourse) {
+          gradeCourseSelect.value = selectedCourse;
+        }
+        if (selectedCourse) {
+          renderGradeTable(selectedCourse);
+        }
+      }
+
+      return;
     }
 
-    if (userAvatar) {
-      userAvatar.textContent = metadata.user.initials;
-    }
+    if (role === 'student') {
+      if (studentName) {
+        studentName.textContent = metadata.user.name;
+      }
 
-    configureNavigationForRole(role, metadata.defaultSection);
+      if (studentDetail) {
+        studentDetail.textContent = metadata.user.detail;
+      }
+
+      if (studentAvatar) {
+        studentAvatar.textContent = metadata.user.initials;
+      }
+    }
   }
 
-  function configureNavigationForRole(role, preferredSection = 'dashboard') {
+  function showLayoutForRole(role) {
+    hideAllLayouts();
+
+    if (role === 'admin' && adminLayout) {
+      adminLayout.hidden = false;
+      applyRoleProfile('admin');
+      return;
+    }
+
+    if (role === 'teacher' && teacherLayout) {
+      teacherLayout.hidden = false;
+      applyRoleProfile('teacher');
+      return;
+    }
+
+    if (role === 'student' && studentLayout) {
+      studentLayout.hidden = false;
+      applyRoleProfile('student');
+      return;
+    }
+
+    if (adminLayout) {
+      adminLayout.hidden = false;
+      applyRoleProfile('admin');
+    }
+  }
+
+  function hideAllLayouts() {
+    if (adminLayout) {
+      adminLayout.hidden = true;
+    }
+    if (teacherLayout) {
+      teacherLayout.hidden = true;
+    }
+    if (studentLayout) {
+      studentLayout.hidden = true;
+    }
+  }
+
+  function configureAdminNavigation(preferredSection = 'dashboard') {
+    if (!adminLayout) {
+      return;
+    }
+
     let firstVisibleSection = null;
 
-    navButtons.forEach((button) => {
+    adminNavButtons.forEach((button) => {
       const allowed = (button.dataset.roles || '')
         .split(',')
         .map((value) => value.trim())
         .filter(Boolean);
-      const isVisible = allowed.length === 0 || allowed.includes(role);
+      const isVisible = allowed.length === 0 || allowed.includes('admin');
       button.hidden = !isVisible;
 
       if (!isVisible) {
@@ -508,12 +616,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const sectionToActivate =
-      preferredSection && isSectionAvailable(preferredSection)
+      preferredSection && isAdminSectionAvailable(preferredSection)
         ? preferredSection
         : firstVisibleSection;
 
     if (sectionToActivate) {
-      activateSection(sectionToActivate);
+      activateAdminSection(sectionToActivate);
     }
   }
 
@@ -1294,22 +1402,23 @@ document.addEventListener('DOMContentLoaded', () => {
     return escapeHtml(value).replace(/`/g, '&#96;');
   }
 
-  function isSectionAvailable(sectionId) {
-    return navButtons.some(
+  function isAdminSectionAvailable(sectionId) {
+    return adminNavButtons.some(
       (button) => !button.hidden && button.dataset.target === sectionId
     );
   }
 
-  function activateSection(target) {
-    if (!target) {
+  function activateAdminSection(target) {
+    if (!target || !adminLayout) {
       return;
     }
 
-    document.querySelectorAll('.panel').forEach((panel) => {
+    const panels = Array.from(adminLayout.querySelectorAll('.panel'));
+    panels.forEach((panel) => {
       panel.classList.toggle('active', panel.id === target);
     });
 
-    navButtons.forEach((button) => {
+    adminNavButtons.forEach((button) => {
       const isActive = !button.hidden && button.dataset.target === target;
       button.classList.toggle('active', isActive);
     });

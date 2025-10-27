@@ -250,6 +250,82 @@ footer {
   min-height: 100vh;
 }
 
+.role-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  padding: clamp(2rem, 4vw, 3.25rem);
+  background: linear-gradient(180deg, #f8fbff 0%, #e6f7eb 50%, #f5f7fb 100%);
+}
+
+.role-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  background: var(--surface);
+  padding: clamp(1.1rem, 2.2vw, 1.5rem) clamp(1.25rem, 2.5vw, 2rem);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  flex-wrap: wrap;
+}
+
+.role-identity {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.role-identity .avatar {
+  width: 48px;
+  height: 48px;
+  font-size: 1.1rem;
+}
+
+.role-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.role-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  padding-bottom: 2rem;
+}
+
+.role-main .grid {
+  align-items: stretch;
+}
+
+.role-main .panel {
+  background: transparent;
+}
+
+.contact-list {
+  list-style: none;
+  display: grid;
+  gap: 1rem;
+}
+
+.contact-list li {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(var(--primary-rgb), 0.08);
+  padding: 0.9rem 1.1rem;
+  border-radius: var(--radius-md);
+  flex-wrap: wrap;
+}
+
+.contact-list li > div {
+  flex: 1 1 auto;
+  min-width: 180px;
+}
+
 .sidebar {
   background: linear-gradient(200deg, #0f9d58 0%, #0b7d44 100%);
   color: #ecfdf5;
@@ -839,6 +915,20 @@ footer {
     grid-template-columns: 1fr;
   }
 
+  .role-layout {
+    padding: clamp(1.75rem, 6vw, 2.5rem);
+  }
+
+  .role-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .role-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
   .sidebar {
     position: sticky;
     top: 0;
@@ -874,6 +964,18 @@ footer {
 
   .login-form {
     padding: 1.5rem;
+  }
+
+  .role-layout {
+    padding: 1.5rem;
+  }
+
+  .role-topbar {
+    gap: 1rem;
+  }
+
+  .contact-list li {
+    align-items: flex-start;
   }
 
   .panel-header {

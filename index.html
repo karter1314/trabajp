@@ -77,7 +77,7 @@
         </footer>
       </div>
 
-      <div class="main-layout" id="main-layout" hidden>
+      <div class="main-layout" id="admin-layout" hidden>
         <aside class="sidebar">
           <div class="brand">SIAGIE+</div>
           <nav>
@@ -87,13 +87,6 @@
               data-roles="admin,teacher,student"
             >
               <span class="icon">🏠</span>Inicio
-            </button>
-            <button
-              class="nav-item"
-              data-target="teacher-hub"
-              data-roles="teacher"
-            >
-              <span class="icon">📚</span>Aulas y calificaciones
             </button>
             <button
               class="nav-item"
@@ -139,7 +132,7 @@
             </button>
           </nav>
           <div class="sidebar-footer">
-            <button class="secondary-button" id="logout-button">Cerrar sesión</button>
+            <button class="secondary-button" id="logout-button" data-logout>Cerrar sesión</button>
           </div>
         </aside>
 
@@ -262,131 +255,6 @@
                   </li>
                 </ul>
               </section>
-            </div>
-          </section>
-
-          <section id="teacher-hub" class="panel">
-            <div class="panel-header">
-              <div>
-                <h2>Espacio docente</h2>
-                <p>
-                  Consulta tu horario, registra calificaciones y reporta incidencias
-                  en los datos de tus estudiantes.
-                </p>
-              </div>
-            </div>
-            <div class="grid two-columns stack-on-mobile">
-              <article class="card">
-                <header>
-                  <h3>Horarios por aula</h3>
-                  <span class="chip info" id="schedule-room">Aula 204</span>
-                </header>
-                <div class="compact-field">
-                  <span>Día de la semana</span>
-                  <select id="schedule-day"></select>
-                </div>
-                <table class="data-table compact">
-                  <thead>
-                    <tr>
-                      <th>Hora</th>
-                      <th>Curso</th>
-                      <th>Sección</th>
-                      <th>Aula</th>
-                    </tr>
-                  </thead>
-                  <tbody id="schedule-body"></tbody>
-                </table>
-              </article>
-
-              <article class="card">
-                <header>
-                  <h3>Registro rápido de calificaciones</h3>
-                  <button type="button" class="ghost-button" id="grade-reset">
-                    Reiniciar
-                  </button>
-                </header>
-                <form id="grade-form" class="stacked-form" autocomplete="off">
-                  <div class="compact-field">
-                    <span>Curso asignado</span>
-                    <select id="grade-course" required></select>
-                  </div>
-                  <table class="data-table compact">
-                    <thead>
-                      <tr>
-                        <th>Estudiante</th>
-                        <th>Grupo</th>
-                        <th>Calificación final</th>
-                      </tr>
-                    </thead>
-                    <tbody id="grade-table-body"></tbody>
-                  </table>
-                  <div class="form-actions">
-                    <button type="submit" class="primary-button">
-                      Guardar calificaciones
-                    </button>
-                    <span class="form-feedback" id="grade-feedback" aria-live="polite"></span>
-                  </div>
-                </form>
-                <div class="card-subsection">
-                  <h4>Últimas entregas</h4>
-                  <ul id="grade-history" class="timeline compact"></ul>
-                  <p id="grade-history-empty" class="empty-state">
-                    Aún no registras calificaciones en esta sesión.
-                  </p>
-                </div>
-              </article>
-
-              <article class="card wide">
-                <header>
-                  <h3>Reportar error en datos estudiantiles</h3>
-                </header>
-                <form id="data-issue-form" class="stacked-form" autocomplete="off">
-                  <div class="form-field">
-                    <span>Nombre del estudiante</span>
-                    <input
-                      type="text"
-                      name="studentName"
-                      placeholder="Ej. Andrea Paredes"
-                      required
-                    />
-                  </div>
-                  <div class="form-field">
-                    <span>Tipo de incidencia</span>
-                    <select name="issueType" required>
-                      <option value="Datos personales">Datos personales</option>
-                      <option value="Documento de identidad">
-                        Documento de identidad
-                      </option>
-                      <option value="Calificaciones registradas">
-                        Calificaciones registradas
-                      </option>
-                      <option value="Otro">Otro</option>
-                    </select>
-                  </div>
-                  <div class="form-field">
-                    <span>Detalle del problema</span>
-                    <textarea
-                      name="issueDetail"
-                      rows="3"
-                      placeholder="Describe el dato que requiere corrección"
-                      required
-                    ></textarea>
-                  </div>
-                  <div class="form-actions">
-                    <button type="submit" class="secondary-button">
-                      Enviar solicitud
-                    </button>
-                    <span class="form-feedback" id="issue-feedback" aria-live="polite"></span>
-                  </div>
-                </form>
-                <div class="card-subsection">
-                  <h4>Solicitudes recientes</h4>
-                  <ul id="data-issue-list" class="issue-list"></ul>
-                  <p id="data-issue-empty" class="empty-state">
-                    No se han reportado inconsistencias todavía.
-                  </p>
-                </div>
-              </article>
             </div>
           </section>
 
@@ -897,6 +765,311 @@
                   ><span>27</span><span>28</span><span>29</span><span>30</span><span class="muted">31</span>
                 </div>
               </div>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <div class="role-layout" id="teacher-layout" hidden>
+        <header class="role-topbar">
+          <div class="role-identity">
+            <span class="avatar" id="teacher-avatar">MR</span>
+            <div>
+              <strong id="teacher-name">María Elena Rojas</strong>
+              <small id="teacher-detail">Docente de Comunicación</small>
+            </div>
+          </div>
+          <div class="role-actions">
+            <button class="ghost-button">Centro de ayuda</button>
+            <button class="secondary-button" data-logout>Salir</button>
+          </div>
+        </header>
+        <main class="role-main">
+          <section class="panel active" id="teacher-hub">
+            <div class="panel-header">
+              <div>
+                <h2>Espacio docente</h2>
+                <p>
+                  Consulta tu horario, registra calificaciones y reporta incidencias en los datos de tus estudiantes.
+                </p>
+              </div>
+            </div>
+            <div class="grid two-columns stack-on-mobile">
+              <article class="card">
+                <header>
+                  <h3>Horarios por aula</h3>
+                  <span class="chip info" id="schedule-room">Aula 204</span>
+                </header>
+                <div class="compact-field">
+                  <span>Día de la semana</span>
+                  <select id="schedule-day"></select>
+                </div>
+                <table class="data-table compact">
+                  <thead>
+                    <tr>
+                      <th>Hora</th>
+                      <th>Curso</th>
+                      <th>Sección</th>
+                      <th>Aula</th>
+                    </tr>
+                  </thead>
+                  <tbody id="schedule-body"></tbody>
+                </table>
+              </article>
+
+              <article class="card">
+                <header>
+                  <h3>Registro rápido de calificaciones</h3>
+                  <button type="button" class="ghost-button" id="grade-reset">
+                    Reiniciar
+                  </button>
+                </header>
+                <form id="grade-form" class="stacked-form" autocomplete="off">
+                  <div class="compact-field">
+                    <span>Curso asignado</span>
+                    <select id="grade-course" required></select>
+                  </div>
+                  <table class="data-table compact">
+                    <thead>
+                      <tr>
+                        <th>Estudiante</th>
+                        <th>Grupo</th>
+                        <th>Calificación final</th>
+                      </tr>
+                    </thead>
+                    <tbody id="grade-table-body"></tbody>
+                  </table>
+                  <div class="form-actions">
+                    <button type="submit" class="primary-button">
+                      Guardar calificaciones
+                    </button>
+                    <span class="form-feedback" id="grade-feedback" aria-live="polite"></span>
+                  </div>
+                </form>
+                <div class="card-subsection">
+                  <h4>Últimas entregas</h4>
+                  <ul id="grade-history" class="timeline compact"></ul>
+                  <p id="grade-history-empty" class="empty-state">
+                    Aún no registras calificaciones en esta sesión.
+                  </p>
+                </div>
+              </article>
+
+              <article class="card wide">
+                <header>
+                  <h3>Reportar error en datos estudiantiles</h3>
+                </header>
+                <form id="data-issue-form" class="stacked-form" autocomplete="off">
+                  <div class="form-field">
+                    <span>Nombre del estudiante</span>
+                    <input
+                      type="text"
+                      name="studentName"
+                      placeholder="Ej. Andrea Paredes"
+                      required
+                    />
+                  </div>
+                  <div class="form-field">
+                    <span>Tipo de incidencia</span>
+                    <select name="issueType" required>
+                      <option value="Datos personales">Datos personales</option>
+                      <option value="Documento de identidad">Documento de identidad</option>
+                      <option value="Calificaciones registradas">Calificaciones registradas</option>
+                      <option value="Otro">Otro</option>
+                    </select>
+                  </div>
+                  <div class="form-field">
+                    <span>Detalle del problema</span>
+                    <textarea
+                      name="issueDetail"
+                      rows="3"
+                      placeholder="Describe el dato que requiere corrección"
+                      required
+                    ></textarea>
+                  </div>
+                  <div class="form-actions">
+                    <button type="submit" class="secondary-button">
+                      Enviar solicitud
+                    </button>
+                    <span class="form-feedback" id="issue-feedback" aria-live="polite"></span>
+                  </div>
+                </form>
+                <div class="card-subsection">
+                  <h4>Solicitudes recientes</h4>
+                  <ul id="data-issue-list" class="issue-list"></ul>
+                  <p id="data-issue-empty" class="empty-state">
+                    No se han reportado inconsistencias todavía.
+                  </p>
+                </div>
+              </article>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <div class="role-layout" id="student-layout" hidden>
+        <header class="role-topbar">
+          <div class="role-identity">
+            <span class="avatar" id="student-avatar">LH</span>
+            <div>
+              <strong id="student-name">Lucía Herrera</strong>
+              <small id="student-detail">Estudiante 4.º de secundaria</small>
+            </div>
+          </div>
+          <div class="role-actions">
+            <button class="ghost-button">Mesa de partes</button>
+            <button class="secondary-button" data-logout>Salir</button>
+          </div>
+        </header>
+        <main class="role-main">
+          <section class="panel active" id="student-overview">
+            <div class="panel-header">
+              <div>
+                <h2>Panel del estudiante</h2>
+                <p>
+                  Revisa tus calificaciones, asistencias y actividades planificadas para el periodo actual.
+                </p>
+              </div>
+            </div>
+            <div class="grid three-columns stack-on-mobile">
+              <article class="card highlight">
+                <header>
+                  <h3>Promedio general</h3>
+                  <span class="status up">+1.2</span>
+                </header>
+                <p class="stat">17.8</p>
+                <p class="caption">Comparado con el trimestre anterior.</p>
+              </article>
+              <article class="card highlight">
+                <header>
+                  <h3>Asistencia</h3>
+                  <span class="status stable">94%</span>
+                </header>
+                <p class="stat">182 asistencias</p>
+                <p class="caption">De 194 sesiones programadas.</p>
+              </article>
+              <article class="card highlight">
+                <header>
+                  <h3>Compromisos</h3>
+                  <span class="status info">3 activos</span>
+                </header>
+                <p class="stat">Tareas al día</p>
+                <p class="caption">Recuerda enviar el informe STEAM.</p>
+              </article>
+            </div>
+
+            <div class="grid two-columns stack-on-mobile">
+              <article class="card">
+                <header>
+                  <h3>Calificaciones por curso</h3>
+                  <div class="filters">
+                    <select>
+                      <option>Trimestre 1</option>
+                      <option>Trimestre 2</option>
+                      <option>Trimestre 3</option>
+                    </select>
+                    <select>
+                      <option>Mostrar todo</option>
+                      <option>Competencias destacadas</option>
+                      <option>Competencias por reforzar</option>
+                    </select>
+                  </div>
+                </header>
+                <table class="data-table compact">
+                  <thead>
+                    <tr>
+                      <th>Área</th>
+                      <th>Competencia</th>
+                      <th>Resultado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Comunicación</td>
+                      <td>Se comunica oralmente</td>
+                      <td><span class="chip success">AD</span></td>
+                    </tr>
+                    <tr>
+                      <td>Comunicación</td>
+                      <td>Comprende textos escritos</td>
+                      <td><span class="chip info">A</span></td>
+                    </tr>
+                    <tr>
+                      <td>Matemática</td>
+                      <td>Resuelve problemas</td>
+                      <td><span class="chip info">A</span></td>
+                    </tr>
+                    <tr>
+                      <td>Ciencia y Tecnología</td>
+                      <td>Indaga mediante métodos</td>
+                      <td><span class="chip warning">B</span></td>
+                    </tr>
+                    <tr>
+                      <td>Inglés</td>
+                      <td>Comprende textos orales</td>
+                      <td><span class="chip success">AD</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </article>
+
+              <article class="card">
+                <header>
+                  <h3>Agenda próxima</h3>
+                  <span class="chip info">Esta semana</span>
+                </header>
+                <ul class="timeline compact">
+                  <li>
+                    <span class="tag info">Evaluación</span>
+                    <div>
+                      <strong>Exposición de historia</strong>
+                      <p>Jueves 10:30 · Aula 304</p>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="tag success">Actividad</span>
+                    <div>
+                      <strong>Club de ciencias</strong>
+                      <p>Viernes 16:00 · Laboratorio</p>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="tag warning">Recordatorio</span>
+                    <div>
+                      <strong>Entrega de bitácora STEAM</strong>
+                      <p>Lunes 8:00 · Secretaría académica</p>
+                    </div>
+                  </li>
+                </ul>
+              </article>
+            </div>
+
+            <div class="card wide">
+              <header>
+                <h3>Comunicación con tutoría</h3>
+                <button class="secondary-button">Solicitar reunión</button>
+              </header>
+              <p>
+                Si detectas errores en tus datos o necesitas acompañamiento adicional, puedes escribir a tu tutoría o solicitar una reunión virtual.
+              </p>
+              <ul class="contact-list">
+                <li>
+                  <span class="avatar small">ML</span>
+                  <div>
+                    <strong>María López</strong>
+                    <small>Tutora de 4.º Secundaria · mlópez@ie3058.edu.pe</small>
+                  </div>
+                  <button class="ghost-button">Enviar mensaje</button>
+                </li>
+                <li>
+                  <span class="avatar small">JG</span>
+                  <div>
+                    <strong>José Gómez</strong>
+                    <small>Psicopedagogo · jgomez@ie3058.edu.pe</small>
+                  </div>
+                  <button class="ghost-button">Solicitar apoyo</button>
+                </li>
+              </ul>
             </div>
           </section>
         </main>

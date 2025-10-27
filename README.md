@@ -5,21 +5,21 @@ Una interfaz moderna inspirada en el Sistema de Información de Apoyo a la Gesti
 ## Características principales
 
 - **Pantalla de acceso renovada** con diseño gradiente, tarjetas informativas y soporte para recordatorio de dispositivo.
-- **Accesos diferenciados** para administrativos, docentes y estudiantes con pestañas dedicadas que recuerdan las credenciales de cada perfil.
-- **Espacio docente** con horarios por aula, registro rápido de calificaciones y formulario para reportar inconsistencias en los datos de estudiantes.
-- **Panel de control** con indicadores clave, tablas de seguimiento y alertas priorizadas.
-- **Navegación modular** para estudiantes, docentes, calificaciones, reportes y agenda, con tarjetas y tablas responsivas.
-- **Paneles informativos** con filtros simulados para explorar matrículas, calificaciones y plantilla docente.
+- **Accesos diferenciados** que redirigen a espacios independientes para administrativos, docentes y estudiantes, recordando las credenciales de cada perfil.
+- **Panel administrativo** con indicadores clave, seguimiento de matrículas, reportes institucionales y agenda general.
+- **Espacio docente** dedicado con horarios por aula, registro rápido de calificaciones y formulario para reportar inconsistencias en los datos de estudiantes.
+- **Panel del estudiante** orientado a la consulta de resultados, asistencias y agenda personal con accesos directos a tutoría.
 - **Gestión de accesos administrativos** para registrar nuevas personas, asignarles rol (docente o estudiante) y reflejar al instante los cambios en las tablas correspondientes.
 - **Diseño responsive** pensado para equipos directivos que utilizan tanto escritorio como tabletas.
 
 ## Uso
 
 1. Abre el archivo `index.html` en tu navegador favorito.
-2. Elige el tipo de acceso (administrativo, docente o estudiante), completa el formulario de ingreso (no requiere credenciales reales) y presiona **Acceder** para visualizar el panel principal correspondiente.
-3. Navega por los distintos módulos mediante la barra lateral para consultar la información de ejemplo.
-   - Si ingresas como administrativo, utiliza el panel **Gestión de accesos** para dar de alta a nuevos docentes o estudiantes y ajustar su información antes de habilitarlos.
-   - Si ingresas como docente, consulta el panel **Aulas y calificaciones** para revisar tu horario, registrar notas de tus grupos y solicitar correcciones de datos cuando sea necesario.
+2. Elige el tipo de acceso (administrativo, docente o estudiante), completa el formulario de ingreso (no requiere credenciales reales) y presiona **Acceder**.
+3. Según el perfil seleccionado se mostrará la interfaz dedicada:
+   - **Administrativos**: acceden a un panel con barra lateral verde para recorrer módulos de matrículas, docentes, reportes, agenda y la sección de **Gestión de accesos**.
+   - **Docentes**: ingresan al **Espacio docente**, donde pueden revisar horarios, registrar calificaciones y enviar reportes de incidencias en un entorno independiente.
+   - **Estudiantes**: visualizan el **Panel del estudiante**, con promedios, asistencias, agenda personal y accesos directos para contactar a tutoría.
 
 ## Tecnologías
 
