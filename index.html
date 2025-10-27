@@ -29,7 +29,31 @@
             </ul>
           </div>
           <form class="login-form" id="login-form">
-            <h2>Iniciar sesión</h2>
+            <h2>Selecciona tu acceso</h2>
+            <div class="role-switcher" role="tablist">
+              <button
+                type="button"
+                class="role-tab active"
+                data-role="admin"
+                aria-selected="true"
+              >
+                Administrativos
+              </button>
+              <button type="button" class="role-tab" data-role="teacher">
+                Docentes
+              </button>
+              <button type="button" class="role-tab" data-role="student">
+                Estudiantes
+              </button>
+            </div>
+            <div class="role-intro" id="role-intro">
+              <h3 id="role-heading">Acceso administrativo</h3>
+              <p id="role-description">
+                Supervisa matrículas, reportes y la gestión integral de la institución
+                educativa.
+              </p>
+            </div>
+            <input type="hidden" name="role" id="login-role" value="admin" />
             <label class="field">
               <span>Correo institucional</span>
               <input type="email" required placeholder="usuario@ie.gob.pe" />
@@ -42,7 +66,9 @@
               <input type="checkbox" />
               <span>Recordar dispositivo</span>
             </label>
-            <button type="submit" class="primary-button">Acceder</button>
+            <button type="submit" class="primary-button" id="login-submit">
+              Acceder como administrativo
+            </button>
             <a href="#" class="link">¿Olvidaste tu contraseña?</a>
           </form>
         </div>
@@ -55,22 +81,46 @@
         <aside class="sidebar">
           <div class="brand">SIAGIE+</div>
           <nav>
-            <button class="nav-item active" data-target="dashboard">
+            <button
+              class="nav-item active"
+              data-target="dashboard"
+              data-roles="admin,teacher,student"
+            >
               <span class="icon">🏠</span>Inicio
             </button>
-            <button class="nav-item" data-target="students">
+            <button
+              class="nav-item"
+              data-target="students"
+              data-roles="admin,teacher"
+            >
               <span class="icon">👩‍🎓</span>Estudiantes
             </button>
-            <button class="nav-item" data-target="teachers">
+            <button
+              class="nav-item"
+              data-target="teachers"
+              data-roles="admin"
+            >
               <span class="icon">👨‍🏫</span>Docentes
             </button>
-            <button class="nav-item" data-target="grades">
+            <button
+              class="nav-item"
+              data-target="grades"
+              data-roles="admin,teacher,student"
+            >
               <span class="icon">📊</span>Calificaciones
             </button>
-            <button class="nav-item" data-target="reports">
+            <button
+              class="nav-item"
+              data-target="reports"
+              data-roles="admin,student"
+            >
               <span class="icon">📄</span>Reportes
             </button>
-            <button class="nav-item" data-target="calendar">
+            <button
+              class="nav-item"
+              data-target="calendar"
+              data-roles="admin,teacher,student"
+            >
               <span class="icon">🗓️</span>Agenda
             </button>
           </nav>
