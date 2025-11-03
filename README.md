@@ -1,6 +1,6 @@
-# SIAGIE+ Plataforma Educativa
+# SISE Plataforma Educativa
 
-Una interfaz moderna inspirada en el Sistema de Información de Apoyo a la Gestión de la Institución Educativa (SIAGIE), con mejoras de diseño y experiencia de usuario. Esta versión incluye un flujo de autenticación simulado, panel administrativo y módulos visuales para gestionar estudiantes, docentes, calificaciones, reportes y agenda institucional.
+Una interfaz moderna para la plataforma SISE, con mejoras de diseño y experiencia de usuario. Esta versión incluye un flujo de autenticación simulado, panel administrativo y módulos visuales para gestionar estudiantes, docentes, calificaciones, reportes y agenda institucional.
 
 ## Características principales
 
@@ -21,9 +21,9 @@ Una interfaz moderna inspirada en el Sistema de Información de Apoyo a la Gesti
    - Docente: `clasico3040@gmail.com` · contraseña `docente123`
    - Estudiante: `karter1314@gmail.com` · contraseña `alumno123`
 3. Según el perfil seleccionado se mostrará la interfaz dedicada:
-   - **Administrativos**: acceden a un panel con barra lateral verde para recorrer módulos de matrículas, docentes, reportes, agenda y la sección de **Gestión de accesos**.
-  - **Docentes**: ingresan al **Espacio docente**, donde pueden revisar horarios, registrar calificaciones, enviar tareas con instrucciones y archivos adjuntos, además de reportar incidencias de datos.
-  - **Estudiantes**: visualizan el **Panel del estudiante**, con promedios, asistencias, agenda personal, acceso a los archivos de apoyo y listado de tareas recibidas por sus docentes.
+   - **Administrativos**: acceden a un panel con barra lateral borgoña inspirada en el uniforme institucional para recorrer módulos de matrículas, docentes, reportes, agenda y la sección de **Gestión de accesos**.
+   - **Docentes**: ingresan al **Espacio docente**, donde pueden revisar horarios, registrar calificaciones, enviar tareas con instrucciones y archivos adjuntos, además de reportar incidencias de datos.
+   - **Estudiantes**: visualizan el **Panel del estudiante**, con promedios, asistencias, agenda personal, acceso a los archivos de apoyo y listado de tareas recibidas por sus docentes.
 
 ## Tecnologías
 
@@ -37,11 +37,11 @@ Una interfaz moderna inspirada en el Sistema de Información de Apoyo a la Gesti
 - Cada registro puede incluir `email`, `password`, `name`, `detail` e `initials`. La aplicación normaliza los datos y utiliza los valores para personalizar los encabezados de cada rol.
 - Desde el panel administrativo puedes registrar nuevas cuentas o ajustar sus datos. Cada alta valida duplicados por correo, actualiza el padrón cargado y lo guarda en el almacenamiento local del navegador.
 - Usa el botón **“Descargar padrón actualizado”** para obtener un archivo JSON con todos los cambios y reemplazar `data/usuarios.json` (o compartirlo con otros equipos).
-- Si quieres volver al padrón original, elimina la clave `siagiePlusDirectory` del almacenamiento local del navegador y recarga la página.
+- Si quieres volver al padrón original, elimina la clave `siseDirectory` del almacenamiento local del navegador y recarga la página. También puedes limpiar las credenciales guardadas borrando `siseCredentials`.
 - Si abres el proyecto directamente como archivo (`file://`), algunos navegadores bloquean la lectura del JSON. Usa un servidor local ligero (por ejemplo, Live Server de VS Code o `python -m http.server`).
 
 ## Próximos pasos sugeridos
 
-- Integrar autenticación real y conexión con la base de datos del SIAGIE oficial.
+- Integrar autenticación real y conexión con la base de datos institucional.
 - Añadir gráficos dinámicos y filtros avanzados para reportes.
 - Implementar persistencia de datos y servicios API para matrículas y calificaciones.

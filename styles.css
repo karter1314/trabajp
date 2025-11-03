@@ -1,10 +1,10 @@
 :root {
   --bg: #f5f7fb;
   --surface: #ffffff;
-  --primary: #0f9d58;
-  --primary-dark: #0b7d44;
-  --primary-rgb: 15, 157, 88;
-  --accent: #9be15d;
+  --primary: #8b1e3f;
+  --primary-dark: #5a1225;
+  --primary-rgb: 139, 30, 63;
+  --accent: #d95b73;
   --text: #1f2937;
   --text-muted: #6b7280;
   --border: #e5e7eb;
@@ -46,7 +46,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   padding: clamp(2rem, 4vw, 3.5rem);
-  background: linear-gradient(135deg, #034d1f 0%, #0f9d58 45%, #7ad67d 100%);
+  background: linear-gradient(135deg, #3f0717 0%, #8b1e3f 45%, #c75d72 100%);
   color: #f9fafb;
 }
 
@@ -136,12 +136,12 @@ body {
 .role-tab:hover,
 .role-tab:focus-visible {
   outline: none;
-  background: rgba(13, 148, 86, 0.22);
+  background: rgba(139, 30, 63, 0.22);
   color: #f9fafb;
 }
 
 .role-tab.active {
-  background: rgba(13, 148, 86, 0.45);
+  background: rgba(139, 30, 63, 0.45);
   color: #f9fafb;
   box-shadow: 0 18px 35px -22px rgba(15, 23, 42, 0.85);
 }
@@ -341,8 +341,8 @@ footer {
 }
 
 .sidebar {
-  background: linear-gradient(200deg, #0f9d58 0%, #0b7d44 100%);
-  color: #ecfdf5;
+  background: linear-gradient(200deg, #8b1e3f 0%, #5a1225 100%);
+  color: #fde9ef;
   padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
@@ -353,7 +353,7 @@ footer {
   font-size: 1.75rem;
   font-weight: 700;
   letter-spacing: 0.05em;
-  color: #f0fdf4;
+  color: #fde9ef;
 }
 
 .nav-item {
@@ -382,7 +382,7 @@ footer {
 
 .nav-item.active {
   background: rgba(255, 255, 255, 0.35);
-  color: #0b5f33;
+  color: #5a1225;
   font-weight: 600;
 }
 
@@ -392,7 +392,7 @@ footer {
 
 .sidebar .secondary-button {
   background: rgba(255, 255, 255, 0.18);
-  color: #f0fdf4;
+  color: #fde9ef;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.24);
 }
 

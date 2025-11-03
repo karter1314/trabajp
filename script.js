@@ -65,12 +65,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const studentAssignmentList = document.getElementById('student-assignment-list');
   const studentAssignmentEmpty = document.getElementById('student-assignment-empty');
   const studentAssignmentSummary = document.getElementById('student-assignment-summary');
-  const STORAGE_KEY = 'siagiePlusCredentials';
+  const STORAGE_KEY = 'siseCredentials';
+  const LEGACY_STORAGE_KEY = 'siagiePlusCredentials';
   const DIRECTORY_PATH = 'data/usuarios.json';
-  const DIRECTORY_STORAGE_KEY = 'siagiePlusDirectory';
-  const DIRECTORY_DOWNLOAD_NAME = 'usuarios-actualizados.json';
+  const DIRECTORY_STORAGE_KEY = 'siseDirectory';
+  const LEGACY_DIRECTORY_STORAGE_KEY = 'siagiePlusDirectory';
+  const DIRECTORY_DOWNLOAD_NAME = 'usuarios-sise-actualizados.json';
 
   const storage = getStorage();
+  migrateLegacyStorage();
   const body = document.body;
 
   const gradeOptions = [
@@ -2309,6 +2312,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function migrateLegacyStorage() {
+    if (!storage) {
+      return;
+    }
+
+    try {
+      if (!storage.getItem(STORAGE_KEY)) {
+        const legacyCredentials = storage.getItem(LEGACY_STORAGE_KEY);
+        if (legacyCredentials) {
+          storage.setItem(STORAGE_KEY, legacyCredentials);
+          storage.removeItem(LEGACY_STORAGE_KEY);
+        }
+      }
+    } catch (error) {
+      console.warn('No se pudieron migrar las credenciales guardadas.', error);
+    }
+
+    try {
+      if (!storage.getItem(DIRECTORY_STORAGE_KEY)) {
+        const legacyDirectory = storage.getItem(LEGACY_DIRECTORY_STORAGE_KEY);
+        if (legacyDirectory) {
+          storage.setItem(DIRECTORY_STORAGE_KEY, legacyDirectory);
+          storage.removeItem(LEGACY_DIRECTORY_STORAGE_KEY);
+        }
+      }
+    } catch (error) {
+      console.warn('No se pudo migrar el padrón institucional guardado.', error);
+    }
+  }
+
   function persistState() {
     if (!storage) {
       return;
@@ -2440,7 +2473,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return null;
       }
 
-      const testKey = '__siagie-test__';
+      const testKey = '__sise-test__';
       window.localStorage.setItem(testKey, '1');
       window.localStorage.removeItem(testKey);
       return window.localStorage;
