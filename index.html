@@ -1131,6 +1131,68 @@
 
               <article class="card">
                 <header>
+                  <h3>Envía tareas a tus estudiantes</h3>
+                  <span class="chip info" id="teacher-assignment-count">Sin tareas</span>
+                </header>
+                <form id="teacher-assignment-form" class="stacked-form" autocomplete="off">
+                  <label class="field form-field">
+                    <span>Curso</span>
+                    <select id="teacher-assignment-course" required></select>
+                  </label>
+                  <label class="field form-field">
+                    <span>Título de la tarea</span>
+                    <input
+                      type="text"
+                      id="teacher-assignment-title"
+                      name="assignmentTitle"
+                      placeholder="Ej. Ensayo de comprensión lectora"
+                      required
+                    />
+                  </label>
+                  <label class="field form-field">
+                    <span>Indicaciones para el estudiante</span>
+                    <textarea
+                      id="teacher-assignment-detail"
+                      name="assignmentDetail"
+                      rows="3"
+                      placeholder="Especifica los criterios de evaluación y recursos de apoyo"
+                    ></textarea>
+                  </label>
+                  <div class="grid two-columns compact">
+                    <label class="field form-field">
+                      <span>Fecha de entrega</span>
+                      <input type="date" id="teacher-assignment-due" name="assignmentDue" />
+                    </label>
+                    <label class="field form-field">
+                      <span>Archivo de apoyo (Word, PDF)</span>
+                      <input
+                        type="file"
+                        id="teacher-assignment-file"
+                        name="assignmentFile"
+                        accept=".doc,.docx,.pdf"
+                      />
+                    </label>
+                  </div>
+                  <div class="form-actions">
+                    <button type="submit" class="primary-button">Enviar tarea</button>
+                    <span
+                      class="form-feedback"
+                      id="teacher-assignment-feedback"
+                      aria-live="polite"
+                    ></span>
+                  </div>
+                </form>
+                <div class="card-subsection">
+                  <h4>Tareas enviadas</h4>
+                  <ul id="teacher-assignment-list" class="task-list"></ul>
+                  <p id="teacher-assignment-empty" class="empty-state">
+                    Aún no has enviado tareas a tus cursos.
+                  </p>
+                </div>
+              </article>
+
+              <article class="card">
+                <header>
                   <h3>Registro rápido de calificaciones</h3>
                   <button type="button" class="ghost-button" id="grade-reset">
                     Reiniciar
@@ -1442,36 +1504,22 @@
                 </table>
               </article>
 
-              <article class="card" aria-labelledby="student-task-heading">
+              <article class="card" aria-labelledby="student-assignment-heading">
                 <header>
-                  <h3 id="student-task-heading">Mis cursos y tareas</h3>
-                  <span class="chip info">Organiza tus entregas</span>
+                  <h3 id="student-assignment-heading">Tareas enviadas por tus docentes</h3>
+                  <span class="chip info" id="student-assignment-summary">Sin tareas</span>
                 </header>
-                <form id="student-task-form" class="stacked-form" autocomplete="off">
-                  <label class="field form-field">
-                    <span>Curso</span>
-                    <select id="student-task-course" required></select>
-                  </label>
-                  <label class="field form-field">
-                    <span>Descripción de la tarea</span>
-                    <input
-                      type="text"
-                      id="student-task-input"
-                      name="task"
-                      placeholder="Ej. Resolver guía de problemas 5"
-                      required
-                    />
-                  </label>
-                  <div class="form-actions">
-                    <button type="submit" class="primary-button">Agregar tarea</button>
-                    <span class="form-feedback" id="student-task-feedback" aria-live="polite"></span>
-                  </div>
-                </form>
+                <p>
+                  Cada vez que un docente publique una actividad, aparecerá aquí con los
+                  detalles, fecha de entrega y archivos de referencia necesarios para su
+                  desarrollo.
+                </p>
                 <div class="card-subsection">
-                  <h4>Tareas registradas</h4>
-                  <ul id="student-task-list" class="task-list"></ul>
-                  <p id="student-task-empty" class="empty-state">
-                    Aún no has registrado tareas pendientes.
+                  <h4>Lista de pendientes</h4>
+                  <ul id="student-assignment-list" class="task-list"></ul>
+                  <p id="student-assignment-empty" class="empty-state">
+                    Tus docentes aún no han enviado tareas. Mantente atento a las
+                    próximas indicaciones.
                   </p>
                 </div>
               </article>

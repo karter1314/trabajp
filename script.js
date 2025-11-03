@@ -50,12 +50,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const dataIssueList = document.getElementById('data-issue-list');
   const dataIssueEmpty = document.getElementById('data-issue-empty');
   const issueFeedback = document.getElementById('issue-feedback');
-  const studentTaskForm = document.getElementById('student-task-form');
-  const studentTaskCourseSelect = document.getElementById('student-task-course');
-  const studentTaskInput = document.getElementById('student-task-input');
-  const studentTaskList = document.getElementById('student-task-list');
-  const studentTaskEmpty = document.getElementById('student-task-empty');
-  const studentTaskFeedback = document.getElementById('student-task-feedback');
+  const teacherAssignmentForm = document.getElementById('teacher-assignment-form');
+  const teacherAssignmentCourseSelect = document.getElementById('teacher-assignment-course');
+  const teacherAssignmentTitle = document.getElementById('teacher-assignment-title');
+  const teacherAssignmentDetail = document.getElementById('teacher-assignment-detail');
+  const teacherAssignmentDue = document.getElementById('teacher-assignment-due');
+  const teacherAssignmentFile = document.getElementById('teacher-assignment-file');
+  const teacherAssignmentFeedback = document.getElementById('teacher-assignment-feedback');
+  const teacherAssignmentList = document.getElementById('teacher-assignment-list');
+  const teacherAssignmentEmpty = document.getElementById('teacher-assignment-empty');
+  const teacherAssignmentCount = document.getElementById('teacher-assignment-count');
+  const studentAssignmentList = document.getElementById('student-assignment-list');
+  const studentAssignmentEmpty = document.getElementById('student-assignment-empty');
+  const studentAssignmentSummary = document.getElementById('student-assignment-summary');
   const STORAGE_KEY = 'siagiePlusCredentials';
   const DIRECTORY_PATH = 'data/usuarios.json';
 
@@ -86,20 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
     'Turno mañana',
     'Turno tarde',
     'Horas parciales'
-  ];
-
-  const studentCourses = [
-    { id: 'comunicacion', label: 'Comunicación' },
-    { id: 'matematica', label: 'Matemática' },
-    { id: 'ciencia-tecnologia', label: 'Ciencia y Tecnología' },
-    { id: 'ingles', label: 'Inglés' },
-    { id: 'historia', label: 'Historia, Geografía y Economía' },
-    { id: 'arte', label: 'Arte y Cultura' },
-    { id: 'educacion-fisica', label: 'Educación Física' },
-    { id: 'educacion-trabajo', label: 'Educación para el Trabajo' },
-    { id: 'computacion', label: 'Computación' },
-    { id: 'proyecto-steam', label: 'Proyecto STEAM' },
-    { id: 'tutoria', label: 'Tutoría y Consejería' }
   ];
 
   const BASE_TEACHER_COUNT = document.querySelectorAll('#teachers-base tr').length;
@@ -257,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const gradeHistory = [];
   const dataIssueRequests = [];
-  const studentTasks = [];
+  const assignments = [];
 
   const panelDescriptions = {
     dashboard: 'Visualiza el estado académico y administrativo de tu institución.',
@@ -436,14 +429,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     dataIssueForm?.addEventListener('submit', handleDataIssueSubmit);
 
-    studentTaskForm?.addEventListener('submit', handleStudentTaskSubmit);
-    studentTaskList?.addEventListener('click', handleStudentTaskClick);
-    studentTaskInput?.addEventListener('input', () => {
-      clearStudentTaskFeedback();
+    teacherAssignmentForm?.addEventListener('submit', handleTeacherAssignmentSubmit);
+    teacherAssignmentForm?.addEventListener('input', () => {
+      clearTeacherAssignmentFeedback();
     });
-    studentTaskCourseSelect?.addEventListener('change', () => {
-      clearStudentTaskFeedback();
+    teacherAssignmentCourseSelect?.addEventListener('change', () => {
+      clearTeacherAssignmentFeedback();
     });
+
+    studentAssignmentList?.addEventListener('click', handleStudentAssignmentClick);
   }
 
   async function loadAccessDirectory() {
@@ -712,6 +706,10 @@ document.addEventListener('DOMContentLoaded', () => {
         teacherAvatar.textContent = metadata.user.initials;
       }
 
+      populateTeacherAssignmentCourses();
+      renderTeacherAssignments();
+      clearTeacherAssignmentFeedback();
+
       clearGradeFeedback();
       if (issueFeedback) {
         issueFeedback.textContent = '';
@@ -750,6 +748,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (studentAvatar) {
         studentAvatar.textContent = metadata.user.initials;
       }
+
+      renderStudentAssignments();
+      updateStudentAssignmentSummary();
     }
   }
 
@@ -830,19 +831,20 @@ document.addEventListener('DOMContentLoaded', () => {
   function initializeTeacherWorkspace() {
     populateScheduleSelect();
     populateGradeCourses();
+    populateTeacherAssignmentCourses();
     clearGradeFeedback();
+    clearTeacherAssignmentFeedback();
     if (issueFeedback) {
       issueFeedback.textContent = '';
       issueFeedback.classList.remove('success', 'error');
     }
     updateGradeHistory();
     updateDataIssueList();
+    renderTeacherAssignments();
   }
 
   function initializeStudentWorkspace() {
-    populateStudentTaskCourses();
-    renderStudentTasks();
-    clearStudentTaskFeedback();
+    renderStudentAssignments();
   }
 
   function populateScheduleSelect() {
@@ -940,21 +942,6 @@ document.addEventListener('DOMContentLoaded', () => {
       gradeTableBody.innerHTML =
         '<tr class="empty-state"><td colspan="3">Sin estudiantes registrados.</td></tr>';
     }
-  }
-
-  function populateStudentTaskCourses() {
-    if (!studentTaskCourseSelect) {
-      return;
-    }
-
-    const options = studentCourses
-      .map(
-        (course) =>
-          `<option value="${escapeAttribute(course.id)}">${escapeHtml(course.label)}</option>`
-      )
-      .join('');
-
-    studentTaskCourseSelect.innerHTML = options;
   }
 
   function renderGradeTable(courseId) {
@@ -1208,91 +1195,222 @@ document.addEventListener('DOMContentLoaded', () => {
       .join('');
   }
 
-  function handleStudentTaskSubmit(event) {
+  function handleTeacherAssignmentSubmit(event) {
     event.preventDefault();
 
-    if (!studentTaskCourseSelect || !studentTaskInput) {
+    if (!teacherAssignmentCourseSelect || !teacherAssignmentTitle) {
       return;
     }
 
-    const courseId = studentTaskCourseSelect.value;
-    const description = studentTaskInput.value.trim();
+    const courseId = teacherAssignmentCourseSelect.value;
+    const title = teacherAssignmentTitle.value.trim();
+    const detail = teacherAssignmentDetail?.value.trim() ?? '';
+    const dueDate = teacherAssignmentDue?.value ?? '';
+    const file = teacherAssignmentFile?.files?.[0] ?? null;
 
-    if (!courseId || !description) {
-      showStudentTaskFeedback('Selecciona un curso y describe la tarea.', 'error');
+    if (!courseId || !title) {
+      showTeacherAssignmentFeedback(
+        'Selecciona un curso e indica un título para poder enviar la tarea.',
+        'error'
+      );
       return;
     }
 
-    const course = studentCourses.find((item) => item.id === courseId);
-    const courseLabel = course?.label ?? 'Curso sin nombre';
+    const course = teacherCourses.find((item) => item.id === courseId);
+    const courseLabel = course?.name ?? 'Curso sin asignar';
+    const courseGroup = course?.group ?? '';
 
-    studentTasks.unshift({
-      id: `task-${Date.now()}`,
+    const assignment = {
+      id: `assignment-${Date.now()}`,
       courseId,
       courseLabel,
-      description,
-      completed: false,
-      createdAt: new Date()
-    });
+      courseGroup,
+      title,
+      detail,
+      dueDate,
+      fileName: file?.name ?? '',
+      fileUrl: file ? URL.createObjectURL(file) : '',
+      createdAt: new Date(),
+      completed: false
+    };
 
-    if (studentTasks.length > 20) {
-      studentTasks.pop();
+    assignments.unshift(assignment);
+
+    if (assignments.length > 30) {
+      const removed = assignments.pop();
+      if (removed?.fileUrl) {
+        URL.revokeObjectURL(removed.fileUrl);
+      }
     }
 
-    studentTaskForm?.reset();
-    studentTaskCourseSelect.value = courseId;
-    showStudentTaskFeedback(`Tarea agregada en ${courseLabel}.`, 'success');
-    renderStudentTasks();
+    teacherAssignmentForm?.reset();
+    populateTeacherAssignmentCourses();
+    if (teacherAssignmentCourseSelect) {
+      teacherAssignmentCourseSelect.value = courseId;
+    }
+
+    showTeacherAssignmentFeedback(
+      `La tarea para ${courseLabel} se envió correctamente.`,
+      'success'
+    );
+    renderTeacherAssignments();
+    renderStudentAssignments();
   }
 
-  function renderStudentTasks() {
-    if (!studentTaskList || !studentTaskEmpty) {
+  function renderTeacherAssignments() {
+    if (!teacherAssignmentList || !teacherAssignmentEmpty) {
       return;
     }
 
-    if (!studentTasks.length) {
-      studentTaskList.innerHTML = '';
-      studentTaskList.hidden = true;
-      studentTaskEmpty.hidden = false;
+    if (!assignments.length) {
+      teacherAssignmentList.innerHTML = '';
+      teacherAssignmentList.hidden = true;
+      teacherAssignmentEmpty.hidden = false;
+      updateTeacherAssignmentCount();
       return;
     }
 
-    studentTaskList.hidden = false;
-    studentTaskEmpty.hidden = true;
+    teacherAssignmentList.hidden = false;
+    teacherAssignmentEmpty.hidden = true;
 
     const fragment = document.createDocumentFragment();
 
-    studentTasks.forEach((task) => {
+    assignments.forEach((assignment) => {
       const item = document.createElement('li');
-      item.className = `task-item${task.completed ? ' completed' : ''}`;
-      item.dataset.taskId = task.id;
+      item.className = 'task-item assignment-item';
+      item.dataset.assignmentId = assignment.id;
+
+      const statusLabel = assignment.completed ? 'Marcada como completada' : 'Pendiente';
+      const statusClass = assignment.completed ? 'success' : 'warning';
+
+      const detailHtml = assignment.detail
+        ? `<p>${escapeHtml(assignment.detail).replace(/\n/g, '<br />')}</p>`
+        : '';
+
+      const metaParts = [
+        `Enviada: ${escapeHtml(formatDateTime(assignment.createdAt))}`
+      ];
+      if (assignment.courseGroup) {
+        metaParts.push(`Sección: ${escapeHtml(assignment.courseGroup)}`);
+      }
+      if (assignment.dueDate) {
+        metaParts.push(`Entrega: ${escapeHtml(formatDate(assignment.dueDate))}`);
+      }
+      if (assignment.fileName && assignment.fileUrl) {
+        metaParts.push(
+          `Archivo: <a href="${escapeAttribute(assignment.fileUrl)}" download="${escapeAttribute(
+            assignment.fileName
+          )}" class="link">${escapeHtml(assignment.fileName)}</a>`
+        );
+      }
+
       item.innerHTML = `
-        <div>
-          <strong>${escapeHtml(task.courseLabel)}</strong>
-          <p>${escapeHtml(task.description)}</p>
+        <div class="assignment-body">
+          <div class="assignment-header">
+            <strong>${escapeHtml(assignment.title)}</strong>
+            <span class="chip">${escapeHtml(assignment.courseLabel)}</span>
+          </div>
+          ${detailHtml}
+          <ul class="assignment-meta">
+            ${metaParts.map((part) => `<li>${part}</li>`).join('')}
+          </ul>
         </div>
-        <div class="task-actions">
-          <button type="button" class="ghost-button" data-action="toggle">${escapeHtml(
-            task.completed ? 'Reabrir' : 'Marcar listo'
-          )}</button>
-          <button type="button" class="ghost-button" data-action="remove">Eliminar</button>
+        <div class="assignment-actions">
+          <span class="chip ${statusClass}">${escapeHtml(statusLabel)}</span>
         </div>
       `;
+
       fragment.appendChild(item);
     });
 
-    studentTaskList.innerHTML = '';
-    studentTaskList.appendChild(fragment);
+    teacherAssignmentList.innerHTML = '';
+    teacherAssignmentList.appendChild(fragment);
+    updateTeacherAssignmentCount();
   }
 
-  function handleStudentTaskClick(event) {
+  function renderStudentAssignments() {
+    if (!studentAssignmentList || !studentAssignmentEmpty) {
+      return;
+    }
+
+    if (!assignments.length) {
+      studentAssignmentList.innerHTML = '';
+      studentAssignmentList.hidden = true;
+      studentAssignmentEmpty.hidden = false;
+      updateStudentAssignmentSummary();
+      return;
+    }
+
+    studentAssignmentList.hidden = false;
+    studentAssignmentEmpty.hidden = true;
+
+    const fragment = document.createDocumentFragment();
+
+    assignments.forEach((assignment) => {
+      const item = document.createElement('li');
+      item.className = `task-item assignment-item${assignment.completed ? ' completed' : ''}`;
+      item.dataset.assignmentId = assignment.id;
+
+      const detailHtml = assignment.detail
+        ? `<p>${escapeHtml(assignment.detail).replace(/\n/g, '<br />')}</p>`
+        : '';
+
+      const metaParts = [
+        `Enviada el ${escapeHtml(formatDateTime(assignment.createdAt))}`
+      ];
+      if (assignment.dueDate) {
+        metaParts.push(`Entrega: ${escapeHtml(formatDate(assignment.dueDate))}`);
+      }
+      if (assignment.courseGroup) {
+        metaParts.push(`Sección: ${escapeHtml(assignment.courseGroup)}`);
+      }
+
+      const fileButton =
+        assignment.fileName && assignment.fileUrl
+          ? `<a class="ghost-button" href="${escapeAttribute(
+              assignment.fileUrl
+            )}" download="${escapeAttribute(assignment.fileName)}">Descargar archivo</a>`
+          : '';
+
+      item.innerHTML = `
+        <div class="assignment-body">
+          <div class="assignment-header">
+            <strong>${escapeHtml(assignment.title)}</strong>
+            <span class="chip">${escapeHtml(assignment.courseLabel)}</span>
+          </div>
+          ${detailHtml}
+          <ul class="assignment-meta">
+            ${metaParts.map((part) => `<li>${part}</li>`).join('')}
+            ${
+              assignment.fileName && assignment.fileUrl
+                ? `<li>Archivo: <span>${escapeHtml(assignment.fileName)}</span></li>`
+                : ''
+            }
+          </ul>
+        </div>
+        <div class="assignment-actions">
+          ${fileButton}
+          <button type="button" class="secondary-button" data-action="toggle">
+            ${escapeHtml(assignment.completed ? 'Marcar como pendiente' : 'Marcar como completada')}
+          </button>
+        </div>
+      `;
+
+      fragment.appendChild(item);
+    });
+
+    studentAssignmentList.innerHTML = '';
+    studentAssignmentList.appendChild(fragment);
+    updateStudentAssignmentSummary();
+  }
+
+  function handleStudentAssignmentClick(event) {
     const target = event.target;
     if (!(target instanceof HTMLElement)) {
       return;
     }
 
-    const action = target.dataset.action;
-    if (!action) {
+    if (target.dataset.action !== 'toggle') {
       return;
     }
 
@@ -1301,55 +1419,133 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const taskId = item.dataset.taskId;
-    if (!taskId) {
+    const assignmentId = item.dataset.assignmentId;
+    if (!assignmentId) {
       return;
     }
 
-    const taskIndex = studentTasks.findIndex((task) => task.id === taskId);
-
-    if (taskIndex === -1) {
+    const assignment = assignments.find((entry) => entry.id === assignmentId);
+    if (!assignment) {
       return;
     }
 
-    if (action === 'toggle') {
-      studentTasks[taskIndex].completed = !studentTasks[taskIndex].completed;
-      const courseLabel = studentTasks[taskIndex].courseLabel;
-      showStudentTaskFeedback(
-        studentTasks[taskIndex].completed
-          ? `Marcaste como completada la tarea de ${courseLabel}.`
-          : `Reabriste la tarea de ${courseLabel}.`,
-        'success'
-      );
-    } else if (action === 'remove') {
-      const [removed] = studentTasks.splice(taskIndex, 1);
-      if (removed) {
-        showStudentTaskFeedback(`Eliminaste la tarea de ${removed.courseLabel}.`, 'success');
-      }
-    }
-
-    renderStudentTasks();
+    assignment.completed = !assignment.completed;
+    renderStudentAssignments();
+    renderTeacherAssignments();
   }
 
-  function showStudentTaskFeedback(message, status) {
-    if (!studentTaskFeedback) {
+  function showTeacherAssignmentFeedback(message, status) {
+    if (!teacherAssignmentFeedback) {
       return;
     }
 
-    studentTaskFeedback.textContent = message;
-    studentTaskFeedback.classList.remove('success', 'error');
+    teacherAssignmentFeedback.textContent = message;
+    teacherAssignmentFeedback.classList.remove('success', 'error');
     if (status) {
-      studentTaskFeedback.classList.add(status);
+      teacherAssignmentFeedback.classList.add(status);
     }
   }
 
-  function clearStudentTaskFeedback() {
-    if (!studentTaskFeedback) {
+  function clearTeacherAssignmentFeedback() {
+    if (!teacherAssignmentFeedback) {
       return;
     }
 
-    studentTaskFeedback.textContent = '';
-    studentTaskFeedback.classList.remove('success', 'error');
+    teacherAssignmentFeedback.textContent = '';
+    teacherAssignmentFeedback.classList.remove('success', 'error');
+  }
+
+  function populateTeacherAssignmentCourses() {
+    if (!teacherAssignmentCourseSelect) {
+      return;
+    }
+
+    const options = teacherCourses
+      .map(
+        (course) =>
+          `<option value="${escapeAttribute(course.id)}">${escapeHtml(course.name)}</option>`
+      )
+      .join('');
+
+    teacherAssignmentCourseSelect.innerHTML = options;
+
+    const availableCourses = teacherCourses.map((course) => course.id);
+    const currentValue = availableCourses.includes(teacherAssignmentCourseSelect.value)
+      ? teacherAssignmentCourseSelect.value
+      : availableCourses[0];
+
+    if (currentValue) {
+      teacherAssignmentCourseSelect.value = currentValue;
+    }
+  }
+
+  function updateTeacherAssignmentCount() {
+    if (!teacherAssignmentCount) {
+      return;
+    }
+
+    const total = assignments.length;
+    const pending = assignments.filter((assignment) => !assignment.completed).length;
+
+    teacherAssignmentCount.classList.remove('success', 'warning');
+
+    if (!total) {
+      teacherAssignmentCount.textContent = 'Sin tareas';
+      return;
+    }
+
+    teacherAssignmentCount.textContent = `${total} ${total === 1 ? 'tarea' : 'tareas'}`;
+
+    if (!pending) {
+      teacherAssignmentCount.classList.add('success');
+    } else {
+      teacherAssignmentCount.classList.add('warning');
+    }
+  }
+
+  function updateStudentAssignmentSummary() {
+    if (!studentAssignmentSummary) {
+      return;
+    }
+
+    const total = assignments.length;
+    const pending = assignments.filter((assignment) => !assignment.completed).length;
+
+    studentAssignmentSummary.classList.remove('success', 'warning');
+
+    if (!total) {
+      studentAssignmentSummary.textContent = 'Sin tareas';
+      return;
+    }
+
+    if (!pending) {
+      studentAssignmentSummary.textContent = 'Todo al día';
+      studentAssignmentSummary.classList.add('success');
+      return;
+    }
+
+    studentAssignmentSummary.textContent = `${pending} ${pending === 1 ? 'pendiente' : 'pendientes'}`;
+    studentAssignmentSummary.classList.add('warning');
+  }
+
+  function formatDate(value) {
+    if (!value) {
+      return '';
+    }
+
+    const date = value instanceof Date ? value : new Date(value);
+
+    if (Number.isNaN(date.valueOf())) {
+      return '';
+    }
+
+    try {
+      return new Intl.DateTimeFormat('es-PE', {
+        dateStyle: 'medium'
+      }).format(date);
+    } catch (error) {
+      return date.toLocaleDateString();
+    }
   }
 
   function formatDateTime(value) {
@@ -1860,4 +2056,12 @@ document.addEventListener('DOMContentLoaded', () => {
       return null;
     }
   }
+
+  window.addEventListener('beforeunload', () => {
+    assignments.forEach((assignment) => {
+      if (assignment.fileUrl) {
+        URL.revokeObjectURL(assignment.fileUrl);
+      }
+    });
+  });
 });

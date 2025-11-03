@@ -7,8 +7,8 @@ Una interfaz moderna inspirada en el Sistema de Información de Apoyo a la Gesti
 - **Pantalla de acceso renovada** con diseño gradiente, tarjetas informativas y soporte para recordatorio de dispositivo.
 - **Accesos diferenciados** que redirigen a espacios independientes para administrativos, docentes y estudiantes, recordando las credenciales de cada perfil.
 - **Panel administrativo** con indicadores clave, seguimiento de matrículas, reportes institucionales y agenda general.
-- **Espacio docente** dedicado con horarios por aula, calendario semanal de referencia, registro rápido de calificaciones y formulario para reportar inconsistencias en los datos de estudiantes.
-- **Panel del estudiante** orientado a la consulta de resultados, asistencias y agenda personal, ahora con horario semanal y gestor de tareas por curso.
+- **Espacio docente** dedicado con horarios por aula, calendario semanal de referencia, registro rápido de calificaciones, envío de tareas con archivos de apoyo y formulario para reportar inconsistencias en los datos de estudiantes.
+- **Panel del estudiante** orientado a la consulta de resultados, asistencias y agenda personal, con horario semanal y un buzón que muestra automáticamente las tareas enviadas por los docentes.
 - **Plantillas ampliadas** con 10 docentes y 20 estudiantes de muestra que enriquecen las tablas y permiten visualizar la gestión de aulas más completa.
 - **Gestión de accesos administrativos** para registrar nuevas personas, asignarles rol (docente o estudiante) y reflejar al instante los cambios en las tablas correspondientes.
 - **Diseño responsive** pensado para equipos directivos que utilizan tanto escritorio como tabletas.
@@ -22,8 +22,8 @@ Una interfaz moderna inspirada en el Sistema de Información de Apoyo a la Gesti
    - Estudiante: `karter1314@gmail.com` · contraseña `alumno123`
 3. Según el perfil seleccionado se mostrará la interfaz dedicada:
    - **Administrativos**: acceden a un panel con barra lateral verde para recorrer módulos de matrículas, docentes, reportes, agenda y la sección de **Gestión de accesos**.
-   - **Docentes**: ingresan al **Espacio docente**, donde pueden revisar horarios, registrar calificaciones y enviar reportes de incidencias en un entorno independiente.
-   - **Estudiantes**: visualizan el **Panel del estudiante**, con promedios, asistencias, agenda personal y accesos directos para contactar a tutoría.
+  - **Docentes**: ingresan al **Espacio docente**, donde pueden revisar horarios, registrar calificaciones, enviar tareas con instrucciones y archivos adjuntos, además de reportar incidencias de datos.
+  - **Estudiantes**: visualizan el **Panel del estudiante**, con promedios, asistencias, agenda personal, acceso a los archivos de apoyo y listado de tareas recibidas por sus docentes.
 
 ## Tecnologías
 

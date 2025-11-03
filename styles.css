@@ -722,12 +722,21 @@ footer {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
+.grid.two-columns.compact {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
 .grid.three-columns {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
 @media (max-width: 960px) {
   .grid.two-columns.stack-on-mobile {
+    grid-template-columns: 1fr;
+  }
+
+  .grid.two-columns.compact {
     grid-template-columns: 1fr;
   }
 }
@@ -842,6 +851,10 @@ footer {
   background: #f9fafb;
 }
 
+.task-item.assignment-item {
+  flex-wrap: wrap;
+}
+
 .task-item.completed {
   background: rgba(34, 197, 94, 0.16);
   border-color: rgba(34, 197, 94, 0.3);
@@ -865,6 +878,68 @@ footer {
 
 .task-item.completed p {
   color: #166534;
+}
+
+.assignment-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1 1 200px;
+}
+
+.assignment-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.assignment-meta {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.assignment-meta li {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.assignment-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.assignment-actions .ghost-button,
+.assignment-actions .secondary-button {
+  font-size: 0.8rem;
+  padding: 0.4rem 0.9rem;
+}
+
+.assignment-actions .ghost-button {
+  background: #ffffff;
+}
+
+@media (max-width: 720px) {
+  .assignment-actions {
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .assignment-actions .ghost-button,
+  .assignment-actions .secondary-button {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .task-actions {
