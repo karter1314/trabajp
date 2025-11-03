@@ -10,7 +10,7 @@ Una interfaz moderna inspirada en el Sistema de Información de Apoyo a la Gesti
 - **Espacio docente** dedicado con horarios por aula, calendario semanal de referencia, registro rápido de calificaciones, envío de tareas con archivos de apoyo y formulario para reportar inconsistencias en los datos de estudiantes.
 - **Panel del estudiante** orientado a la consulta de resultados, asistencias y agenda personal, con horario semanal y un buzón que muestra automáticamente las tareas enviadas por los docentes.
 - **Plantillas ampliadas** con 10 docentes y 20 estudiantes de muestra que enriquecen las tablas y permiten visualizar la gestión de aulas más completa.
-- **Gestión de accesos administrativos** para registrar nuevas personas, asignarles rol (docente o estudiante) y reflejar al instante los cambios en las tablas correspondientes.
+- **Gestión de accesos administrativos** para registrar nuevas personas, asignarles rol (docente o estudiante), actualizar el padrón institucional y descargar la versión modificada de `data/usuarios.json`.
 - **Diseño responsive** pensado para equipos directivos que utilizan tanto escritorio como tabletas.
 
 ## Uso
@@ -35,7 +35,9 @@ Una interfaz moderna inspirada en el Sistema de Información de Apoyo a la Gesti
 
 - El padrón de cuentas se carga automáticamente desde `data/usuarios.json`, un archivo JSON pensado para exportarse desde Excel/Sheets (guardar como CSV y convertir a JSON).
 - Cada registro puede incluir `email`, `password`, `name`, `detail` e `initials`. La aplicación normaliza los datos y utiliza los valores para personalizar los encabezados de cada rol.
-- Para añadir o modificar cuentas, edita el archivo y actualiza la lista correspondiente (`admin`, `teacher`, `student`). Los cambios se reflejarán al recargar la página.
+- Desde el panel administrativo puedes registrar nuevas cuentas o ajustar sus datos. Cada alta valida duplicados por correo, actualiza el padrón cargado y lo guarda en el almacenamiento local del navegador.
+- Usa el botón **“Descargar padrón actualizado”** para obtener un archivo JSON con todos los cambios y reemplazar `data/usuarios.json` (o compartirlo con otros equipos).
+- Si quieres volver al padrón original, elimina la clave `siagiePlusDirectory` del almacenamiento local del navegador y recarga la página.
 - Si abres el proyecto directamente como archivo (`file://`), algunos navegadores bloquean la lectura del JSON. Usa un servidor local ligero (por ejemplo, Live Server de VS Code o `python -m http.server`).
 
 ## Próximos pasos sugeridos

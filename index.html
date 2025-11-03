@@ -740,6 +740,15 @@
                   </label>
                   <div class="role-fields" data-role-fields="student">
                     <label class="field form-field">
+                      <span>Correo institucional</span>
+                      <input
+                        type="email"
+                        name="studentEmail"
+                        placeholder="usuario@estudiantes.ie.pe"
+                        required
+                      />
+                    </label>
+                    <label class="field form-field">
                       <span>Grado</span>
                       <select name="studentGrade">
                         <option value="Inicial">Inicial</option>
@@ -790,15 +799,44 @@
                     </label>
                     <label class="field form-field">
                       <span>Correo institucional</span>
-                      <input type="email" name="teacherEmail" placeholder="usuario@colegio.edu.pe" />
+                      <input
+                        type="email"
+                        name="teacherEmail"
+                        placeholder="usuario@colegio.edu.pe"
+                        required
+                      />
                     </label>
                     <label class="field form-field">
                       <span>Teléfono</span>
                       <input type="tel" name="teacherPhone" placeholder="987 654 321" />
                     </label>
                   </div>
+                  <label class="field form-field">
+                    <span>Contraseña temporal</span>
+                    <input
+                      type="text"
+                      name="accessPassword"
+                      required
+                      placeholder="Ej. acceso2024"
+                    />
+                  </label>
                   <button type="submit" class="primary-button">Registrar acceso</button>
+                  <p
+                    class="form-feedback card-feedback"
+                    id="access-feedback"
+                    role="status"
+                    aria-live="polite"
+                  ></p>
                 </form>
+                <div class="form-actions">
+                  <button type="button" class="ghost-button" id="download-directory">
+                    Descargar padrón actualizado
+                  </button>
+                  <p class="hint">
+                    Los registros se guardan en tu navegador. Descarga el archivo para
+                    reemplazar <code>data/usuarios.json</code> y compartirlo con el equipo.
+                  </p>
+                </div>
               </div>
               <div class="card">
                 <header>

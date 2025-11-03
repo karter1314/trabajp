@@ -513,23 +513,40 @@ footer {
 
 .form-actions {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 1rem;
   flex-wrap: wrap;
   margin-top: 0.75rem;
 }
 
-.form-feedback {
+.card-feedback {
   font-size: 0.9rem;
   color: var(--text-muted);
+  min-height: 1.25rem;
 }
 
-.form-feedback.success {
+.card-feedback.success {
   color: #15803d;
 }
 
-.form-feedback.error {
+.card-feedback.error {
   color: #b91c1c;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  max-width: 320px;
+  line-height: 1.4;
+}
+
+.hint code {
+  font-family: 'Fira Code', 'Source Code Pro', ui-monospace, SFMono-Regular, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+  font-size: 0.8rem;
+  background: rgba(15, 118, 110, 0.08);
+  padding: 0.1rem 0.3rem;
+  border-radius: var(--radius-sm);
 }
 
 .issue-list {

@@ -36,6 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const studentsDynamicBody = document.getElementById('students-dynamic');
   const teachersDynamicBody = document.getElementById('teachers-dynamic');
   const teacherCount = document.getElementById('teacher-count');
+  const accessFeedback = document.getElementById('access-feedback');
+  const downloadDirectoryButton = document.getElementById('download-directory');
   const scheduleDaySelect = document.getElementById('schedule-day');
   const scheduleBody = document.getElementById('schedule-body');
   const scheduleRoom = document.getElementById('schedule-room');
@@ -65,6 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const studentAssignmentSummary = document.getElementById('student-assignment-summary');
   const STORAGE_KEY = 'siagiePlusCredentials';
   const DIRECTORY_PATH = 'data/usuarios.json';
+  const DIRECTORY_STORAGE_KEY = 'siagiePlusDirectory';
+  const DIRECTORY_DOWNLOAD_NAME = 'usuarios-actualizados.json';
 
   const storage = getStorage();
   const body = document.body;
@@ -94,6 +98,8 @@ document.addEventListener('DOMContentLoaded', () => {
     'Turno tarde',
     'Horas parciales'
   ];
+
+  const DIRECTORY_ROLES = ['admin', 'teacher', 'student'];
 
   const BASE_TEACHER_COUNT = document.querySelectorAll('#teachers-base tr').length;
 
@@ -333,6 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const newRecords = [];
   let recordIdCounter = 1;
+  let directoryDownloadUrl = '';
 
   restoreSavedState();
   updateRoleUI();
@@ -408,8 +415,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     accessForm?.addEventListener('submit', handleAccessFormSubmit);
 
-    assignmentList?.addEventListener('change', handleAssignmentInteraction);
-    assignmentList?.addEventListener('input', handleAssignmentInteraction);
+    assignmentList?.addEventListener('change', (event) => handleAssignmentInteraction(event, true));
+    assignmentList?.addEventListener('input', (event) => handleAssignmentInteraction(event, false));
+
+    downloadDirectoryButton?.addEventListener('click', downloadDirectorySnapshot);
 
     scheduleDaySelect?.addEventListener('change', () => {
       renderSchedule(scheduleDaySelect.value);
@@ -441,6 +450,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function loadAccessDirectory() {
+    const storedDirectory = readStoredDirectory();
+    if (storedDirectory) {
+      applyDirectory(storedDirectory);
+      populateCredentialsFields();
+      persistState();
+      return;
+    }
+
     try {
       const response = await fetch(DIRECTORY_PATH, { cache: 'no-store' });
       if (!response.ok) {
@@ -448,17 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const payload = await response.json();
-      ['admin', 'teacher', 'student'].forEach((role) => {
-        const records = Array.isArray(payload?.[role]) ? payload[role] : [];
-        accessDirectory[role] = records.map(normalizeAccount).filter((account) => account.email);
-        if (!credentialsByRole[role]?.email && accessDirectory[role][0]) {
-          credentialsByRole[role].email = accessDirectory[role][0].email;
-        }
-        if (accessDirectory[role][0]) {
-          updateRoleMetadataFromAccount(role, accessDirectory[role][0], false);
-        }
-      });
-
+      applyDirectory(payload, { persist: true });
       populateCredentialsFields();
       persistState();
     } catch (error) {
@@ -467,6 +474,26 @@ document.addEventListener('DOMContentLoaded', () => {
         'No se pudo cargar el padrón de accesos. Verifica el archivo data/usuarios.json.',
         'error'
       );
+    }
+  }
+
+  function applyDirectory(payload, { persist = false, preferExisting = false } = {}) {
+    invalidateDirectoryDownload();
+    DIRECTORY_ROLES.forEach((role) => {
+      const records = Array.isArray(payload?.[role]) ? payload[role] : [];
+      accessDirectory[role] = records.map(normalizeAccount).filter((account) => account.email);
+
+      if (!credentialsByRole[role]?.email && accessDirectory[role][0]) {
+        credentialsByRole[role].email = accessDirectory[role][0].email;
+      }
+
+      if (accessDirectory[role][0]) {
+        updateRoleMetadataFromAccount(role, accessDirectory[role][0], preferExisting);
+      }
+    });
+
+    if (persist) {
+      persistDirectory();
     }
   }
 
@@ -668,6 +695,30 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (variant === 'success') {
       loginFeedback.classList.add('success');
     }
+  }
+
+  function showAccessFeedback(message, variant) {
+    if (!accessFeedback) {
+      return;
+    }
+
+    accessFeedback.textContent = message;
+    accessFeedback.classList.remove('error', 'success');
+
+    if (variant === 'error') {
+      accessFeedback.classList.add('error');
+    } else if (variant === 'success') {
+      accessFeedback.classList.add('success');
+    }
+  }
+
+  function clearAccessFeedback() {
+    if (!accessFeedback) {
+      return;
+    }
+
+    accessFeedback.textContent = '';
+    accessFeedback.classList.remove('error', 'success');
   }
 
   function applyRoleProfile(role) {
@@ -1570,19 +1621,47 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const formData = new FormData(accessForm);
+    clearAccessFeedback();
     const fullName = (formData.get('fullName') || '').toString().trim();
     const identifier = (formData.get('identifier') || '').toString().trim();
     const selectedRole = (formData.get('role') || 'student').toString();
+    const password = (formData.get('accessPassword') || '').toString().trim();
+
+    const email = sanitizeEmail(
+      selectedRole === 'student'
+        ? (formData.get('studentEmail') || '').toString()
+        : (formData.get('teacherEmail') || '').toString()
+    );
 
     if (!fullName || !identifier) {
+      showAccessFeedback('Completa el nombre y el identificador de la persona.', 'error');
+      return;
+    }
+
+    if (!email) {
+      showAccessFeedback('Ingresa un correo institucional válido.', 'error');
+      return;
+    }
+
+    if (isEmailRegistered(email)) {
+      showAccessFeedback('Ese correo ya existe en el padrón institucional.', 'error');
+      return;
+    }
+
+    if (!password) {
+      showAccessFeedback('Define una contraseña temporal para el acceso.', 'error');
       return;
     }
 
     const record = {
-      id: recordIdCounter++,
+      id: recordIdCounter,
       name: fullName,
       identifier,
       role: selectedRole,
+      credentials: {
+        email,
+        password
+      },
       student: createEmptyStudentData(),
       teacher: createEmptyTeacherData()
     };
@@ -1592,18 +1671,21 @@ document.addEventListener('DOMContentLoaded', () => {
         grade: (formData.get('studentGrade') || gradeOptions[0]).toString(),
         section: (formData.get('studentSection') || '').toString().trim(),
         status: (formData.get('studentStatus') || statusOptions[0]).toString(),
-        tutor: (formData.get('studentTutor') || '').toString().trim()
+        tutor: (formData.get('studentTutor') || '').toString().trim(),
+        email
       };
     } else {
       record.teacher = {
         specialty: (formData.get('teacherSpecialty') || '').toString().trim(),
         availability: (formData.get('teacherAvailability') || availabilityOptions[0]).toString(),
-        email: (formData.get('teacherEmail') || '').toString().trim(),
+        email,
         phone: (formData.get('teacherPhone') || '').toString().trim()
       };
     }
 
     newRecords.unshift(record);
+    recordIdCounter += 1;
+    syncRecordWithDirectory(record);
     renderRecords();
 
     accessForm.reset();
@@ -1611,9 +1693,10 @@ document.addEventListener('DOMContentLoaded', () => {
       accessRoleSelect.value = 'student';
     }
     toggleRoleFields('student');
+    showAccessFeedback('Registro añadido y padrón actualizado.', 'success');
   }
 
-  function handleAssignmentInteraction(event) {
+  function handleAssignmentInteraction(event, shouldNotify = false) {
     const target = event.target;
     if (!(target instanceof HTMLElement)) {
       return;
@@ -1629,6 +1712,8 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    const shouldPersist = event.type === 'change';
+
     if (target.classList.contains('assignment-role')) {
       const nextRole = target.value;
       if (nextRole !== record.role) {
@@ -1641,12 +1726,17 @@ document.addEventListener('DOMContentLoaded', () => {
           if (!record.student.status) {
             record.student.status = statusOptions[0];
           }
+          record.student.email = record.credentials.email;
         } else {
           record.teacher = record.teacher || createEmptyTeacherData();
           if (!record.teacher.availability) {
             record.teacher.availability = availabilityOptions[0];
           }
+          if (!record.teacher.email) {
+            record.teacher.email = record.credentials.email;
+          }
         }
+        syncRecordWithDirectory(record, { persist: shouldPersist, notify: shouldNotify });
         renderRecords();
       }
       return;
@@ -1664,8 +1754,34 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (scope === 'teacher') {
       record.teacher = record.teacher || createEmptyTeacherData();
       record.teacher[field] = target.value;
+    } else if (scope === 'credentials') {
+      record.credentials = record.credentials || { email: '', password: '' };
+      const previousEmail = record.credentials.email;
+
+      if (field === 'email') {
+        record.credentials.email = target.value;
+        const synced = syncRecordWithDirectory(record, {
+          persist: shouldPersist,
+          notify: shouldNotify,
+          skipValidation: event.type === 'input'
+        });
+
+        if (!synced) {
+          record.credentials.email = previousEmail;
+          target.value = previousEmail;
+          return;
+        }
+      } else if (field === 'password') {
+        record.credentials.password = target.value;
+        syncRecordWithDirectory(record, { persist: shouldPersist, notify: shouldNotify });
+      }
+
+      updateTables();
+      updateCounters();
+      return;
     }
 
+    syncRecordWithDirectory(record, { persist: shouldPersist, notify: shouldNotify });
     updateTables();
     updateCounters();
   }
@@ -1674,6 +1790,93 @@ document.addEventListener('DOMContentLoaded', () => {
     updateAssignmentList();
     updateTables();
     updateCounters();
+  }
+
+  function syncRecordWithDirectory(
+    record,
+    { persist = true, notify = false, skipValidation = false } = {}
+  ) {
+    if (!record || !record.credentials) {
+      return false;
+    }
+
+    const rawEmail = record.credentials.email ?? '';
+    const email = sanitizeEmail(rawEmail);
+
+    if (skipValidation) {
+      record.credentials.email = email;
+      if (record.role === 'student' && record.student) {
+        record.student.email = email;
+      } else if (record.role === 'teacher' && record.teacher && !record.teacher.email) {
+        record.teacher.email = email;
+      }
+      return true;
+    }
+
+    if (!email) {
+      if (notify) {
+        showAccessFeedback('El correo institucional no puede quedar vacío.', 'error');
+      }
+      return false;
+    }
+
+    if (isEmailRegistered(email, record.directoryAccount)) {
+      if (notify) {
+        showAccessFeedback('Ese correo ya existe en el padrón institucional.', 'error');
+      }
+      return false;
+    }
+
+    record.credentials.email = email;
+
+    const password = (record.credentials.password || '').toString().trim();
+    record.credentials.password = password;
+
+    if (record.role === 'student') {
+      record.student = record.student || createEmptyStudentData();
+      record.student.email = email;
+    } else if (record.role === 'teacher') {
+      record.teacher = record.teacher || createEmptyTeacherData();
+      record.teacher.email = record.teacher.email || email;
+    }
+
+    const accountPayload = buildAccountFromRecord(record);
+    const normalizedAccount = normalizeAccount(accountPayload);
+    normalizedAccount.recordId = record.id;
+
+    const previousAccount = record.directoryAccount;
+    const previousRole = record.directoryRole;
+
+    if (!previousAccount || previousRole !== record.role) {
+      if (previousAccount && previousRole && accessDirectory[previousRole]) {
+        const list = accessDirectory[previousRole];
+        const index = list.indexOf(previousAccount);
+        if (index >= 0) {
+          list.splice(index, 1);
+        }
+      }
+
+      accessDirectory[record.role] = accessDirectory[record.role] || [];
+      accessDirectory[record.role].push(normalizedAccount);
+      record.directoryAccount = normalizedAccount;
+    } else {
+      Object.assign(previousAccount, normalizedAccount);
+      record.directoryAccount = previousAccount;
+    }
+
+    record.directoryRole = record.role;
+
+    if (persist) {
+      persistDirectory();
+    } else {
+      invalidateDirectoryDownload();
+    }
+
+    if (notify) {
+      showAccessFeedback('Padrón actualizado correctamente.', 'success');
+    }
+
+    return true;
   }
 
   function updateAssignmentList() {
@@ -1732,6 +1935,8 @@ document.addEventListener('DOMContentLoaded', () => {
         .filter((record) => record.role === 'teacher')
         .forEach((record) => {
           const teacher = record.teacher || createEmptyTeacherData();
+          const credentialEmail = record.credentials?.email || '';
+          const contactEmail = teacher.email || credentialEmail;
           const row = document.createElement('tr');
           row.innerHTML = `
             <td>${escapeHtml(record.name)}</td>
@@ -1739,7 +1944,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <td><span class="chip ${resolveAvailabilityClass(teacher.availability)}">${escapeHtml(
               teacher.availability || 'Por asignar'
             )}</span></td>
-            <td>${createContactColumn(teacher.email, teacher.phone)}</td>
+            <td>${createContactColumn(contactEmail, teacher.phone)}</td>
           `;
           teacherFragment.appendChild(row);
         });
@@ -1784,11 +1989,40 @@ document.addEventListener('DOMContentLoaded', () => {
             <option value="teacher"${record.role === 'teacher' ? ' selected' : ''}>Docente</option>
           </select>
         </label>
+        ${renderCredentialFields(record)}
         ${renderRoleSpecificFields(record)}
       </div>
     `;
 
     return element;
+  }
+
+  function renderCredentialFields(record) {
+    const credentials = record.credentials || { email: '', password: '' };
+    return `
+      <div class="assignment-fields">
+        <label class="field compact-field">
+          <span>Correo institucional</span>
+          <input
+            type="email"
+            data-scope="credentials"
+            data-field="email"
+            placeholder="usuario@ie3058.edu.pe"
+            value="${escapeAttribute(credentials.email)}"
+          />
+        </label>
+        <label class="field compact-field">
+          <span>Contraseña temporal</span>
+          <input
+            type="text"
+            data-scope="credentials"
+            data-field="password"
+            placeholder="Contraseña inicial"
+            value="${escapeAttribute(credentials.password)}"
+          />
+        </label>
+      </div>
+    `;
   }
 
   function renderRoleSpecificFields(record) {
@@ -1888,7 +2122,8 @@ document.addEventListener('DOMContentLoaded', () => {
       grade: gradeOptions[0],
       section: '',
       status: statusOptions[0],
-      tutor: ''
+      tutor: '',
+      email: ''
     };
   }
 
@@ -1899,6 +2134,85 @@ document.addEventListener('DOMContentLoaded', () => {
       email: '',
       phone: ''
     };
+  }
+
+  function buildAccountFromRecord(record) {
+    const email = sanitizeEmail(record.credentials?.email ?? '');
+    const password = (record.credentials?.password ?? '').toString().trim();
+    const name = record.name?.trim() || email;
+    const detail =
+      record.role === 'student'
+        ? buildStudentDetail(record.student)
+        : buildTeacherDetail(record.teacher);
+
+    return {
+      email,
+      password,
+      name,
+      detail
+    };
+  }
+
+  function buildStudentDetail(student) {
+    if (!student) {
+      return 'Estudiante';
+    }
+
+    const segments = [];
+    const grade = (student.grade || '').toString().trim();
+    if (grade) {
+      segments.push(grade);
+    }
+
+    const section = (student.section || '').toString().trim();
+    if (section) {
+      segments.push(`Sección ${section}`);
+    }
+
+    const status = (student.status || '').toString().trim();
+    if (status && status !== 'Regular') {
+      segments.push(status);
+    }
+
+    const descriptor = segments.join(' · ');
+    return descriptor ? `Estudiante ${descriptor}` : 'Estudiante';
+  }
+
+  function buildTeacherDetail(teacher) {
+    if (!teacher) {
+      return 'Docente';
+    }
+
+    const segments = [];
+    const specialty = (teacher.specialty || '').toString().trim();
+    if (specialty) {
+      segments.push(specialty);
+    }
+
+    const availability = (teacher.availability || '').toString().trim();
+    if (availability) {
+      segments.push(availability);
+    }
+
+    const descriptor = segments.join(' · ');
+    return descriptor ? `Docente ${descriptor}` : 'Docente';
+  }
+
+  function sanitizeEmail(value) {
+    return (value || '').toString().trim();
+  }
+
+  function isEmailRegistered(email, excludedAccount = null) {
+    if (!email) {
+      return false;
+    }
+
+    const normalized = email.toLowerCase();
+    return DIRECTORY_ROLES.some((role) =>
+      (accessDirectory[role] || []).some(
+        (account) => account.emailNormalized === normalized && account !== excludedAccount
+      )
+    );
   }
 
   function resolveStatusClass(status) {
@@ -2013,6 +2327,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function persistDirectory() {
+    invalidateDirectoryDownload();
+
+    if (!storage) {
+      return;
+    }
+
+    try {
+      const snapshot = buildDirectorySnapshot();
+      storage.setItem(DIRECTORY_STORAGE_KEY, JSON.stringify(snapshot));
+    } catch (error) {
+      console.error('No se pudo guardar el padrón institucional.', error);
+    }
+  }
+
   function restoreSavedState() {
     const saved = readStoredState();
     if (!saved) {
@@ -2041,6 +2370,70 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function readStoredDirectory() {
+    if (!storage) {
+      return null;
+    }
+
+    try {
+      const raw = storage.getItem(DIRECTORY_STORAGE_KEY);
+      if (!raw) {
+        return null;
+      }
+
+      const parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== 'object') {
+        return null;
+      }
+
+      return parsed;
+    } catch (error) {
+      console.warn('No se pudo leer el padrón institucional almacenado.', error);
+      return null;
+    }
+  }
+
+  function buildDirectorySnapshot() {
+    const snapshot = {};
+    DIRECTORY_ROLES.forEach((role) => {
+      snapshot[role] = (accessDirectory[role] || []).map((account) => ({
+        email: account.email,
+        password: account.password ?? '',
+        name: account.name ?? '',
+        detail: account.detail ?? ''
+      }));
+    });
+    return snapshot;
+  }
+
+  function invalidateDirectoryDownload() {
+    if (directoryDownloadUrl) {
+      URL.revokeObjectURL(directoryDownloadUrl);
+      directoryDownloadUrl = '';
+    }
+  }
+
+  function downloadDirectorySnapshot() {
+    try {
+      const snapshot = buildDirectorySnapshot();
+      const blob = new Blob([JSON.stringify(snapshot, null, 2)], { type: 'application/json' });
+      invalidateDirectoryDownload();
+      directoryDownloadUrl = URL.createObjectURL(blob);
+
+      const anchor = document.createElement('a');
+      anchor.href = directoryDownloadUrl;
+      anchor.download = DIRECTORY_DOWNLOAD_NAME;
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+
+      showAccessFeedback('Se descargó el padrón actualizado.', 'success');
+    } catch (error) {
+      console.error('No se pudo preparar la descarga del padrón.', error);
+      showAccessFeedback('No se pudo generar la descarga del padrón.', 'error');
+    }
+  }
+
   function getStorage() {
     try {
       if (typeof window === 'undefined' || !('localStorage' in window)) {
@@ -2063,5 +2456,6 @@ document.addEventListener('DOMContentLoaded', () => {
         URL.revokeObjectURL(assignment.fileUrl);
       }
     });
+    invalidateDirectoryDownload();
   });
 });
