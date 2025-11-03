@@ -1,0 +1,44 @@
+{
+  "admin": [
+    {
+      "email": "bj210806@gmail.com",
+      "password": "admin123",
+      "name": "Carlos Luis Huamán Manrique",
+      "detail": "Director IE 3058"
+    },
+    {
+      "email": "soporte@ie3058.edu.pe",
+      "password": "soporte2024",
+      "name": "Adriana Vela",
+      "detail": "Coordinadora académica"
+    }
+  ],
+  "teacher": [
+    {
+      "email": "clasico3040@gmail.com",
+      "password": "docente123",
+      "name": "María Elena Rojas",
+      "detail": "Docente de Comunicación"
+    },
+    {
+      "email": "jcarranza@ie3058.edu.pe",
+      "password": "horario456",
+      "name": "Javier Carranza",
+      "detail": "Docente de Matemática"
+    }
+  ],
+  "student": [
+    {
+      "email": "karter1314@gmail.com",
+      "password": "alumno123",
+      "name": "Lucía Herrera",
+      "detail": "Estudiante 4.º de secundaria"
+    },
+    {
+      "email": "mmendoza@ie3058.edu.pe",
+      "password": "alumno456",
+      "name": "Miguel Mendoza",
+      "detail": "Estudiante 3.º de secundaria"
+    }
+  ]
+}

@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const dataIssueEmpty = document.getElementById('data-issue-empty');
   const issueFeedback = document.getElementById('issue-feedback');
   const STORAGE_KEY = 'siagiePlusCredentials';
+  const DIRECTORY_PATH = 'data/usuarios.json';
 
   const storage = getStorage();
   const body = document.body;
@@ -302,16 +303,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  const allowedAccounts = {
-    admin: { email: 'bj210806@gmail.com' },
-    teacher: { email: 'clasico3040@gmail.com' },
-    student: { email: 'karter1314@gmail.com' }
+  const accessDirectory = {
+    admin: [],
+    teacher: [],
+    student: []
   };
 
   const credentialsByRole = {
-    admin: { email: allowedAccounts.admin.email, password: '' },
-    teacher: { email: allowedAccounts.teacher.email, password: '' },
-    student: { email: allowedAccounts.student.email, password: '' }
+    admin: { email: '', password: '' },
+    teacher: { email: '', password: '' },
+    student: { email: '', password: '' }
   };
 
   let activeRole = 'admin';
@@ -324,6 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
   populateCredentialsFields();
   setInitialView();
   initializeTeacherWorkspace();
+  loadAccessDirectory();
   attachEventHandlers();
   toggleRoleFields(accessRoleSelect?.value ?? 'student');
   updateCounters();
@@ -413,6 +415,36 @@ document.addEventListener('DOMContentLoaded', () => {
     dataIssueForm?.addEventListener('submit', handleDataIssueSubmit);
   }
 
+  async function loadAccessDirectory() {
+    try {
+      const response = await fetch(DIRECTORY_PATH, { cache: 'no-store' });
+      if (!response.ok) {
+        throw new Error(`Estado inesperado: ${response.status}`);
+      }
+
+      const payload = await response.json();
+      ['admin', 'teacher', 'student'].forEach((role) => {
+        const records = Array.isArray(payload?.[role]) ? payload[role] : [];
+        accessDirectory[role] = records.map(normalizeAccount).filter((account) => account.email);
+        if (!credentialsByRole[role]?.email && accessDirectory[role][0]) {
+          credentialsByRole[role].email = accessDirectory[role][0].email;
+        }
+        if (accessDirectory[role][0]) {
+          updateRoleMetadataFromAccount(role, accessDirectory[role][0], false);
+        }
+      });
+
+      populateCredentialsFields();
+      persistState();
+    } catch (error) {
+      console.error('No se pudo cargar el padrón de usuarios.', error);
+      showLoginFeedback(
+        'No se pudo cargar el padrón de accesos. Verifica el archivo data/usuarios.json.',
+        'error'
+      );
+    }
+  }
+
   function setAuthenticatedState(isAuthenticated) {
     if (!loginScreen) return;
 
@@ -433,6 +465,72 @@ document.addEventListener('DOMContentLoaded', () => {
       updateRoleUI();
       populateCredentialsFields();
     }
+  }
+
+  function getFirstAccountForRole(role) {
+    const list = accessDirectory[role];
+    if (!Array.isArray(list) || !list.length) {
+      return null;
+    }
+    return list[0];
+  }
+
+  function updateRoleMetadataFromAccount(role, account, preferExisting = false) {
+    const metadata = roleMetadata[role];
+    if (!metadata || !account) {
+      return;
+    }
+
+    const name = account.name?.trim();
+    const detail = account.detail?.trim();
+    const initials = account.initials?.trim() || buildInitials(name || account.email);
+
+    if (!preferExisting || !metadata.user.name) {
+      if (name) {
+        metadata.user.name = name;
+      }
+    }
+
+    if (!preferExisting || !metadata.user.detail) {
+      if (detail) {
+        metadata.user.detail = detail;
+      }
+    }
+
+    if (!preferExisting || !metadata.user.initials) {
+      metadata.user.initials = initials;
+    }
+  }
+
+  function normalizeAccount(rawAccount) {
+    const email = (rawAccount?.email ?? '').trim();
+    const password = typeof rawAccount?.password === 'string' ? rawAccount.password.trim() : '';
+    const name = (rawAccount?.name ?? '').trim();
+    const detail = (rawAccount?.detail ?? '').trim();
+
+    return {
+      email,
+      emailNormalized: email.toLowerCase(),
+      password,
+      name,
+      detail,
+      initials: (rawAccount?.initials ?? '').trim() || buildInitials(name || email)
+    };
+  }
+
+  function buildInitials(source) {
+    if (!source) {
+      return '';
+    }
+
+    const matches = source
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((segment) => segment[0]?.toUpperCase() ?? '');
+
+    const initials = matches.join('');
+    return initials || source[0]?.toUpperCase() || '';
   }
 
   function updateRoleUI() {
@@ -465,13 +563,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function populateCredentialsFields() {
-    const defaultEmail = allowedAccounts[activeRole]?.email ?? '';
     const record = credentialsByRole[activeRole] ?? {
-      email: defaultEmail,
+      email: '',
       password: ''
     };
+    const fallbackAccount = getFirstAccountForRole(activeRole);
     if (emailInput) {
-      const value = record.email ?? defaultEmail;
+      const value = record.email || fallbackAccount?.email || '';
       emailInput.value = value;
     }
 
@@ -487,7 +585,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const trimmedEmail = (emailInput?.value ?? '').trim();
     credentialsByRole[activeRole] = {
-      email: trimmedEmail || allowedAccounts[activeRole]?.email || '',
+      email: trimmedEmail,
       password: passwordInput?.value ?? ''
     };
   }
@@ -497,7 +595,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return false;
     }
 
-    const account = allowedAccounts[activeRole];
     const enteredEmail = emailInput.value.trim().toLowerCase();
     const enteredPassword = passwordInput.value.trim();
 
@@ -506,14 +603,30 @@ document.addEventListener('DOMContentLoaded', () => {
       return false;
     }
 
-    if (!account || enteredEmail !== account.email.toLowerCase()) {
+    const directory = accessDirectory[activeRole] ?? [];
+    if (!directory.length) {
       showLoginFeedback(
-        'El correo no coincide con las credenciales autorizadas para este rol.',
+        'No hay cuentas registradas para este rol en la base de datos. Revisa el archivo de usuarios.',
         'error'
       );
       return false;
     }
 
+    const matchedAccount = directory.find(
+      (account) =>
+        account.emailNormalized === enteredEmail &&
+        (account.password ? account.password === enteredPassword : true)
+    );
+
+    if (!matchedAccount) {
+      showLoginFeedback(
+        'Las credenciales no coinciden con el padrón institucional registrado para este acceso.',
+        'error'
+      );
+      return false;
+    }
+
+    updateRoleMetadataFromAccount(activeRole, matchedAccount);
     return true;
   }
 
@@ -1520,8 +1633,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     Object.keys(credentialsByRole).forEach((role) => {
       credentialsByRole[role] = {
-        email:
-          saved.credentials?.[role]?.email ?? allowedAccounts[role]?.email ?? '',
+        email: saved.credentials?.[role]?.email ?? '',
         password: saved.credentials?.[role]?.password ?? ''
       };
     });

@@ -15,10 +15,10 @@ Una interfaz moderna inspirada en el Sistema de Información de Apoyo a la Gesti
 ## Uso
 
 1. Abre el archivo `index.html` en tu navegador favorito.
-2. Elige el tipo de acceso (administrativo, docente o estudiante), ingresa el correo institucional sugerido para cada rol y presiona **Acceder**.
-   - Administrativo: `bj210806@gmail.com`
-   - Docente: `clasico3040@gmail.com`
-   - Estudiante: `karter1314@gmail.com`
+2. Elige el tipo de acceso (administrativo, docente o estudiante), ingresa el correo institucional almacenado en la base de datos (`data/usuarios.json`) y presiona **Acceder**.
+   - Administrativo: `bj210806@gmail.com` · contraseña `admin123`
+   - Docente: `clasico3040@gmail.com` · contraseña `docente123`
+   - Estudiante: `karter1314@gmail.com` · contraseña `alumno123`
 3. Según el perfil seleccionado se mostrará la interfaz dedicada:
    - **Administrativos**: acceden a un panel con barra lateral verde para recorrer módulos de matrículas, docentes, reportes, agenda y la sección de **Gestión de accesos**.
    - **Docentes**: ingresan al **Espacio docente**, donde pueden revisar horarios, registrar calificaciones y enviar reportes de incidencias en un entorno independiente.
@@ -29,6 +29,13 @@ Una interfaz moderna inspirada en el Sistema de Información de Apoyo a la Gesti
 - HTML5 semántico
 - CSS3 con variables y layout responsive
 - JavaScript (ES6) para navegación y autenticación simulada
+
+## Base de datos de accesos
+
+- El padrón de cuentas se carga automáticamente desde `data/usuarios.json`, un archivo JSON pensado para exportarse desde Excel/Sheets (guardar como CSV y convertir a JSON).
+- Cada registro puede incluir `email`, `password`, `name`, `detail` e `initials`. La aplicación normaliza los datos y utiliza los valores para personalizar los encabezados de cada rol.
+- Para añadir o modificar cuentas, edita el archivo y actualiza la lista correspondiente (`admin`, `teacher`, `student`). Los cambios se reflejarán al recargar la página.
+- Si abres el proyecto directamente como archivo (`file://`), algunos navegadores bloquean la lectura del JSON. Usa un servidor local ligero (por ejemplo, Live Server de VS Code o `python -m http.server`).
 
 ## Próximos pasos sugeridos
 
