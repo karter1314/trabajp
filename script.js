@@ -50,6 +50,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const dataIssueList = document.getElementById('data-issue-list');
   const dataIssueEmpty = document.getElementById('data-issue-empty');
   const issueFeedback = document.getElementById('issue-feedback');
+  const studentTaskForm = document.getElementById('student-task-form');
+  const studentTaskCourseSelect = document.getElementById('student-task-course');
+  const studentTaskInput = document.getElementById('student-task-input');
+  const studentTaskList = document.getElementById('student-task-list');
+  const studentTaskEmpty = document.getElementById('student-task-empty');
+  const studentTaskFeedback = document.getElementById('student-task-feedback');
   const STORAGE_KEY = 'siagiePlusCredentials';
   const DIRECTORY_PATH = 'data/usuarios.json';
 
@@ -80,6 +86,20 @@ document.addEventListener('DOMContentLoaded', () => {
     'Turno mañana',
     'Turno tarde',
     'Horas parciales'
+  ];
+
+  const studentCourses = [
+    { id: 'comunicacion', label: 'Comunicación' },
+    { id: 'matematica', label: 'Matemática' },
+    { id: 'ciencia-tecnologia', label: 'Ciencia y Tecnología' },
+    { id: 'ingles', label: 'Inglés' },
+    { id: 'historia', label: 'Historia, Geografía y Economía' },
+    { id: 'arte', label: 'Arte y Cultura' },
+    { id: 'educacion-fisica', label: 'Educación Física' },
+    { id: 'educacion-trabajo', label: 'Educación para el Trabajo' },
+    { id: 'computacion', label: 'Computación' },
+    { id: 'proyecto-steam', label: 'Proyecto STEAM' },
+    { id: 'tutoria', label: 'Tutoría y Consejería' }
   ];
 
   const BASE_TEACHER_COUNT = document.querySelectorAll('#teachers-base tr').length;
@@ -237,6 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const gradeHistory = [];
   const dataIssueRequests = [];
+  const studentTasks = [];
 
   const panelDescriptions = {
     dashboard: 'Visualiza el estado académico y administrativo de tu institución.',
@@ -325,6 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
   populateCredentialsFields();
   setInitialView();
   initializeTeacherWorkspace();
+  initializeStudentWorkspace();
   loadAccessDirectory();
   attachEventHandlers();
   toggleRoleFields(accessRoleSelect?.value ?? 'student');
@@ -413,6 +435,15 @@ document.addEventListener('DOMContentLoaded', () => {
     gradeForm?.addEventListener('submit', handleGradeFormSubmit);
 
     dataIssueForm?.addEventListener('submit', handleDataIssueSubmit);
+
+    studentTaskForm?.addEventListener('submit', handleStudentTaskSubmit);
+    studentTaskList?.addEventListener('click', handleStudentTaskClick);
+    studentTaskInput?.addEventListener('input', () => {
+      clearStudentTaskFeedback();
+    });
+    studentTaskCourseSelect?.addEventListener('change', () => {
+      clearStudentTaskFeedback();
+    });
   }
 
   async function loadAccessDirectory() {
@@ -808,6 +839,12 @@ document.addEventListener('DOMContentLoaded', () => {
     updateDataIssueList();
   }
 
+  function initializeStudentWorkspace() {
+    populateStudentTaskCourses();
+    renderStudentTasks();
+    clearStudentTaskFeedback();
+  }
+
   function populateScheduleSelect() {
     if (!scheduleDaySelect) {
       return;
@@ -903,6 +940,21 @@ document.addEventListener('DOMContentLoaded', () => {
       gradeTableBody.innerHTML =
         '<tr class="empty-state"><td colspan="3">Sin estudiantes registrados.</td></tr>';
     }
+  }
+
+  function populateStudentTaskCourses() {
+    if (!studentTaskCourseSelect) {
+      return;
+    }
+
+    const options = studentCourses
+      .map(
+        (course) =>
+          `<option value="${escapeAttribute(course.id)}">${escapeHtml(course.label)}</option>`
+      )
+      .join('');
+
+    studentTaskCourseSelect.innerHTML = options;
   }
 
   function renderGradeTable(courseId) {
@@ -1154,6 +1206,150 @@ document.addEventListener('DOMContentLoaded', () => {
         `
       )
       .join('');
+  }
+
+  function handleStudentTaskSubmit(event) {
+    event.preventDefault();
+
+    if (!studentTaskCourseSelect || !studentTaskInput) {
+      return;
+    }
+
+    const courseId = studentTaskCourseSelect.value;
+    const description = studentTaskInput.value.trim();
+
+    if (!courseId || !description) {
+      showStudentTaskFeedback('Selecciona un curso y describe la tarea.', 'error');
+      return;
+    }
+
+    const course = studentCourses.find((item) => item.id === courseId);
+    const courseLabel = course?.label ?? 'Curso sin nombre';
+
+    studentTasks.unshift({
+      id: `task-${Date.now()}`,
+      courseId,
+      courseLabel,
+      description,
+      completed: false,
+      createdAt: new Date()
+    });
+
+    if (studentTasks.length > 20) {
+      studentTasks.pop();
+    }
+
+    studentTaskForm?.reset();
+    studentTaskCourseSelect.value = courseId;
+    showStudentTaskFeedback(`Tarea agregada en ${courseLabel}.`, 'success');
+    renderStudentTasks();
+  }
+
+  function renderStudentTasks() {
+    if (!studentTaskList || !studentTaskEmpty) {
+      return;
+    }
+
+    if (!studentTasks.length) {
+      studentTaskList.innerHTML = '';
+      studentTaskList.hidden = true;
+      studentTaskEmpty.hidden = false;
+      return;
+    }
+
+    studentTaskList.hidden = false;
+    studentTaskEmpty.hidden = true;
+
+    const fragment = document.createDocumentFragment();
+
+    studentTasks.forEach((task) => {
+      const item = document.createElement('li');
+      item.className = `task-item${task.completed ? ' completed' : ''}`;
+      item.dataset.taskId = task.id;
+      item.innerHTML = `
+        <div>
+          <strong>${escapeHtml(task.courseLabel)}</strong>
+          <p>${escapeHtml(task.description)}</p>
+        </div>
+        <div class="task-actions">
+          <button type="button" class="ghost-button" data-action="toggle">${escapeHtml(
+            task.completed ? 'Reabrir' : 'Marcar listo'
+          )}</button>
+          <button type="button" class="ghost-button" data-action="remove">Eliminar</button>
+        </div>
+      `;
+      fragment.appendChild(item);
+    });
+
+    studentTaskList.innerHTML = '';
+    studentTaskList.appendChild(fragment);
+  }
+
+  function handleStudentTaskClick(event) {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) {
+      return;
+    }
+
+    const action = target.dataset.action;
+    if (!action) {
+      return;
+    }
+
+    const item = target.closest('.task-item');
+    if (!item) {
+      return;
+    }
+
+    const taskId = item.dataset.taskId;
+    if (!taskId) {
+      return;
+    }
+
+    const taskIndex = studentTasks.findIndex((task) => task.id === taskId);
+
+    if (taskIndex === -1) {
+      return;
+    }
+
+    if (action === 'toggle') {
+      studentTasks[taskIndex].completed = !studentTasks[taskIndex].completed;
+      const courseLabel = studentTasks[taskIndex].courseLabel;
+      showStudentTaskFeedback(
+        studentTasks[taskIndex].completed
+          ? `Marcaste como completada la tarea de ${courseLabel}.`
+          : `Reabriste la tarea de ${courseLabel}.`,
+        'success'
+      );
+    } else if (action === 'remove') {
+      const [removed] = studentTasks.splice(taskIndex, 1);
+      if (removed) {
+        showStudentTaskFeedback(`Eliminaste la tarea de ${removed.courseLabel}.`, 'success');
+      }
+    }
+
+    renderStudentTasks();
+  }
+
+  function showStudentTaskFeedback(message, status) {
+    if (!studentTaskFeedback) {
+      return;
+    }
+
+    studentTaskFeedback.textContent = message;
+    studentTaskFeedback.classList.remove('success', 'error');
+    if (status) {
+      studentTaskFeedback.classList.add(status);
+    }
+  }
+
+  function clearStudentTaskFeedback() {
+    if (!studentTaskFeedback) {
+      return;
+    }
+
+    studentTaskFeedback.textContent = '';
+    studentTaskFeedback.classList.remove('success', 'error');
   }
 
   function formatDateTime(value) {

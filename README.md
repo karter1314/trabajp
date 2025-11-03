@@ -7,8 +7,9 @@ Una interfaz moderna inspirada en el Sistema de Información de Apoyo a la Gesti
 - **Pantalla de acceso renovada** con diseño gradiente, tarjetas informativas y soporte para recordatorio de dispositivo.
 - **Accesos diferenciados** que redirigen a espacios independientes para administrativos, docentes y estudiantes, recordando las credenciales de cada perfil.
 - **Panel administrativo** con indicadores clave, seguimiento de matrículas, reportes institucionales y agenda general.
-- **Espacio docente** dedicado con horarios por aula, registro rápido de calificaciones y formulario para reportar inconsistencias en los datos de estudiantes.
-- **Panel del estudiante** orientado a la consulta de resultados, asistencias y agenda personal con accesos directos a tutoría.
+- **Espacio docente** dedicado con horarios por aula, calendario semanal de referencia, registro rápido de calificaciones y formulario para reportar inconsistencias en los datos de estudiantes.
+- **Panel del estudiante** orientado a la consulta de resultados, asistencias y agenda personal, ahora con horario semanal y gestor de tareas por curso.
+- **Plantillas ampliadas** con 10 docentes y 20 estudiantes de muestra que enriquecen las tablas y permiten visualizar la gestión de aulas más completa.
 - **Gestión de accesos administrativos** para registrar nuevas personas, asignarles rol (docente o estudiante) y reflejar al instante los cambios en las tablas correspondientes.
 - **Diseño responsive** pensado para equipos directivos que utilizan tanto escritorio como tabletas.
 
