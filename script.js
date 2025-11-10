@@ -112,22 +112,28 @@ document.addEventListener('DOMContentLoaded', () => {
       label: 'Lunes',
       sessions: [
         {
-          time: '07:30 - 09:00',
+          time: '08:00 - 09:30',
           course: 'Comunicación',
-          section: '2.º Secundaria B',
+          section: '4.º Secundaria B',
           room: 'Aula 204'
         },
         {
-          time: '09:15 - 10:45',
-          course: 'Comunicación',
-          section: '3.º Secundaria A',
-          room: 'Laboratorio de idiomas'
+          time: '09:45 - 11:15',
+          course: 'Matemáticas',
+          section: '4.º Secundaria B',
+          room: 'Aula 204'
         },
         {
-          time: '11:15 - 12:30',
-          course: 'Tutoría',
-          section: '1.º Secundaria C',
-          room: 'Aula 108'
+          time: '11:30 - 13:00',
+          course: 'Ciencias',
+          section: '4.º Secundaria B',
+          room: 'Laboratorio de ciencias'
+        },
+        {
+          time: '13:30 - 14:30',
+          course: 'Educación Física',
+          section: '4.º Secundaria B',
+          room: 'Coliseo escolar'
         }
       ]
     },
@@ -137,15 +143,21 @@ document.addEventListener('DOMContentLoaded', () => {
       sessions: [
         {
           time: '08:00 - 09:30',
-          course: 'Comunicación',
-          section: '4.º Secundaria A',
-          room: 'Aula 305'
+          course: 'Matemáticas',
+          section: '4.º Secundaria B',
+          room: 'Aula 204'
         },
         {
           time: '09:45 - 11:15',
-          course: 'Proyecto STEAM',
-          section: '2.º Secundaria B',
-          room: 'Sala de innovación'
+          course: 'Comunicación',
+          section: '4.º Secundaria B',
+          room: 'Aula 204'
+        },
+        {
+          time: '11:30 - 13:00',
+          course: 'Educación Física',
+          section: '4.º Secundaria B',
+          room: 'Coliseo escolar'
         }
       ]
     },
@@ -154,22 +166,22 @@ document.addEventListener('DOMContentLoaded', () => {
       label: 'Miércoles',
       sessions: [
         {
-          time: '07:30 - 09:00',
+          time: '08:00 - 09:30',
+          course: 'Ciencias',
+          section: '4.º Secundaria B',
+          room: 'Laboratorio de ciencias'
+        },
+        {
+          time: '09:45 - 11:15',
+          course: 'Educación Física',
+          section: '4.º Secundaria B',
+          room: 'Coliseo escolar'
+        },
+        {
+          time: '11:30 - 13:00',
           course: 'Comunicación',
-          section: '2.º Secundaria B',
+          section: '4.º Secundaria B',
           room: 'Aula 204'
-        },
-        {
-          time: '09:15 - 10:45',
-          course: 'Comunicación',
-          section: '5.º Secundaria C',
-          room: 'Aula 401'
-        },
-        {
-          time: '11:00 - 11:45',
-          course: 'Consejería',
-          section: 'Docentes noveles',
-          room: 'Sala de profesores'
         }
       ]
     },
@@ -179,15 +191,21 @@ document.addEventListener('DOMContentLoaded', () => {
       sessions: [
         {
           time: '08:00 - 09:30',
-          course: 'Comunicación',
-          section: '3.º Secundaria B',
-          room: 'Aula 210'
+          course: 'Educación Física',
+          section: '4.º Secundaria B',
+          room: 'Coliseo escolar'
         },
         {
           time: '09:45 - 11:15',
-          course: 'Comunicación',
-          section: '5.º Secundaria C',
-          room: 'Aula 401'
+          course: 'Ciencias',
+          section: '4.º Secundaria B',
+          room: 'Laboratorio de ciencias'
+        },
+        {
+          time: '11:30 - 13:00',
+          course: 'Matemáticas',
+          section: '4.º Secundaria B',
+          room: 'Aula 204'
         }
       ]
     },
@@ -196,22 +214,28 @@ document.addEventListener('DOMContentLoaded', () => {
       label: 'Viernes',
       sessions: [
         {
-          time: '07:30 - 09:00',
+          time: '08:00 - 09:30',
           course: 'Comunicación',
-          section: '1.º Secundaria C',
-          room: 'Aula 108'
+          section: '4.º Secundaria B',
+          room: 'Aula 204'
         },
         {
-          time: '09:15 - 10:45',
-          course: 'Comunicación',
-          section: '4.º Secundaria A',
-          room: 'Aula 305'
+          time: '09:45 - 11:15',
+          course: 'Matemáticas',
+          section: '4.º Secundaria B',
+          room: 'Aula 204'
         },
         {
-          time: '11:00 - 11:45',
-          course: 'Reunión con familias',
-          section: '2.º Secundaria B',
-          room: 'Sala de reuniones'
+          time: '11:30 - 13:00',
+          course: 'Ciencias',
+          section: '4.º Secundaria B',
+          room: 'Laboratorio de ciencias'
+        },
+        {
+          time: '13:30 - 14:30',
+          course: 'Educación Física',
+          section: '4.º Secundaria B',
+          room: 'Coliseo escolar'
         }
       ]
     }
@@ -219,40 +243,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const teacherCourses = [
     {
-      id: 'comunicacion-2b',
-      name: 'Comunicación · 2.º Secundaria B',
-      group: '2.º Secundaria B',
+      id: 'comunicacion-4b',
+      name: 'Comunicación · 4.º Secundaria B',
+      group: '4.º Secundaria B',
       room: 'Aula 204',
       students: [
         { id: 'andrea-paredes', name: 'Andrea Paredes', grade: 'AD' },
-        { id: 'carlos-ramos', name: 'Carlos Ramos', grade: 'B' },
+        { id: 'carlos-ramos', name: 'Carlos Ramos', grade: 'A' },
         { id: 'lucia-torres', name: 'Lucía Torres', grade: 'A' },
-        { id: 'valeria-nunez', name: 'Valeria Núñez', grade: 'A' },
-        { id: 'diego-herrera', name: 'Diego Herrera', grade: 'B' }
+        { id: 'valeria-nunez', name: 'Valeria Núñez', grade: 'B' }
       ]
     },
     {
-      id: 'comunicacion-4a',
-      name: 'Comunicación · 4.º Secundaria A',
-      group: '4.º Secundaria A',
-      room: 'Aula 305',
+      id: 'matematicas-4b',
+      name: 'Matemáticas · 4.º Secundaria B',
+      group: '4.º Secundaria B',
+      room: 'Aula 204',
       students: [
-        { id: 'sofia-leon', name: 'Sofía León', grade: 'AD' },
+        { id: 'diego-herrera', name: 'Diego Herrera', grade: 'B' },
         { id: 'renato-ibanez', name: 'Renato Ibañez', grade: 'A' },
-        { id: 'ana-castro', name: 'Ana Castro', grade: 'A' },
-        { id: 'gabriel-lopez', name: 'Gabriel López', grade: 'B' }
+        { id: 'gabriel-lopez', name: 'Gabriel López', grade: 'B' },
+        { id: 'ana-castro', name: 'Ana Castro', grade: 'A' }
       ]
     },
     {
-      id: 'comunicacion-5c',
-      name: 'Comunicación · 5.º Secundaria C',
-      group: '5.º Secundaria C',
-      room: 'Aula 401',
+      id: 'ciencias-4b',
+      name: 'Ciencias · 4.º Secundaria B',
+      group: '4.º Secundaria B',
+      room: 'Laboratorio de ciencias',
       students: [
         { id: 'mariana-silva', name: 'Mariana Silva', grade: 'A' },
         { id: 'jorge-vizcarra', name: 'Jorge Vizcarra', grade: 'B' },
         { id: 'paula-gomez', name: 'Paula Gómez', grade: 'AD' },
         { id: 'sebastian-cortes', name: 'Sebastián Cortés', grade: 'A' }
+      ]
+    },
+    {
+      id: 'educacion-fisica-4b',
+      name: 'Educación Física · 4.º Secundaria B',
+      group: '4.º Secundaria B',
+      room: 'Coliseo escolar',
+      students: [
+        { id: 'lucia-herrera', name: 'Lucía Herrera', grade: 'A' },
+        { id: 'mateo-fernandez', name: 'Mateo Fernández', grade: 'B' },
+        { id: 'ximena-alarcon', name: 'Ximena Alarcón', grade: 'A' },
+        { id: 'raul-ordonez', name: 'Raúl Ordoñez', grade: 'AD' }
       ]
     }
   ];
