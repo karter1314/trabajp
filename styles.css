@@ -619,6 +619,22 @@ footer {
   gap: 1rem;
 }
 
+.assignment-video {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.assignment-video video {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  background: #000;
+}
+
+.assignment-video small {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
 .assignment-header {
   display: flex;
   justify-content: space-between;

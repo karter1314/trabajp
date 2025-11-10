@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const teacherAssignmentDetail = document.getElementById('teacher-assignment-detail');
   const teacherAssignmentDue = document.getElementById('teacher-assignment-due');
   const teacherAssignmentFile = document.getElementById('teacher-assignment-file');
+  const teacherAssignmentVideo = document.getElementById('teacher-assignment-video');
   const teacherAssignmentFeedback = document.getElementById('teacher-assignment-feedback');
   const teacherAssignmentList = document.getElementById('teacher-assignment-list');
   const teacherAssignmentEmpty = document.getElementById('teacher-assignment-empty');
@@ -338,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
     teacher: {
       heading: 'Acceso docente',
       description:
-        'Registra calificaciones, revisa la asistencia y mantén comunicación con tus aulas asignadas.',
+        'Registra calificaciones, comparte videos de clase y mantén comunicación con tus aulas asignadas.',
       submitLabel: 'Acceder como docente',
       user: {
         name: 'María Elena Rojas',
@@ -350,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
     student: {
       heading: 'Acceso estudiante',
       description:
-        'Consulta tus calificaciones, seguimiento académico y actividades planificadas.',
+        'Consulta tus calificaciones, revisa los videos compartidos y sigue tus actividades planificadas.',
       submitLabel: 'Acceder como estudiante',
       user: {
         name: 'Lucía Herrera',
@@ -373,13 +374,14 @@ document.addEventListener('DOMContentLoaded', () => {
     student: { email: '', password: '' }
   };
 
-  let activeRole = 'admin';
+  let activeRole = 'teacher';
 
   const newRecords = [];
   let recordIdCounter = 1;
   let directoryDownloadUrl = '';
 
   restoreSavedState();
+  ensureActiveRoleAvailable();
   updateRoleUI();
   populateCredentialsFields();
   setInitialView();
@@ -481,6 +483,12 @@ document.addEventListener('DOMContentLoaded', () => {
       clearTeacherAssignmentFeedback();
     });
     teacherAssignmentCourseSelect?.addEventListener('change', () => {
+      clearTeacherAssignmentFeedback();
+    });
+    teacherAssignmentFile?.addEventListener('change', () => {
+      clearTeacherAssignmentFeedback();
+    });
+    teacherAssignmentVideo?.addEventListener('change', () => {
       clearTeacherAssignmentFeedback();
     });
 
@@ -846,19 +854,21 @@ document.addEventListener('DOMContentLoaded', () => {
   function showLayoutForRole(role) {
     hideAllLayouts();
 
-    if (role === 'admin' && adminLayout) {
+    const targetRole = role === 'admin' && !adminLayout ? 'teacher' : role;
+
+    if (targetRole === 'admin' && adminLayout) {
       adminLayout.hidden = false;
       applyRoleProfile('admin');
       return;
     }
 
-    if (role === 'teacher' && teacherLayout) {
+    if (targetRole === 'teacher' && teacherLayout) {
       teacherLayout.hidden = false;
       applyRoleProfile('teacher');
       return;
     }
 
-    if (role === 'student' && studentLayout) {
+    if (targetRole === 'student' && studentLayout) {
       studentLayout.hidden = false;
       applyRoleProfile('student');
       return;
@@ -1296,6 +1306,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const detail = teacherAssignmentDetail?.value.trim() ?? '';
     const dueDate = teacherAssignmentDue?.value ?? '';
     const file = teacherAssignmentFile?.files?.[0] ?? null;
+    const video = teacherAssignmentVideo?.files?.[0] ?? null;
 
     if (!courseId || !title) {
       showTeacherAssignmentFeedback(
@@ -1319,6 +1330,8 @@ document.addEventListener('DOMContentLoaded', () => {
       dueDate,
       fileName: file?.name ?? '',
       fileUrl: file ? URL.createObjectURL(file) : '',
+      videoName: video?.name ?? '',
+      videoUrl: video ? URL.createObjectURL(video) : '',
       createdAt: new Date(),
       completed: false
     };
@@ -1327,12 +1340,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (assignments.length > 30) {
       const removed = assignments.pop();
-      if (removed?.fileUrl) {
-        URL.revokeObjectURL(removed.fileUrl);
-      }
+      releaseAssignmentResources(removed);
     }
 
     teacherAssignmentForm?.reset();
+    if (teacherAssignmentFile) {
+      teacherAssignmentFile.value = '';
+    }
+    if (teacherAssignmentVideo) {
+      teacherAssignmentVideo.value = '';
+    }
     populateTeacherAssignmentCourses();
     if (teacherAssignmentCourseSelect) {
       teacherAssignmentCourseSelect.value = courseId;
@@ -1344,6 +1361,22 @@ document.addEventListener('DOMContentLoaded', () => {
     );
     renderTeacherAssignments();
     renderStudentAssignments();
+  }
+
+  function releaseAssignmentResources(assignment) {
+    if (!assignment) {
+      return;
+    }
+
+    if (assignment.fileUrl) {
+      URL.revokeObjectURL(assignment.fileUrl);
+      assignment.fileUrl = '';
+    }
+
+    if (assignment.videoUrl) {
+      URL.revokeObjectURL(assignment.videoUrl);
+      assignment.videoUrl = '';
+    }
   }
 
   function renderTeacherAssignments() {
@@ -1390,6 +1423,14 @@ document.addEventListener('DOMContentLoaded', () => {
           `Archivo: <a href="${escapeAttribute(assignment.fileUrl)}" download="${escapeAttribute(
             assignment.fileName
           )}" class="link">${escapeHtml(assignment.fileName)}</a>`
+        );
+      }
+      if (assignment.videoUrl) {
+        const videoName = assignment.videoName || 'Video de clase';
+        metaParts.push(
+          `Video: <a href="${escapeAttribute(assignment.videoUrl)}" target="_blank" rel="noopener" download="${escapeAttribute(
+            assignment.videoName || 'video-clase.mp4'
+          )}" class="link">${escapeHtml(videoName)}</a>`
         );
       }
 
@@ -1453,6 +1494,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (assignment.courseGroup) {
         metaParts.push(`Sección: ${escapeHtml(assignment.courseGroup)}`);
       }
+      if (assignment.videoUrl) {
+        metaParts.push('Incluye video de clase');
+      }
 
       const fileButton =
         assignment.fileName && assignment.fileUrl
@@ -1460,6 +1504,20 @@ document.addEventListener('DOMContentLoaded', () => {
               assignment.fileUrl
             )}" download="${escapeAttribute(assignment.fileName)}">Descargar archivo</a>`
           : '';
+      const videoBlock = assignment.videoUrl
+        ? `<div class="assignment-video"><video controls preload="metadata" src="${escapeAttribute(
+            assignment.videoUrl
+          )}"></video>${assignment.videoName ? `<small>${escapeHtml(
+            assignment.videoName
+          )}</small>` : ''}</div>`
+        : '';
+      const videoButton = assignment.videoUrl
+        ? `<a class="ghost-button" href="${escapeAttribute(
+            assignment.videoUrl
+          )}" target="_blank" rel="noopener" download="${escapeAttribute(
+            assignment.videoName || 'video-clase.mp4'
+          )}">Ver video</a>`
+        : '';
 
       item.innerHTML = `
         <div class="assignment-body">
@@ -1468,6 +1526,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <span class="chip">${escapeHtml(assignment.courseLabel)}</span>
           </div>
           ${detailHtml}
+          ${videoBlock}
           <ul class="assignment-meta">
             ${metaParts.map((part) => `<li>${part}</li>`).join('')}
             ${
@@ -1478,6 +1537,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </ul>
         </div>
         <div class="assignment-actions">
+          ${videoButton}
           ${fileButton}
           <button type="button" class="secondary-button" data-action="toggle">
             ${escapeHtml(assignment.completed ? 'Marcar como pendiente' : 'Marcar como completada')}
@@ -2426,6 +2486,20 @@ document.addEventListener('DOMContentLoaded', () => {
         password: saved.credentials?.[role]?.password ?? ''
       };
     });
+  }
+
+  function ensureActiveRoleAvailable() {
+    if (activeRole === 'admin' && !adminLayout) {
+      activeRole = 'teacher';
+    }
+
+    const hasMatchingTab = Array.from(roleTabs).some(
+      (tab) => tab.dataset.role === activeRole
+    );
+
+    if (!hasMatchingTab) {
+      activeRole = 'teacher';
+    }
   }
 
   function readStoredState() {

@@ -1,18 +1,5 @@
 {
-  "admin": [
-    {
-      "email": "bj210806@gmail.com",
-      "password": "admin123",
-      "name": "Carlos Luis Huamán Manrique",
-      "detail": "Director IE 3058"
-    },
-    {
-      "email": "soporte@ie3058.edu.pe",
-      "password": "soporte2024",
-      "name": "Adriana Vela",
-      "detail": "Coordinadora académica"
-    }
-  ],
+  "admin": [],
   "teacher": [
     {
       "email": "clasico3040@gmail.com",
