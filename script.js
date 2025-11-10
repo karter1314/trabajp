@@ -71,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const studentResourceList = document.getElementById('student-resource-list');
   const studentResourceEmpty = document.getElementById('student-resource-empty');
   const studentResourceSummary = document.getElementById('student-resource-summary');
+  const PLATFORM_NAME = 'SESI';
   const STORAGE_KEY = 'sesiCredentials';
   const LEGACY_STORAGE_KEYS = ['siagiePlusCredentials', 'siseCredentials'];
   const DIRECTORY_PATH = 'data/usuarios.json';
@@ -81,6 +82,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const storage = getStorage();
   migrateLegacyStorage();
   const body = document.body;
+
+  document.title = `${PLATFORM_NAME} Plataforma Educativa`;
+
+  document.querySelectorAll('[data-brand="name"]').forEach((element) => {
+    element.textContent = PLATFORM_NAME;
+  });
+
+  document.querySelectorAll('[data-brand="logo"]').forEach((element) => {
+    element.setAttribute('alt', `Logo institucional ${PLATFORM_NAME}`);
+  });
 
   const gradeOptions = [
     'Inicial',
