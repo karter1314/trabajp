@@ -34,10 +34,27 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.watermark {
+  position: fixed;
+  inset: 0;
+  background-image: url('assets/iee-huancayo-logo.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: min(46vw, 420px);
+  opacity: 0.065;
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: multiply;
 }
 
 #app {
   width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
 .login-screen {
