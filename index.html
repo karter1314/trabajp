@@ -46,8 +46,7 @@
             <div class="role-intro" id="role-intro">
               <h3 id="role-heading">Acceso docente</h3>
               <p id="role-description">
-                Registra calificaciones, comparte recursos y mantén comunicación con tus
-                aulas asignadas.
+                Administra tu horario, envía tareas y comparte materiales con tus aulas asignadas.
               </p>
             </div>
             <input type="hidden" name="role" id="login-role" value="teacher" />
@@ -105,8 +104,8 @@
               <div>
                 <h2>Espacio docente</h2>
                 <p>
-                  Consulta tu horario, registra calificaciones y comparte recursos en video
-                  con tus estudiantes.
+                  Consulta tu horario de clases, envía tareas y comparte presentaciones o videos
+                  con tus aulas asignadas.
                 </p>
               </div>
             </div>
@@ -130,91 +129,6 @@
                     </tr>
                   </thead>
                   <tbody id="schedule-body"></tbody>
-                </table>
-              </article>
-
-              <article class="card wide schedule-matrix" aria-labelledby="teacher-weekly-heading">
-                <header>
-                  <h3 id="teacher-weekly-heading">Horario semanal del docente</h3>
-                  <span class="chip success">Actualizado</span>
-                </header>
-                <table class="schedule-table">
-                  <thead>
-                    <tr>
-                      <th>Hora</th>
-                      <th>Lunes</th>
-                      <th>Martes</th>
-                      <th>Miércoles</th>
-                      <th>Jueves</th>
-                      <th>Viernes</th>
-                      <th>Sábado</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th>08:00</th>
-                      <td>Comunicación · 4.º B</td>
-                      <td>Matemáticas · 4.º B</td>
-                      <td>Ciencias · 4.º B</td>
-                      <td>Educación Física · 4.º B</td>
-                      <td>Comunicación · 4.º B</td>
-                      <td class="muted">Planificación</td>
-                    </tr>
-                    <tr>
-                      <th>09:00</th>
-                      <td>Matemáticas · 4.º B</td>
-                      <td>Comunicación · 4.º B</td>
-                      <td>Educación Física · 4.º B</td>
-                      <td>Ciencias · 4.º B</td>
-                      <td>Matemáticas · 4.º B</td>
-                      <td class="muted">Planificación</td>
-                    </tr>
-                    <tr>
-                      <th>10:00</th>
-                      <td>Ciencias · 4.º B</td>
-                      <td>Educación Física · 4.º B</td>
-                      <td>Comunicación · 4.º B</td>
-                      <td>Matemáticas · 4.º B</td>
-                      <td>Ciencias · 4.º B</td>
-                      <td class="muted">Libre</td>
-                    </tr>
-                    <tr>
-                      <th>11:00</th>
-                      <td>Receso</td>
-                      <td>Receso</td>
-                      <td>Receso</td>
-                      <td>Receso</td>
-                      <td>Receso</td>
-                      <td class="muted">Libre</td>
-                    </tr>
-                    <tr>
-                      <th>12:00</th>
-                      <td>Educación Física · 4.º B</td>
-                      <td>Ciencias · 4.º B</td>
-                      <td>Matemáticas · 4.º B</td>
-                      <td>Comunicación · 4.º B</td>
-                      <td>Educación Física · 4.º B</td>
-                      <td class="muted">Libre</td>
-                    </tr>
-                    <tr>
-                      <th>13:00</th>
-                      <td>Planificación</td>
-                      <td>Planificación</td>
-                      <td>Planificación</td>
-                      <td>Planificación</td>
-                      <td>Planificación</td>
-                      <td class="muted">Libre</td>
-                    </tr>
-                    <tr>
-                      <th>14:00</th>
-                      <td class="muted">Libre</td>
-                      <td class="muted">Libre</td>
-                      <td class="muted">Libre</td>
-                      <td class="muted">Libre</td>
-                      <td class="muted">Libre</td>
-                      <td class="muted">Libre</td>
-                    </tr>
-                  </tbody>
                 </table>
               </article>
 
@@ -252,25 +166,11 @@
                       <span>Fecha de entrega</span>
                       <input type="date" id="teacher-assignment-due" name="assignmentDue" />
                     </label>
-                    <label class="field form-field">
-                      <span>Archivo de apoyo (Word, PDF)</span>
-                      <input
-                        type="file"
-                        id="teacher-assignment-file"
-                        name="assignmentFile"
-                        accept=".doc,.docx,.pdf"
-                      />
-                    </label>
+                    <div class="field form-field helper">
+                      <span>Recordatorio</span>
+                      <p>Comparte detalles claros para que tu aula complete la actividad a tiempo.</p>
+                    </div>
                   </div>
-                  <label class="field form-field">
-                    <span>Video de la clase</span>
-                    <input
-                      type="file"
-                      id="teacher-assignment-video"
-                      name="assignmentVideo"
-                      accept="video/*"
-                    />
-                  </label>
                   <div class="form-actions">
                     <button type="submit" class="primary-button">Enviar tarea</button>
                     <span
@@ -288,46 +188,138 @@
                   </p>
                 </div>
               </article>
-
-              <article class="card">
-                <header>
-                  <h3>Registro rápido de calificaciones</h3>
-                  <button type="button" class="ghost-button" id="grade-reset">
-                    Reiniciar
-                  </button>
-                </header>
-                <form id="grade-form" class="stacked-form" autocomplete="off">
-                  <div class="compact-field">
-                    <span>Curso asignado</span>
-                    <select id="grade-course" required></select>
-                  </div>
-                  <table class="data-table compact">
-                    <thead>
-                      <tr>
-                        <th>Estudiante</th>
-                        <th>Grupo</th>
-                        <th>Calificación final</th>
-                      </tr>
-                    </thead>
-                    <tbody id="grade-table-body"></tbody>
-                  </table>
-                  <div class="form-actions">
-                    <button type="submit" class="primary-button">
-                      Guardar calificaciones
-                    </button>
-                    <span class="form-feedback" id="grade-feedback" aria-live="polite"></span>
-                  </div>
-                </form>
-                <div class="card-subsection">
-                  <h4>Últimas entregas</h4>
-                  <ul id="grade-history" class="timeline compact"></ul>
-                  <p id="grade-history-empty" class="empty-state">
-                    Aún no registras calificaciones en esta sesión.
-                  </p>
-                </div>
-              </article>
-
             </div>
+
+            <article class="card wide schedule-matrix" aria-labelledby="teacher-weekly-heading">
+              <header>
+                <h3 id="teacher-weekly-heading">Horario semanal del docente</h3>
+                <span class="chip success">Actualizado</span>
+              </header>
+              <table class="schedule-table">
+                <thead>
+                  <tr>
+                    <th>Hora</th>
+                    <th>Lunes</th>
+                    <th>Martes</th>
+                    <th>Miércoles</th>
+                    <th>Jueves</th>
+                    <th>Viernes</th>
+                    <th>Sábado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>08:00</th>
+                    <td>Comunicación · 4.º B</td>
+                    <td>Matemáticas · 4.º B</td>
+                    <td>Ciencias · 4.º B</td>
+                    <td>Educación Física · 4.º B</td>
+                    <td>Comunicación · 4.º B</td>
+                    <td class="muted">Planificación</td>
+                  </tr>
+                  <tr>
+                    <th>09:00</th>
+                    <td>Matemáticas · 4.º B</td>
+                    <td>Comunicación · 4.º B</td>
+                    <td>Educación Física · 4.º B</td>
+                    <td>Ciencias · 4.º B</td>
+                    <td>Matemáticas · 4.º B</td>
+                    <td class="muted">Planificación</td>
+                  </tr>
+                  <tr>
+                    <th>10:00</th>
+                    <td>Ciencias · 4.º B</td>
+                    <td>Educación Física · 4.º B</td>
+                    <td>Comunicación · 4.º B</td>
+                    <td>Matemáticas · 4.º B</td>
+                    <td>Ciencias · 4.º B</td>
+                    <td class="muted">Libre</td>
+                  </tr>
+                  <tr>
+                    <th>11:00</th>
+                    <td>Receso</td>
+                    <td>Receso</td>
+                    <td>Receso</td>
+                    <td>Receso</td>
+                    <td>Receso</td>
+                    <td class="muted">Libre</td>
+                  </tr>
+                  <tr>
+                    <th>12:00</th>
+                    <td>Educación Física · 4.º B</td>
+                    <td>Ciencias · 4.º B</td>
+                    <td>Matemáticas · 4.º B</td>
+                    <td>Comunicación · 4.º B</td>
+                    <td>Educación Física · 4.º B</td>
+                    <td class="muted">Libre</td>
+                  </tr>
+                  <tr>
+                    <th>13:00</th>
+                    <td>Planificación</td>
+                    <td>Planificación</td>
+                    <td>Planificación</td>
+                    <td>Planificación</td>
+                    <td>Planificación</td>
+                    <td class="muted">Libre</td>
+                  </tr>
+                  <tr>
+                    <th>14:00</th>
+                    <td class="muted">Libre</td>
+                    <td class="muted">Libre</td>
+                    <td class="muted">Libre</td>
+                    <td class="muted">Libre</td>
+                    <td class="muted">Libre</td>
+                    <td class="muted">Libre</td>
+                  </tr>
+                </tbody>
+              </table>
+            </article>
+
+            <article class="card">
+              <header>
+                <h3>Recursos de clase</h3>
+                <span class="chip info" id="teacher-resource-count">Sin recursos</span>
+              </header>
+              <form id="teacher-resource-form" class="stacked-form" autocomplete="off">
+                <label class="field form-field">
+                  <span>Curso</span>
+                  <select id="teacher-resource-course" required></select>
+                </label>
+                <label class="field form-field">
+                  <span>Presentación (PPT, PDF)</span>
+                  <input
+                    type="file"
+                    id="teacher-resource-presentation"
+                    name="resourcePresentation"
+                    accept=".ppt,.pptx,.pdf"
+                  />
+                </label>
+                <label class="field form-field">
+                  <span>Video de la clase</span>
+                  <input
+                    type="file"
+                    id="teacher-resource-video"
+                    name="resourceVideo"
+                    accept="video/*"
+                  />
+                </label>
+                <div class="form-actions">
+                  <button type="submit" class="primary-button">Compartir recurso</button>
+                  <span
+                    class="form-feedback"
+                    id="teacher-resource-feedback"
+                    aria-live="polite"
+                  ></span>
+                </div>
+              </form>
+              <div class="card-subsection">
+                <h4>Materiales compartidos</h4>
+                <ul id="teacher-resource-list" class="task-list resource-list"></ul>
+                <p id="teacher-resource-empty" class="empty-state">
+                  Todavía no has compartido presentaciones o videos.
+                </p>
+              </div>
+            </article>
           </section>
         </main>
       </div>
@@ -555,17 +547,24 @@
                   <h3 id="student-assignment-heading">Tareas enviadas por tus docentes</h3>
                   <span class="chip info" id="student-assignment-summary">Sin tareas</span>
                 </header>
-                <p>
-                  Cada vez que un docente publique una actividad, aparecerá aquí con los
-                  detalles, fecha de entrega y recursos adjuntos, incluidos videos de la
-                  clase cuando estén disponibles.
-                </p>
                 <div class="card-subsection">
-                  <h4>Lista de pendientes</h4>
                   <ul id="student-assignment-list" class="task-list"></ul>
                   <p id="student-assignment-empty" class="empty-state">
                     Tus docentes aún no han enviado tareas. Mantente atento a las
                     próximas indicaciones.
+                  </p>
+                </div>
+              </article>
+
+              <article class="card" aria-labelledby="student-resource-heading">
+                <header>
+                  <h3 id="student-resource-heading">Recursos compartidos</h3>
+                  <span class="chip info" id="student-resource-summary">Sin recursos</span>
+                </header>
+                <div class="card-subsection">
+                  <ul id="student-resource-list" class="task-list resource-list"></ul>
+                  <p id="student-resource-empty" class="empty-state">
+                    Aún no tienes presentaciones ni videos compartidos.
                   </p>
                 </div>
               </article>

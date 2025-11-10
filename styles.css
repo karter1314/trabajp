@@ -568,6 +568,24 @@ footer {
   border-radius: var(--radius-sm);
 }
 
+.form-field.helper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.form-field.helper span {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.form-field.helper p {
+  margin: 0;
+}
+
 .role-fields {
   display: grid;
   gap: 0.75rem;
@@ -915,6 +933,15 @@ footer {
   display: flex;
   gap: 0.35rem;
   align-items: center;
+}
+
+.resource-item .assignment-meta li span {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.resource-list .assignment-actions {
+  gap: 0.5rem;
 }
 
 .assignment-actions {

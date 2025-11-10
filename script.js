@@ -53,15 +53,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const teacherAssignmentTitle = document.getElementById('teacher-assignment-title');
   const teacherAssignmentDetail = document.getElementById('teacher-assignment-detail');
   const teacherAssignmentDue = document.getElementById('teacher-assignment-due');
-  const teacherAssignmentFile = document.getElementById('teacher-assignment-file');
-  const teacherAssignmentVideo = document.getElementById('teacher-assignment-video');
   const teacherAssignmentFeedback = document.getElementById('teacher-assignment-feedback');
   const teacherAssignmentList = document.getElementById('teacher-assignment-list');
   const teacherAssignmentEmpty = document.getElementById('teacher-assignment-empty');
   const teacherAssignmentCount = document.getElementById('teacher-assignment-count');
+  const teacherResourceForm = document.getElementById('teacher-resource-form');
+  const teacherResourceCourseSelect = document.getElementById('teacher-resource-course');
+  const teacherResourcePresentation = document.getElementById('teacher-resource-presentation');
+  const teacherResourceVideo = document.getElementById('teacher-resource-video');
+  const teacherResourceFeedback = document.getElementById('teacher-resource-feedback');
+  const teacherResourceList = document.getElementById('teacher-resource-list');
+  const teacherResourceEmpty = document.getElementById('teacher-resource-empty');
+  const teacherResourceCount = document.getElementById('teacher-resource-count');
   const studentAssignmentList = document.getElementById('student-assignment-list');
   const studentAssignmentEmpty = document.getElementById('student-assignment-empty');
   const studentAssignmentSummary = document.getElementById('student-assignment-summary');
+  const studentResourceList = document.getElementById('student-resource-list');
+  const studentResourceEmpty = document.getElementById('student-resource-empty');
+  const studentResourceSummary = document.getElementById('student-resource-summary');
   const STORAGE_KEY = 'siseCredentials';
   const LEGACY_STORAGE_KEY = 'siagiePlusCredentials';
   const DIRECTORY_PATH = 'data/usuarios.json';
@@ -291,6 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const gradeHistory = [];
   const assignments = [];
+  const classResources = [];
 
   const panelDescriptions = {
     dashboard: 'Visualiza el estado académico y administrativo de tu institución.',
@@ -334,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
     teacher: {
       heading: 'Acceso docente',
       description:
-        'Registra calificaciones, comparte videos de clase y mantén comunicación con tus aulas asignadas.',
+        'Administra tu horario, envía tareas y comparte recursos multimedia con tus aulas asignadas.',
       submitLabel: 'Acceder como docente',
       user: {
         name: 'María Elena Rojas',
@@ -346,7 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
     student: {
       heading: 'Acceso estudiante',
       description:
-        'Consulta tus calificaciones, revisa los videos compartidos y sigue tus actividades planificadas.',
+        'Consulta tus avances, revisa las tareas y accede a las presentaciones o videos compartidos.',
       submitLabel: 'Acceder como estudiante',
       user: {
         name: 'Lucía Herrera',
@@ -478,11 +488,19 @@ document.addEventListener('DOMContentLoaded', () => {
     teacherAssignmentCourseSelect?.addEventListener('change', () => {
       clearTeacherAssignmentFeedback();
     });
-    teacherAssignmentFile?.addEventListener('change', () => {
-      clearTeacherAssignmentFeedback();
+
+    teacherResourceForm?.addEventListener('submit', handleTeacherResourceSubmit);
+    teacherResourceForm?.addEventListener('input', () => {
+      clearTeacherResourceFeedback();
     });
-    teacherAssignmentVideo?.addEventListener('change', () => {
-      clearTeacherAssignmentFeedback();
+    teacherResourceCourseSelect?.addEventListener('change', () => {
+      clearTeacherResourceFeedback();
+    });
+    teacherResourcePresentation?.addEventListener('change', () => {
+      clearTeacherResourceFeedback();
+    });
+    teacherResourceVideo?.addEventListener('change', () => {
+      clearTeacherResourceFeedback();
     });
 
     studentAssignmentList?.addEventListener('click', handleStudentAssignmentClick);
@@ -800,6 +818,9 @@ document.addEventListener('DOMContentLoaded', () => {
       renderTeacherAssignments();
       clearTeacherAssignmentFeedback();
 
+      renderTeacherResources();
+      clearTeacherResourceFeedback();
+
       clearGradeFeedback();
 
       if (scheduleDaySelect) {
@@ -837,6 +858,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       renderStudentAssignments();
       updateStudentAssignmentSummary();
+      renderStudentResources();
+      updateStudentResourceSummary();
     }
   }
 
@@ -922,12 +945,15 @@ document.addEventListener('DOMContentLoaded', () => {
     populateTeacherAssignmentCourses();
     clearGradeFeedback();
     clearTeacherAssignmentFeedback();
+    clearTeacherResourceFeedback();
     updateGradeHistory();
     renderTeacherAssignments();
+    renderTeacherResources();
   }
 
   function initializeStudentWorkspace() {
     renderStudentAssignments();
+    renderStudentResources();
   }
 
   function populateScheduleSelect() {
@@ -1212,8 +1238,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const title = teacherAssignmentTitle.value.trim();
     const detail = teacherAssignmentDetail?.value.trim() ?? '';
     const dueDate = teacherAssignmentDue?.value ?? '';
-    const file = teacherAssignmentFile?.files?.[0] ?? null;
-    const video = teacherAssignmentVideo?.files?.[0] ?? null;
 
     if (!courseId || !title) {
       showTeacherAssignmentFeedback(
@@ -1235,10 +1259,6 @@ document.addEventListener('DOMContentLoaded', () => {
       title,
       detail,
       dueDate,
-      fileName: file?.name ?? '',
-      fileUrl: file ? URL.createObjectURL(file) : '',
-      videoName: video?.name ?? '',
-      videoUrl: video ? URL.createObjectURL(video) : '',
       createdAt: new Date(),
       completed: false
     };
@@ -1246,17 +1266,10 @@ document.addEventListener('DOMContentLoaded', () => {
     assignments.unshift(assignment);
 
     if (assignments.length > 30) {
-      const removed = assignments.pop();
-      releaseAssignmentResources(removed);
+      assignments.pop();
     }
 
     teacherAssignmentForm?.reset();
-    if (teacherAssignmentFile) {
-      teacherAssignmentFile.value = '';
-    }
-    if (teacherAssignmentVideo) {
-      teacherAssignmentVideo.value = '';
-    }
     populateTeacherAssignmentCourses();
     if (teacherAssignmentCourseSelect) {
       teacherAssignmentCourseSelect.value = courseId;
@@ -1268,22 +1281,6 @@ document.addEventListener('DOMContentLoaded', () => {
     );
     renderTeacherAssignments();
     renderStudentAssignments();
-  }
-
-  function releaseAssignmentResources(assignment) {
-    if (!assignment) {
-      return;
-    }
-
-    if (assignment.fileUrl) {
-      URL.revokeObjectURL(assignment.fileUrl);
-      assignment.fileUrl = '';
-    }
-
-    if (assignment.videoUrl) {
-      URL.revokeObjectURL(assignment.videoUrl);
-      assignment.videoUrl = '';
-    }
   }
 
   function renderTeacherAssignments() {
@@ -1325,22 +1322,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (assignment.dueDate) {
         metaParts.push(`Entrega: ${escapeHtml(formatDate(assignment.dueDate))}`);
       }
-      if (assignment.fileName && assignment.fileUrl) {
-        metaParts.push(
-          `Archivo: <a href="${escapeAttribute(assignment.fileUrl)}" download="${escapeAttribute(
-            assignment.fileName
-          )}" class="link">${escapeHtml(assignment.fileName)}</a>`
-        );
-      }
-      if (assignment.videoUrl) {
-        const videoName = assignment.videoName || 'Video de clase';
-        metaParts.push(
-          `Video: <a href="${escapeAttribute(assignment.videoUrl)}" target="_blank" rel="noopener" download="${escapeAttribute(
-            assignment.videoName || 'video-clase.mp4'
-          )}" class="link">${escapeHtml(videoName)}</a>`
-        );
-      }
-
       item.innerHTML = `
         <div class="assignment-body">
           <div class="assignment-header">
@@ -1401,31 +1382,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (assignment.courseGroup) {
         metaParts.push(`Sección: ${escapeHtml(assignment.courseGroup)}`);
       }
-      if (assignment.videoUrl) {
-        metaParts.push('Incluye video de clase');
-      }
-
-      const fileButton =
-        assignment.fileName && assignment.fileUrl
-          ? `<a class="ghost-button" href="${escapeAttribute(
-              assignment.fileUrl
-            )}" download="${escapeAttribute(assignment.fileName)}">Descargar archivo</a>`
-          : '';
-      const videoBlock = assignment.videoUrl
-        ? `<div class="assignment-video"><video controls preload="metadata" src="${escapeAttribute(
-            assignment.videoUrl
-          )}"></video>${assignment.videoName ? `<small>${escapeHtml(
-            assignment.videoName
-          )}</small>` : ''}</div>`
-        : '';
-      const videoButton = assignment.videoUrl
-        ? `<a class="ghost-button" href="${escapeAttribute(
-            assignment.videoUrl
-          )}" target="_blank" rel="noopener" download="${escapeAttribute(
-            assignment.videoName || 'video-clase.mp4'
-          )}">Ver video</a>`
-        : '';
-
       item.innerHTML = `
         <div class="assignment-body">
           <div class="assignment-header">
@@ -1433,19 +1389,11 @@ document.addEventListener('DOMContentLoaded', () => {
             <span class="chip">${escapeHtml(assignment.courseLabel)}</span>
           </div>
           ${detailHtml}
-          ${videoBlock}
           <ul class="assignment-meta">
             ${metaParts.map((part) => `<li>${part}</li>`).join('')}
-            ${
-              assignment.fileName && assignment.fileUrl
-                ? `<li>Archivo: <span>${escapeHtml(assignment.fileName)}</span></li>`
-                : ''
-            }
           </ul>
         </div>
         <div class="assignment-actions">
-          ${videoButton}
-          ${fileButton}
           <button type="button" class="secondary-button" data-action="toggle">
             ${escapeHtml(assignment.completed ? 'Marcar como pendiente' : 'Marcar como completada')}
           </button>
@@ -1512,10 +1460,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function populateTeacherAssignmentCourses() {
-    if (!teacherAssignmentCourseSelect) {
-      return;
-    }
-
     const options = teacherCourses
       .map(
         (course) =>
@@ -1523,15 +1467,30 @@ document.addEventListener('DOMContentLoaded', () => {
       )
       .join('');
 
-    teacherAssignmentCourseSelect.innerHTML = options;
-
     const availableCourses = teacherCourses.map((course) => course.id);
-    const currentValue = availableCourses.includes(teacherAssignmentCourseSelect.value)
-      ? teacherAssignmentCourseSelect.value
-      : availableCourses[0];
 
-    if (currentValue) {
-      teacherAssignmentCourseSelect.value = currentValue;
+    if (teacherAssignmentCourseSelect) {
+      teacherAssignmentCourseSelect.innerHTML = options;
+
+      const currentValue = availableCourses.includes(teacherAssignmentCourseSelect.value)
+        ? teacherAssignmentCourseSelect.value
+        : availableCourses[0];
+
+      if (currentValue) {
+        teacherAssignmentCourseSelect.value = currentValue;
+      }
+    }
+
+    if (teacherResourceCourseSelect) {
+      teacherResourceCourseSelect.innerHTML = options;
+
+      const currentValue = availableCourses.includes(teacherResourceCourseSelect.value)
+        ? teacherResourceCourseSelect.value
+        : availableCourses[0];
+
+      if (currentValue) {
+        teacherResourceCourseSelect.value = currentValue;
+      }
     }
   }
 
@@ -1582,6 +1541,302 @@ document.addEventListener('DOMContentLoaded', () => {
 
     studentAssignmentSummary.textContent = `${pending} ${pending === 1 ? 'pendiente' : 'pendientes'}`;
     studentAssignmentSummary.classList.add('warning');
+  }
+
+  function handleTeacherResourceSubmit(event) {
+    event.preventDefault();
+
+    if (!teacherResourceCourseSelect) {
+      return;
+    }
+
+    const courseId = teacherResourceCourseSelect.value;
+    const presentation = teacherResourcePresentation?.files?.[0] ?? null;
+    const video = teacherResourceVideo?.files?.[0] ?? null;
+
+    if (!courseId) {
+      showTeacherResourceFeedback('Selecciona un curso para compartir el recurso.', 'error');
+      return;
+    }
+
+    if (!presentation && !video) {
+      showTeacherResourceFeedback('Adjunta una presentación o un video para compartir.', 'error');
+      return;
+    }
+
+    const course = teacherCourses.find((item) => item.id === courseId);
+    const resource = {
+      id: `resource-${Date.now()}`,
+      courseId,
+      courseLabel: course?.name ?? 'Curso sin asignar',
+      courseGroup: course?.group ?? '',
+      createdAt: new Date(),
+      presentationName: presentation?.name ?? '',
+      presentationUrl: presentation ? URL.createObjectURL(presentation) : '',
+      videoName: video?.name ?? '',
+      videoUrl: video ? URL.createObjectURL(video) : ''
+    };
+
+    classResources.unshift(resource);
+
+    if (classResources.length > 30) {
+      const removed = classResources.pop();
+      releaseResourceAssets(removed);
+    }
+
+    teacherResourceForm?.reset();
+    if (teacherResourcePresentation) {
+      teacherResourcePresentation.value = '';
+    }
+    if (teacherResourceVideo) {
+      teacherResourceVideo.value = '';
+    }
+
+    showTeacherResourceFeedback(
+      `Recurso compartido con ${resource.courseLabel}.`,
+      'success'
+    );
+    renderTeacherResources();
+    renderStudentResources();
+  }
+
+  function releaseResourceAssets(resource) {
+    if (!resource) {
+      return;
+    }
+
+    if (resource.presentationUrl) {
+      URL.revokeObjectURL(resource.presentationUrl);
+      resource.presentationUrl = '';
+    }
+
+    if (resource.videoUrl) {
+      URL.revokeObjectURL(resource.videoUrl);
+      resource.videoUrl = '';
+    }
+  }
+
+  function renderTeacherResources() {
+    if (!teacherResourceList || !teacherResourceEmpty) {
+      return;
+    }
+
+    if (!classResources.length) {
+      teacherResourceList.innerHTML = '';
+      teacherResourceList.hidden = true;
+      teacherResourceEmpty.hidden = false;
+      updateTeacherResourceCount();
+      return;
+    }
+
+    teacherResourceList.hidden = false;
+    teacherResourceEmpty.hidden = true;
+
+    const fragment = document.createDocumentFragment();
+
+    classResources.forEach((resource) => {
+      const item = document.createElement('li');
+      item.className = 'task-item assignment-item resource-item';
+
+      const metaParts = [
+        `Compartido el ${escapeHtml(formatDateTime(resource.createdAt))}`
+      ];
+      if (resource.courseGroup) {
+        metaParts.push(`Sección: ${escapeHtml(resource.courseGroup)}`);
+      }
+
+      const actions = [];
+      if (resource.presentationName && resource.presentationUrl) {
+        actions.push(
+          `<a class="ghost-button" href="${escapeAttribute(
+            resource.presentationUrl
+          )}" download="${escapeAttribute(resource.presentationName)}">Descargar presentación</a>`
+        );
+      }
+      if (resource.videoUrl) {
+        actions.push(
+          `<a class="ghost-button" href="${escapeAttribute(
+            resource.videoUrl
+          )}" target="_blank" rel="noopener" download="${escapeAttribute(
+            resource.videoName || 'video-clase.mp4'
+          )}">Ver video</a>`
+        );
+      }
+
+      item.innerHTML = `
+        <div class="assignment-body">
+          <div class="assignment-header">
+            <strong>${escapeHtml(resource.courseLabel)}</strong>
+            <span class="chip">Recurso</span>
+          </div>
+          <ul class="assignment-meta">
+            ${metaParts.map((part) => `<li>${part}</li>`).join('')}
+            ${
+              resource.presentationName && resource.presentationUrl
+                ? `<li>Presentación: <span>${escapeHtml(resource.presentationName)}</span></li>`
+                : ''
+            }
+            ${
+              resource.videoName && resource.videoUrl
+                ? `<li>Video: <span>${escapeHtml(resource.videoName)}</span></li>`
+                : ''
+            }
+          </ul>
+        </div>
+        <div class="assignment-actions">
+          ${actions.join('') || '<span class="chip">Sin adjuntos</span>'}
+        </div>
+      `;
+
+      fragment.appendChild(item);
+    });
+
+    teacherResourceList.innerHTML = '';
+    teacherResourceList.appendChild(fragment);
+    updateTeacherResourceCount();
+  }
+
+  function renderStudentResources() {
+    if (!studentResourceList || !studentResourceEmpty) {
+      return;
+    }
+
+    if (!classResources.length) {
+      studentResourceList.innerHTML = '';
+      studentResourceList.hidden = true;
+      studentResourceEmpty.hidden = false;
+      updateStudentResourceSummary();
+      return;
+    }
+
+    studentResourceList.hidden = false;
+    studentResourceEmpty.hidden = true;
+
+    const fragment = document.createDocumentFragment();
+
+    classResources.forEach((resource) => {
+      const item = document.createElement('li');
+      item.className = 'task-item assignment-item resource-item';
+
+      const metaParts = [
+        `Disponible desde ${escapeHtml(formatDateTime(resource.createdAt))}`
+      ];
+      if (resource.courseGroup) {
+        metaParts.push(`Sección: ${escapeHtml(resource.courseGroup)}`);
+      }
+
+      const videoBlock = resource.videoUrl
+        ? `<div class="assignment-video"><video controls preload="metadata" src="${escapeAttribute(
+            resource.videoUrl
+          )}"></video>${resource.videoName ? `<small>${escapeHtml(
+            resource.videoName
+          )}</small>` : ''}</div>`
+        : '';
+
+      item.innerHTML = `
+        <div class="assignment-body">
+          <div class="assignment-header">
+            <strong>${escapeHtml(resource.courseLabel)}</strong>
+            <span class="chip">Recurso</span>
+          </div>
+          ${videoBlock}
+          <ul class="assignment-meta">
+            ${metaParts.map((part) => `<li>${part}</li>`).join('')}
+            ${
+              resource.presentationName && resource.presentationUrl
+                ? `<li>Presentación: <span>${escapeHtml(resource.presentationName)}</span></li>`
+                : ''
+            }
+            ${
+              resource.videoName && resource.videoUrl
+                ? `<li>Video: <span>${escapeHtml(resource.videoName)}</span></li>`
+                : ''
+            }
+          </ul>
+        </div>
+        <div class="assignment-actions">
+          ${
+            resource.presentationName && resource.presentationUrl
+              ? `<a class="ghost-button" href="${escapeAttribute(
+                  resource.presentationUrl
+                )}" download="${escapeAttribute(resource.presentationName)}">Descargar presentación</a>`
+              : ''
+          }
+          ${
+            resource.videoUrl
+              ? `<a class="ghost-button" href="${escapeAttribute(
+                  resource.videoUrl
+                )}" target="_blank" rel="noopener" download="${escapeAttribute(
+                  resource.videoName || 'video-clase.mp4'
+                )}">Abrir video</a>`
+              : ''
+          }
+        </div>
+      `;
+
+      fragment.appendChild(item);
+    });
+
+    studentResourceList.innerHTML = '';
+    studentResourceList.appendChild(fragment);
+    updateStudentResourceSummary();
+  }
+
+  function showTeacherResourceFeedback(message, status) {
+    if (!teacherResourceFeedback) {
+      return;
+    }
+
+    teacherResourceFeedback.textContent = message;
+    teacherResourceFeedback.classList.remove('success', 'error');
+    if (status) {
+      teacherResourceFeedback.classList.add(status);
+    }
+  }
+
+  function clearTeacherResourceFeedback() {
+    if (!teacherResourceFeedback) {
+      return;
+    }
+
+    teacherResourceFeedback.textContent = '';
+    teacherResourceFeedback.classList.remove('success', 'error');
+  }
+
+  function updateTeacherResourceCount() {
+    if (!teacherResourceCount) {
+      return;
+    }
+
+    const total = classResources.length;
+
+    teacherResourceCount.classList.remove('success');
+
+    if (!total) {
+      teacherResourceCount.textContent = 'Sin recursos';
+      return;
+    }
+
+    teacherResourceCount.textContent = `${total} ${total === 1 ? 'recurso' : 'recursos'}`;
+    teacherResourceCount.classList.add('success');
+  }
+
+  function updateStudentResourceSummary() {
+    if (!studentResourceSummary) {
+      return;
+    }
+
+    const total = classResources.length;
+
+    studentResourceSummary.classList.remove('success');
+
+    if (!total) {
+      studentResourceSummary.textContent = 'Sin recursos';
+      return;
+    }
+
+    studentResourceSummary.textContent = `${total} ${total === 1 ? 'disponible' : 'disponibles'}`;
+    studentResourceSummary.classList.add('success');
   }
 
   function formatDate(value) {
