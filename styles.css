@@ -74,6 +74,18 @@ body {
   align-items: center;
 }
 
+.login-hero {
+  display: grid;
+  gap: 1.5rem;
+  justify-items: start;
+}
+
+.brand-logo {
+  width: clamp(88px, 12vw, 128px);
+  height: auto;
+  filter: drop-shadow(0 12px 18px rgba(15, 23, 42, 0.4));
+}
+
 .login-hero h1 {
   font-size: clamp(2.5rem, 5vw, 3.5rem);
   font-weight: 700;

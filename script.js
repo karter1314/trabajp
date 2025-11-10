@@ -71,12 +71,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const studentResourceList = document.getElementById('student-resource-list');
   const studentResourceEmpty = document.getElementById('student-resource-empty');
   const studentResourceSummary = document.getElementById('student-resource-summary');
-  const STORAGE_KEY = 'siseCredentials';
-  const LEGACY_STORAGE_KEY = 'siagiePlusCredentials';
+  const STORAGE_KEY = 'sesiCredentials';
+  const LEGACY_STORAGE_KEYS = ['siagiePlusCredentials', 'siseCredentials'];
   const DIRECTORY_PATH = 'data/usuarios.json';
-  const DIRECTORY_STORAGE_KEY = 'siseDirectory';
-  const LEGACY_DIRECTORY_STORAGE_KEY = 'siagiePlusDirectory';
-  const DIRECTORY_DOWNLOAD_NAME = 'usuarios-sise-actualizados.json';
+  const DIRECTORY_STORAGE_KEY = 'sesiDirectory';
+  const LEGACY_DIRECTORY_STORAGE_KEYS = ['siagiePlusDirectory', 'siseDirectory'];
+  const DIRECTORY_DOWNLOAD_NAME = 'usuarios-sesi-actualizados.json';
 
   const storage = getStorage();
   migrateLegacyStorage();
@@ -2576,10 +2576,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       if (!storage.getItem(STORAGE_KEY)) {
-        const legacyCredentials = storage.getItem(LEGACY_STORAGE_KEY);
-        if (legacyCredentials) {
-          storage.setItem(STORAGE_KEY, legacyCredentials);
-          storage.removeItem(LEGACY_STORAGE_KEY);
+        for (const key of LEGACY_STORAGE_KEYS) {
+          const legacyCredentials = storage.getItem(key);
+          if (legacyCredentials) {
+            storage.setItem(STORAGE_KEY, legacyCredentials);
+            storage.removeItem(key);
+            break;
+          }
         }
       }
     } catch (error) {
@@ -2588,10 +2591,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       if (!storage.getItem(DIRECTORY_STORAGE_KEY)) {
-        const legacyDirectory = storage.getItem(LEGACY_DIRECTORY_STORAGE_KEY);
-        if (legacyDirectory) {
-          storage.setItem(DIRECTORY_STORAGE_KEY, legacyDirectory);
-          storage.removeItem(LEGACY_DIRECTORY_STORAGE_KEY);
+        for (const key of LEGACY_DIRECTORY_STORAGE_KEYS) {
+          const legacyDirectory = storage.getItem(key);
+          if (legacyDirectory) {
+            storage.setItem(DIRECTORY_STORAGE_KEY, legacyDirectory);
+            storage.removeItem(key);
+            break;
+          }
         }
       }
     } catch (error) {
@@ -2744,7 +2750,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return null;
       }
 
-      const testKey = '__sise-test__';
+      const testKey = '__sesi-test__';
       window.localStorage.setItem(testKey, '1');
       window.localStorage.removeItem(testKey);
       return window.localStorage;

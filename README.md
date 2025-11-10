@@ -1,6 +1,6 @@
-# SISE Plataforma Educativa
+# SESI Plataforma Educativa
 
-Una interfaz moderna para la plataforma SISE, con mejoras de diseño y experiencia de usuario. Esta versión incluye un flujo de autenticación simulado y espacios visuales dedicados para docentes y estudiantes, abarcando horarios, tareas, recursos compartidos y seguimiento académico.
+Una interfaz moderna para la plataforma SESI, con mejoras de diseño y experiencia de usuario. Esta versión incluye un flujo de autenticación simulado y espacios visuales dedicados para docentes y estudiantes, abarcando horarios, tareas, recursos compartidos y seguimiento académico.
 
 ## Características principales
 
@@ -32,7 +32,7 @@ Una interfaz moderna para la plataforma SISE, con mejoras de diseño y experienc
 - El padrón de cuentas se carga automáticamente desde `data/usuarios.json`, un archivo JSON pensado para exportarse desde Excel/Sheets (guardar como CSV y convertir a JSON).
 - Cada registro puede incluir `email`, `password`, `name`, `detail` e `initials`. La aplicación normaliza los datos y utiliza los valores para personalizar los encabezados de cada rol.
 - Para actualizar la base de accesos, edita `data/usuarios.json` directamente (puedes exportar desde Excel como CSV y convertirlo a JSON).
-- Si quieres volver al padrón original, elimina la clave `siseDirectory` del almacenamiento local del navegador y recarga la página. También puedes limpiar las credenciales guardadas borrando `siseCredentials`.
+- Si quieres volver al padrón original, elimina la clave `sesiDirectory` del almacenamiento local del navegador y recarga la página. También puedes limpiar las credenciales guardadas borrando `sesiCredentials`.
 - Si abres el proyecto directamente como archivo (`file://`), algunos navegadores bloquean la lectura del JSON. Usa un servidor local ligero (por ejemplo, Live Server de VS Code o `python -m http.server`).
 
 ## Próximos pasos sugeridos
