@@ -18,7 +18,7 @@ Una interfaz moderna para la plataforma SISE, con mejoras de diseño y experienc
    - Docente: `clasico3040@gmail.com` · contraseña `docente123`
    - Estudiante: `karter1314@gmail.com` · contraseña `alumno123`
 3. Según el perfil seleccionado se mostrará la interfaz dedicada:
-   - **Docentes**: ingresan al **Espacio docente**, donde pueden revisar horarios, registrar calificaciones, enviar tareas con instrucciones, archivos adjuntos y videos de clase, además de reportar incidencias de datos.
+- **Docentes**: ingresan al **Espacio docente**, donde pueden revisar horarios, registrar calificaciones y enviar tareas con instrucciones, archivos adjuntos y videos de clase.
    - **Estudiantes**: visualizan el **Panel del estudiante**, con promedios, asistencias, agenda personal, reproductor de videos compartidos y listado de tareas recibidas por sus docentes.
 
 ## Tecnologías

@@ -105,8 +105,8 @@
               <div>
                 <h2>Espacio docente</h2>
                 <p>
-                  Consulta tu horario, registra calificaciones, comparte recursos en video y reporta incidencias en los datos
-                  de tus estudiantes.
+                  Consulta tu horario, registra calificaciones y comparte recursos en video
+                  con tus estudiantes.
                 </p>
               </div>
             </div>
@@ -327,53 +327,6 @@
                 </div>
               </article>
 
-              <article class="card wide">
-                <header>
-                  <h3>Reportar error en datos estudiantiles</h3>
-                </header>
-                <form id="data-issue-form" class="stacked-form" autocomplete="off">
-                  <div class="form-field">
-                    <span>Nombre del estudiante</span>
-                    <input
-                      type="text"
-                      name="studentName"
-                      placeholder="Ej. Andrea Paredes"
-                      required
-                    />
-                  </div>
-                  <div class="form-field">
-                    <span>Tipo de incidencia</span>
-                    <select name="issueType" required>
-                      <option value="Datos personales">Datos personales</option>
-                      <option value="Documento de identidad">Documento de identidad</option>
-                      <option value="Calificaciones registradas">Calificaciones registradas</option>
-                      <option value="Otro">Otro</option>
-                    </select>
-                  </div>
-                  <div class="form-field">
-                    <span>Detalle del problema</span>
-                    <textarea
-                      name="issueDetail"
-                      rows="3"
-                      placeholder="Describe el dato que requiere corrección"
-                      required
-                    ></textarea>
-                  </div>
-                  <div class="form-actions">
-                    <button type="submit" class="secondary-button">
-                      Enviar solicitud
-                    </button>
-                    <span class="form-feedback" id="issue-feedback" aria-live="polite"></span>
-                  </div>
-                </form>
-                <div class="card-subsection">
-                  <h4>Solicitudes recientes</h4>
-                  <ul id="data-issue-list" class="issue-list"></ul>
-                  <p id="data-issue-empty" class="empty-state">
-                    No se han reportado inconsistencias todavía.
-                  </p>
-                </div>
-              </article>
             </div>
           </section>
         </main>

@@ -549,34 +549,6 @@ footer {
   border-radius: var(--radius-sm);
 }
 
-.issue-list {
-  list-style: none;
-  display: grid;
-  gap: 1rem;
-}
-
-.issue-item {
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  border-radius: var(--radius-md);
-  background: #ffffff;
-  padding: 1rem 1.1rem;
-  display: grid;
-  gap: 0.5rem;
-}
-
-.issue-item strong {
-  font-size: 1rem;
-}
-
-.issue-item small {
-  color: var(--text-muted);
-}
-
-.issue-status {
-  font-weight: 600;
-  color: #047857;
-}
-
 .stacked-form {
   display: grid;
   gap: 1rem;

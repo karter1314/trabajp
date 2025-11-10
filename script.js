@@ -48,10 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const gradeResetButton = document.getElementById('grade-reset');
   const gradeHistoryList = document.getElementById('grade-history');
   const gradeHistoryEmpty = document.getElementById('grade-history-empty');
-  const dataIssueForm = document.getElementById('data-issue-form');
-  const dataIssueList = document.getElementById('data-issue-list');
-  const dataIssueEmpty = document.getElementById('data-issue-empty');
-  const issueFeedback = document.getElementById('issue-feedback');
   const teacherAssignmentForm = document.getElementById('teacher-assignment-form');
   const teacherAssignmentCourseSelect = document.getElementById('teacher-assignment-course');
   const teacherAssignmentTitle = document.getElementById('teacher-assignment-title');
@@ -294,7 +290,6 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   const gradeHistory = [];
-  const dataIssueRequests = [];
   const assignments = [];
 
   const panelDescriptions = {
@@ -475,8 +470,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     gradeForm?.addEventListener('submit', handleGradeFormSubmit);
-
-    dataIssueForm?.addEventListener('submit', handleDataIssueSubmit);
 
     teacherAssignmentForm?.addEventListener('submit', handleTeacherAssignmentSubmit);
     teacherAssignmentForm?.addEventListener('input', () => {
@@ -808,10 +801,6 @@ document.addEventListener('DOMContentLoaded', () => {
       clearTeacherAssignmentFeedback();
 
       clearGradeFeedback();
-      if (issueFeedback) {
-        issueFeedback.textContent = '';
-        issueFeedback.classList.remove('success', 'error');
-      }
 
       if (scheduleDaySelect) {
         if (!scheduleDaySelect.value && teacherSchedule.length) {
@@ -933,12 +922,7 @@ document.addEventListener('DOMContentLoaded', () => {
     populateTeacherAssignmentCourses();
     clearGradeFeedback();
     clearTeacherAssignmentFeedback();
-    if (issueFeedback) {
-      issueFeedback.textContent = '';
-      issueFeedback.classList.remove('success', 'error');
-    }
     updateGradeHistory();
-    updateDataIssueList();
     renderTeacherAssignments();
   }
 
@@ -1215,83 +1199,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return remaining > 0
       ? `${visible.join(', ')} y ${remaining} más`
       : visible.join(', ');
-  }
-
-  function handleDataIssueSubmit(event) {
-    event.preventDefault();
-
-    if (!dataIssueForm) {
-      return;
-    }
-
-    const formData = new FormData(dataIssueForm);
-    const studentName = (formData.get('studentName') || '').toString().trim();
-    const issueType = (formData.get('issueType') || '').toString().trim();
-    const issueDetail = (formData.get('issueDetail') || '').toString().trim();
-
-    if (!studentName || !issueType || !issueDetail) {
-      if (issueFeedback) {
-        issueFeedback.textContent = 'Completa todos los campos antes de enviar.';
-        issueFeedback.classList.remove('success');
-        issueFeedback.classList.add('error');
-      }
-      return;
-    }
-
-    const timestamp = new Date();
-
-    dataIssueRequests.unshift({
-      id: `issue-${timestamp.getTime()}`,
-      studentName,
-      issueType,
-      detail: issueDetail,
-      timestamp
-    });
-
-    if (dataIssueRequests.length > 6) {
-      dataIssueRequests.pop();
-    }
-
-    dataIssueForm.reset();
-
-    if (issueFeedback) {
-      issueFeedback.textContent = `Se envió la incidencia para ${studentName}.`;
-      issueFeedback.classList.remove('error');
-      issueFeedback.classList.add('success');
-    }
-
-    updateDataIssueList();
-  }
-
-  function updateDataIssueList() {
-    if (!dataIssueList || !dataIssueEmpty) {
-      return;
-    }
-
-    if (!dataIssueRequests.length) {
-      dataIssueList.innerHTML = '';
-      dataIssueList.hidden = true;
-      dataIssueEmpty.hidden = false;
-      return;
-    }
-
-    dataIssueList.hidden = false;
-    dataIssueEmpty.hidden = true;
-
-    dataIssueList.innerHTML = dataIssueRequests
-      .map(
-        (request) => `
-          <li class="issue-item">
-            <strong>${escapeHtml(request.studentName)}</strong>
-            <small>${escapeHtml(request.issueType)} · ${escapeHtml(
-              formatDateTime(request.timestamp)
-            )}</small>
-            <p>${escapeHtml(request.detail)}</p>
-            <span class="issue-status">Enviado a secretaría</span>
-          </li>
-        `
-      )
-      .join('');
   }
 
   function handleTeacherAssignmentSubmit(event) {
