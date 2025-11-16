@@ -89,8 +89,10 @@ document.addEventListener('DOMContentLoaded', () => {
     element.textContent = PLATFORM_NAME;
   });
 
+  const brandLabel = `Escudo institucional ${PLATFORM_NAME}`;
   document.querySelectorAll('[data-brand="logo"]').forEach((element) => {
-    element.setAttribute('alt', `Logo institucional ${PLATFORM_NAME}`);
+    element.setAttribute('aria-label', brandLabel);
+    element.setAttribute('title', brandLabel);
   });
 
   const gradeOptions = [
