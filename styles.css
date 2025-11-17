@@ -5,8 +5,8 @@
   --primary-dark: #5a1225;
   --primary-rgb: 139, 30, 63;
   --accent: #d95b73;
-  --text: #0f172a;
-  --text-muted: #334155;
+  --text: #0b0b0b;
+  --text-muted: #1f2937;
   --border: #e5e7eb;
   --shadow: 0 20px 35px -20px rgba(15, 23, 42, 0.35);
   --radius-lg: 22px;
@@ -659,7 +659,7 @@ footer {
 .content .form-field textarea::placeholder,
 .compact-field input::placeholder,
 .compact-field select::placeholder {
-  color: rgba(15, 23, 42, 0.7);
+  color: rgba(0, 0, 0, 0.82);
 }
 
 .form-field.helper {
