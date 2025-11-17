@@ -1,0 +1,14 @@
+[
+  {
+    "email": "karter1314@gmail.com",
+    "password": "alumno123",
+    "name": "Lucía Herrera",
+    "detail": "Estudiante 4.º de secundaria"
+  },
+  {
+    "email": "mmendoza@ie3058.edu.pe",
+    "password": "alumno456",
+    "name": "Miguel Mendoza",
+    "detail": "Estudiante 3.º de secundaria"
+  }
+]

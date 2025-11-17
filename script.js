@@ -1,14 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('login-form');
   const loginScreen = document.getElementById('login-screen');
-  const adminLayout = document.getElementById('admin-layout');
   const teacherLayout = document.getElementById('teacher-layout');
   const studentLayout = document.getElementById('student-layout');
-  const sectionTitle = adminLayout?.querySelector('#section-title');
-  const subtitle = adminLayout?.querySelector('.subtitle');
-  const adminNavButtons = adminLayout
-    ? Array.from(adminLayout.querySelectorAll('.nav-item'))
-    : [];
+  const adminLayout = null;
+  const sectionTitle = null;
+  const subtitle = null;
+  const adminNavButtons = [];
   const logoutButtons = Array.from(document.querySelectorAll('[data-logout]'));
   const emailInput = loginForm?.querySelector('input[type="email"]');
   const passwordInput = loginForm?.querySelector('input[type="password"]');
@@ -38,9 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const teacherCount = document.getElementById('teacher-count');
   const accessFeedback = document.getElementById('access-feedback');
   const downloadDirectoryButton = document.getElementById('download-directory');
-  const scheduleDaySelect = document.getElementById('schedule-day');
-  const scheduleBody = document.getElementById('schedule-body');
-  const scheduleRoom = document.getElementById('schedule-room');
   const gradeForm = document.getElementById('grade-form');
   const gradeCourseSelect = document.getElementById('grade-course');
   const gradeTableBody = document.getElementById('grade-table-body');
@@ -74,10 +69,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const PLATFORM_NAME = 'SESI';
   const STORAGE_KEY = 'sesiCredentials';
   const LEGACY_STORAGE_KEYS = ['siagiePlusCredentials', 'siseCredentials'];
-  const DIRECTORY_PATH = 'data/usuarios.json';
+  const DIRECTORY_PATHS = {
+    teacher: 'data/docentes.json',
+    student: 'data/estudiantes.json'
+  };
   const DIRECTORY_STORAGE_KEY = 'sesiDirectory';
   const LEGACY_DIRECTORY_STORAGE_KEYS = ['siagiePlusDirectory', 'siseDirectory'];
-  const DIRECTORY_DOWNLOAD_NAME = 'usuarios-sesi-actualizados.json';
+  const DIRECTORY_DOWNLOAD_NAME = 'directorio-sesi-actualizado.json';
 
   const storage = getStorage();
   migrateLegacyStorage();
@@ -121,144 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
     'Horas parciales'
   ];
 
-  const DIRECTORY_ROLES = ['admin', 'teacher', 'student'];
+  const DIRECTORY_ROLES = ['teacher', 'student'];
 
   const BASE_TEACHER_COUNT = document.querySelectorAll('#teachers-base tr').length;
-
-  const teacherSchedule = [
-    {
-      id: 'lunes',
-      label: 'Lunes',
-      sessions: [
-        {
-          time: '08:00 - 09:30',
-          course: 'Comunicación',
-          section: '4.º Secundaria B',
-          room: 'Aula 204'
-        },
-        {
-          time: '09:45 - 11:15',
-          course: 'Matemáticas',
-          section: '4.º Secundaria B',
-          room: 'Aula 204'
-        },
-        {
-          time: '11:30 - 13:00',
-          course: 'Ciencias',
-          section: '4.º Secundaria B',
-          room: 'Laboratorio de ciencias'
-        },
-        {
-          time: '13:30 - 14:30',
-          course: 'Educación Física',
-          section: '4.º Secundaria B',
-          room: 'Coliseo escolar'
-        }
-      ]
-    },
-    {
-      id: 'martes',
-      label: 'Martes',
-      sessions: [
-        {
-          time: '08:00 - 09:30',
-          course: 'Matemáticas',
-          section: '4.º Secundaria B',
-          room: 'Aula 204'
-        },
-        {
-          time: '09:45 - 11:15',
-          course: 'Comunicación',
-          section: '4.º Secundaria B',
-          room: 'Aula 204'
-        },
-        {
-          time: '11:30 - 13:00',
-          course: 'Educación Física',
-          section: '4.º Secundaria B',
-          room: 'Coliseo escolar'
-        }
-      ]
-    },
-    {
-      id: 'miercoles',
-      label: 'Miércoles',
-      sessions: [
-        {
-          time: '08:00 - 09:30',
-          course: 'Ciencias',
-          section: '4.º Secundaria B',
-          room: 'Laboratorio de ciencias'
-        },
-        {
-          time: '09:45 - 11:15',
-          course: 'Educación Física',
-          section: '4.º Secundaria B',
-          room: 'Coliseo escolar'
-        },
-        {
-          time: '11:30 - 13:00',
-          course: 'Comunicación',
-          section: '4.º Secundaria B',
-          room: 'Aula 204'
-        }
-      ]
-    },
-    {
-      id: 'jueves',
-      label: 'Jueves',
-      sessions: [
-        {
-          time: '08:00 - 09:30',
-          course: 'Educación Física',
-          section: '4.º Secundaria B',
-          room: 'Coliseo escolar'
-        },
-        {
-          time: '09:45 - 11:15',
-          course: 'Ciencias',
-          section: '4.º Secundaria B',
-          room: 'Laboratorio de ciencias'
-        },
-        {
-          time: '11:30 - 13:00',
-          course: 'Matemáticas',
-          section: '4.º Secundaria B',
-          room: 'Aula 204'
-        }
-      ]
-    },
-    {
-      id: 'viernes',
-      label: 'Viernes',
-      sessions: [
-        {
-          time: '08:00 - 09:30',
-          course: 'Comunicación',
-          section: '4.º Secundaria B',
-          room: 'Aula 204'
-        },
-        {
-          time: '09:45 - 11:15',
-          course: 'Matemáticas',
-          section: '4.º Secundaria B',
-          room: 'Aula 204'
-        },
-        {
-          time: '11:30 - 13:00',
-          course: 'Ciencias',
-          section: '4.º Secundaria B',
-          room: 'Laboratorio de ciencias'
-        },
-        {
-          time: '13:30 - 14:30',
-          course: 'Educación Física',
-          section: '4.º Secundaria B',
-          room: 'Coliseo escolar'
-        }
-      ]
-    }
-  ];
 
   const teacherCourses = [
     {
@@ -342,22 +205,9 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const roleMetadata = {
-    admin: {
-      heading: 'Acceso administrativo',
-      description:
-        'Supervisa matrículas, reportes y la gestión integral de la institución educativa.',
-      submitLabel: 'Acceder como administrativo',
-      user: {
-        name: 'Carlos Luis Huamán Manrique',
-        detail: 'Director IE 3058',
-        initials: 'CH'
-      },
-      defaultSection: 'dashboard'
-    },
     teacher: {
       heading: 'Acceso docente',
-      description:
-        'Administra tu horario, envía tareas y comparte recursos multimedia con tus aulas asignadas.',
+      description: 'Envía tareas y comparte recursos multimedia con tus aulas asignadas.',
       submitLabel: 'Acceder como docente',
       user: {
         name: 'María Elena Rojas',
@@ -368,8 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     student: {
       heading: 'Acceso estudiante',
-      description:
-        'Consulta tus avances, revisa las tareas y accede a las presentaciones o videos compartidos.',
+      description: 'Revisa las tareas y accede a los videos o presentaciones compartidos.',
       submitLabel: 'Acceder como estudiante',
       user: {
         name: 'Lucía Herrera',
@@ -381,13 +230,11 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const accessDirectory = {
-    admin: [],
     teacher: [],
     student: []
   };
 
   const credentialsByRole = {
-    admin: { email: '', password: '' },
     teacher: { email: '', password: '' },
     student: { email: '', password: '' }
   };
@@ -478,10 +325,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     downloadDirectoryButton?.addEventListener('click', downloadDirectorySnapshot);
 
-    scheduleDaySelect?.addEventListener('change', () => {
-      renderSchedule(scheduleDaySelect.value);
-    });
-
     gradeCourseSelect?.addEventListener('change', () => {
       renderGradeTable(gradeCourseSelect.value);
       clearGradeFeedback();
@@ -529,19 +372,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      const response = await fetch(DIRECTORY_PATH, { cache: 'no-store' });
-      if (!response.ok) {
-        throw new Error(`Estado inesperado: ${response.status}`);
+      const [teacherResponse, studentResponse] = await Promise.all([
+        fetch(DIRECTORY_PATHS.teacher, { cache: 'no-store' }),
+        fetch(DIRECTORY_PATHS.student, { cache: 'no-store' })
+      ]);
+
+      if (!teacherResponse.ok || !studentResponse.ok) {
+        throw new Error(
+          `Estado inesperado: docentes ${teacherResponse.status} / estudiantes ${studentResponse.status}`
+        );
       }
 
-      const payload = await response.json();
+      const payload = {
+        teacher: await teacherResponse.json(),
+        student: await studentResponse.json()
+      };
+
       applyDirectory(payload, { persist: true });
       populateCredentialsFields();
       persistState();
     } catch (error) {
       console.error('No se pudo cargar el padrón de usuarios.', error);
       showLoginFeedback(
-        'No se pudo cargar el padrón de accesos. Verifica el archivo data/usuarios.json.',
+        'No se pudo cargar el padrón de accesos. Verifica data/docentes.json y data/estudiantes.json.',
         'error'
       );
     }
@@ -581,9 +434,6 @@ document.addEventListener('DOMContentLoaded', () => {
       body.style.alignItems = 'center';
       body.style.justifyContent = 'center';
       hideAllLayouts();
-      if (activeRole === 'admin') {
-        configureAdminNavigation(roleMetadata.admin.defaultSection);
-      }
       updateRoleUI();
       populateCredentialsFields();
     }
@@ -727,8 +577,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const directory = accessDirectory[activeRole] ?? [];
     if (!directory.length) {
+      const sourceFile = activeRole === 'teacher' ? 'data/docentes.json' : 'data/estudiantes.json';
       showLoginFeedback(
-        'No hay cuentas registradas para este rol en la base de datos. Revisa el archivo de usuarios.',
+        `No hay cuentas registradas para este rol en la base de datos. Revisa ${sourceFile}.`,
         'error'
       );
       return false;
@@ -797,23 +648,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    if (role === 'admin') {
-      if (adminName) {
-        adminName.textContent = metadata.user.name;
-      }
-
-      if (adminRole) {
-        adminRole.textContent = metadata.user.detail;
-      }
-
-      if (adminAvatar) {
-        adminAvatar.textContent = metadata.user.initials;
-      }
-
-      configureAdminNavigation(metadata.defaultSection);
-      return;
-    }
-
     if (role === 'teacher') {
       if (teacherName) {
         teacherName.textContent = metadata.user.name;
@@ -835,13 +669,6 @@ document.addEventListener('DOMContentLoaded', () => {
       clearTeacherResourceFeedback();
 
       clearGradeFeedback();
-
-      if (scheduleDaySelect) {
-        if (!scheduleDaySelect.value && teacherSchedule.length) {
-          scheduleDaySelect.value = teacherSchedule[0].id;
-        }
-        renderSchedule(scheduleDaySelect.value || teacherSchedule[0]?.id);
-      }
 
       if (gradeCourseSelect) {
         const selectedCourse = gradeCourseSelect.value || teacherCourses[0]?.id;
@@ -878,14 +705,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showLayoutForRole(role) {
     hideAllLayouts();
-
-    const targetRole = role === 'admin' && !adminLayout ? 'teacher' : role;
-
-    if (targetRole === 'admin' && adminLayout) {
-      adminLayout.hidden = false;
-      applyRoleProfile('admin');
-      return;
-    }
+    const targetRole = role;
 
     if (targetRole === 'teacher' && teacherLayout) {
       teacherLayout.hidden = false;
@@ -953,7 +773,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function initializeTeacherWorkspace() {
-    populateScheduleSelect();
     populateGradeCourses();
     populateTeacherAssignmentCourses();
     clearGradeFeedback();
@@ -967,103 +786,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function initializeStudentWorkspace() {
     renderStudentAssignments();
     renderStudentResources();
-  }
-
-  function populateScheduleSelect() {
-    if (!scheduleDaySelect) {
-      return;
-    }
-
-    const options = teacherSchedule
-      .map((day) => `<option value="${escapeAttribute(day.id)}">${escapeHtml(day.label)}</option>`)
-      .join('');
-    scheduleDaySelect.innerHTML = options;
-
-    const availableDays = teacherSchedule.map((day) => day.id);
-    const currentValue = availableDays.includes(scheduleDaySelect.value)
-      ? scheduleDaySelect.value
-      : availableDays[0];
-
-    if (currentValue) {
-      scheduleDaySelect.value = currentValue;
-      renderSchedule(currentValue);
-    }
-  }
-
-  function renderSchedule(dayId) {
-    if (!scheduleBody) {
-      return;
-    }
-
-    const day = teacherSchedule.find((item) => item.id === dayId);
-
-    if (!day || day.sessions.length === 0) {
-      scheduleBody.innerHTML =
-        '<tr class="empty-state"><td colspan="4">No hay sesiones programadas.</td></tr>';
-      updateScheduleRoomLabel([]);
-      return;
-    }
-
-    const rows = day.sessions
-      .map(
-        (session) => `
-          <tr>
-            <td>${escapeHtml(session.time)}</td>
-            <td>${escapeHtml(session.course)}</td>
-            <td>${escapeHtml(session.section)}</td>
-            <td>${escapeHtml(session.room)}</td>
-          </tr>
-        `
-      )
-      .join('');
-
-    scheduleBody.innerHTML = rows;
-    updateScheduleRoomLabel(day.sessions);
-  }
-
-  function updateScheduleRoomLabel(sessions) {
-    if (!scheduleRoom) {
-      return;
-    }
-
-    if (!sessions || sessions.length === 0) {
-      scheduleRoom.textContent = 'Sin aula asignada';
-      return;
-    }
-
-    const uniqueRooms = Array.from(
-      new Set(sessions.map((session) => session.room).filter(Boolean))
-    );
-
-    scheduleRoom.textContent =
-      uniqueRooms.length === 1 ? uniqueRooms[0] : 'Varias aulas';
-  }
-
-  function populateGradeCourses() {
-    if (!gradeCourseSelect) {
-      return;
-    }
-
-    const options = teacherCourses
-      .map(
-        (course) =>
-          `<option value="${escapeAttribute(course.id)}">${escapeHtml(course.name)}</option>`
-      )
-      .join('');
-    gradeCourseSelect.innerHTML = options;
-
-    const availableCourses = teacherCourses.map((course) => course.id);
-    const currentValue = availableCourses.includes(gradeCourseSelect.value)
-      ? gradeCourseSelect.value
-      : availableCourses[0];
-
-    if (currentValue) {
-      gradeCourseSelect.value = currentValue;
-      renderGradeTable(currentValue);
-    } else if (gradeTableBody) {
-      gradeTableBody.innerHTML =
-        '<tr class="empty-state"><td colspan="3">Sin estudiantes registrados.</td></tr>';
-    }
   }
 
   function renderGradeTable(courseId) {
@@ -2670,10 +2392,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function ensureActiveRoleAvailable() {
-    if (activeRole === 'admin' && !adminLayout) {
-      activeRole = 'teacher';
-    }
-
     const hasMatchingTab = Array.from(roleTabs).some(
       (tab) => tab.dataset.role === activeRole
     );

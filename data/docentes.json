@@ -1,0 +1,14 @@
+[
+  {
+    "email": "clasico3040@gmail.com",
+    "password": "docente123",
+    "name": "María Elena Rojas",
+    "detail": "Docente de Comunicación"
+  },
+  {
+    "email": "jcarranza@ie3058.edu.pe",
+    "password": "horario456",
+    "name": "Javier Carranza",
+    "detail": "Docente de Matemática"
+  }
+]
