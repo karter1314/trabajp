@@ -112,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const storage = getStorage();
   migrateLegacyStorage();
   const body = document.body;
+  const toastHost = createToastHost();
 
   document.title = `${PLATFORM_NAME} Plataforma Educativa`;
 
@@ -393,6 +394,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     studentAssignmentList?.addEventListener('click', handleStudentAssignmentClick);
+
+    document.querySelectorAll('[data-action]').forEach((actionNode) => {
+      actionNode.addEventListener('click', (event) => {
+        handleQuickAction(event, actionNode.dataset.action);
+      });
+    });
   }
 
   async function loadAccessDirectory() {
@@ -692,6 +699,82 @@ document.addEventListener('DOMContentLoaded', () => {
 
     accessFeedback.textContent = '';
     accessFeedback.classList.remove('error', 'success');
+  }
+
+  function handleQuickAction(event, action) {
+    if (!action) return;
+
+    event?.preventDefault();
+
+    const actionMessages = {
+      'help-center': {
+        text: 'Redirigiendo al centro de ayuda SESI. Mientras tanto, puedes escribir al soporte.',
+        tone: 'success'
+      },
+      'student-ticket': {
+        text: 'Tu solicitud será enviada a mesa de partes y recibirás respuesta por correo institucional.',
+        tone: 'success'
+      },
+      'request-meeting': {
+        text: 'Se registró tu pedido de reunión. Tutoría confirmará horario disponible.',
+        tone: 'success'
+      },
+      'contact-tutor': {
+        text: 'Mensaje enviado al tutor. Revisa tu bandeja para la confirmación.',
+        tone: 'info'
+      },
+      'contact-support': {
+        text: 'Se notificó a psicopedagogía. Te contactarán con los siguientes pasos.',
+        tone: 'info'
+      },
+      'forgot-password': {
+        text: 'Te enviaremos un correo con el enlace para restablecer tu contraseña.',
+        tone: 'warning'
+      }
+    };
+
+    const payload = actionMessages[action];
+    if (payload) {
+      showToast(payload.text, payload.tone);
+    } else {
+      showToast('Acción rápida registrada.', 'info');
+    }
+  }
+
+  function showToast(message, tone = 'info', duration = 3400) {
+    if (!toastHost || !message) {
+      return;
+    }
+
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+
+    if (tone && tone !== 'info') {
+      toast.classList.add(tone);
+    }
+
+    toast.textContent = message;
+    toastHost.appendChild(toast);
+
+    requestAnimationFrame(() => {
+      toast.classList.add('visible');
+    });
+
+    const removeToast = () => {
+      toast.classList.add('hide');
+      setTimeout(() => {
+        toast.remove();
+      }, 300);
+    };
+
+    setTimeout(removeToast, duration);
+  }
+
+  function createToastHost() {
+    const host = document.createElement('div');
+    host.className = 'toast-host';
+    document.body.appendChild(host);
+    return host;
   }
 
   function applyRoleProfile(role) {
