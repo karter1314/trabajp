@@ -457,6 +457,10 @@ document.addEventListener('DOMContentLoaded', () => {
         credentialsByRole[role].email = accessDirectory[role][0].email;
       }
 
+      if (!credentialsByRole[role]?.password && accessDirectory[role][0]?.password) {
+        credentialsByRole[role].password = accessDirectory[role][0].password;
+      }
+
       if (accessDirectory[role][0]) {
         updateRoleMetadataFromAccount(role, accessDirectory[role][0], preferExisting);
       }
@@ -593,7 +597,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (passwordInput) {
-      passwordInput.value = record.password ?? '';
+      const password = record.password || fallbackAccount?.password || '';
+      passwordInput.value = password;
     }
   }
 
