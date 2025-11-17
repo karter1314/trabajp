@@ -659,7 +659,7 @@ footer {
 .content .form-field textarea::placeholder,
 .compact-field input::placeholder,
 .compact-field select::placeholder {
-  color: rgba(0, 0, 0, 0.82);
+  color: #000;
 }
 
 .form-field.helper {
@@ -768,7 +768,7 @@ footer {
 }
 
 .compact-field input::placeholder {
-  color: rgba(15, 23, 42, 0.7);
+  color: #000;
 }
 
 .placeholder {
