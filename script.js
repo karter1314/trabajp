@@ -396,23 +396,26 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function loadAccessDirectory() {
-    const storedDirectory = readStoredDirectory();
-    if (storedDirectory) {
-      applyDirectory(storedDirectory);
-      populateCredentialsFields();
-      persistState();
-      return;
-    }
-
-    // Habilita inmediatamente el acceso con el padrón embebido para evitar que la vista quede estática
-    // cuando el navegador bloquee las lecturas locales de JSON (p. ej., al abrir el archivo sin servidor).
-    applyDirectory(DEFAULT_DIRECTORY, { persist: true });
+    // Aplica de inmediato el padrón embebido para evitar que la pantalla quede estática
+    // si la lectura de los JSON locales falla o tarda demasiado.
+    applyDirectory(DEFAULT_DIRECTORY);
     populateCredentialsFields();
     persistState();
 
+    const storedDirectory = readStoredDirectory();
+    if (storedDirectory && hasDirectoryRecords(storedDirectory)) {
+      applyDirectory(storedDirectory, { persist: true, preferExisting: true });
+      populateCredentialsFields();
+      persistState();
+    } else {
+      persistDirectory();
+    }
+
     const applyFallbackDirectory = (reason) => {
       console.warn('No se pudo obtener el padrón externo. Se usará el padrón embebido.', reason);
-      // Ya aplicamos el padrón base, solo informamos la razón del fallback.
+      if (!hasDirectoryRecords(accessDirectory)) {
+        applyDirectory(DEFAULT_DIRECTORY, { persist: true });
+      }
       showLoginFeedback(
         'Se cargó el padrón base incluido en la aplicación. Puedes reemplazar data/docentes.json y data/estudiantes.json cuando uses un servidor local.',
         'warning'
@@ -2593,6 +2596,10 @@ document.addEventListener('DOMContentLoaded', () => {
       console.warn('No se pudo leer el padrón institucional almacenado.', error);
       return null;
     }
+  }
+
+  function hasDirectoryRecords(directory) {
+    return DIRECTORY_ROLES.some((role) => Array.isArray(directory?.[role]) && directory[role].length > 0);
   }
 
   function buildDirectorySnapshot() {
