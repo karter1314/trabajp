@@ -840,6 +840,31 @@ document.addEventListener('DOMContentLoaded', () => {
     renderStudentResources();
   }
 
+  function populateGradeCourses() {
+    if (!gradeCourseSelect) {
+      return;
+    }
+
+    const options = teacherCourses
+      .map(
+        (course) =>
+          `<option value="${escapeAttribute(course.id)}">${escapeHtml(course.name)}</option>`
+      )
+      .join('');
+
+    gradeCourseSelect.innerHTML = options;
+
+    const availableCourses = teacherCourses.map((course) => course.id);
+    const currentValue = availableCourses.includes(gradeCourseSelect.value)
+      ? gradeCourseSelect.value
+      : availableCourses[0];
+
+    if (currentValue) {
+      gradeCourseSelect.value = currentValue;
+      renderGradeTable(currentValue);
+    }
+  }
+
   function renderGradeTable(courseId) {
     if (!gradeTableBody) {
       return;
