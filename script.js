@@ -404,11 +404,15 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    // Habilita inmediatamente el acceso con el padrón embebido para evitar que la vista quede estática
+    // cuando el navegador bloquee las lecturas locales de JSON (p. ej., al abrir el archivo sin servidor).
+    applyDirectory(DEFAULT_DIRECTORY, { persist: true });
+    populateCredentialsFields();
+    persistState();
+
     const applyFallbackDirectory = (reason) => {
       console.warn('No se pudo obtener el padrón externo. Se usará el padrón embebido.', reason);
-      applyDirectory(DEFAULT_DIRECTORY, { persist: true });
-      populateCredentialsFields();
-      persistState();
+      // Ya aplicamos el padrón base, solo informamos la razón del fallback.
       showLoginFeedback(
         'Se cargó el padrón base incluido en la aplicación. Puedes reemplazar data/docentes.json y data/estudiantes.json cuando uses un servidor local.',
         'warning'
@@ -432,7 +436,7 @@ document.addEventListener('DOMContentLoaded', () => {
         student: await studentResponse.json()
       };
 
-      applyDirectory(payload, { persist: true });
+      applyDirectory(payload, { persist: true, preferExisting: true });
       populateCredentialsFields();
       persistState();
     } catch (error) {
