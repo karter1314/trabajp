@@ -379,6 +379,8 @@ document.addEventListener('DOMContentLoaded', () => {
       clearTeacherAssignmentFeedback();
     });
 
+    teacherAssignmentList?.addEventListener('click', handleTeacherAssignmentClick);
+
     teacherResourceForm?.addEventListener('submit', handleTeacherResourceSubmit);
     teacherResourceForm?.addEventListener('input', () => {
       clearTeacherResourceFeedback();
@@ -392,6 +394,8 @@ document.addEventListener('DOMContentLoaded', () => {
     teacherResourceVideo?.addEventListener('change', () => {
       clearTeacherResourceFeedback();
     });
+
+    teacherResourceList?.addEventListener('click', handleTeacherResourceClick);
 
     studentAssignmentList?.addEventListener('click', handleStudentAssignmentClick);
 
@@ -1231,6 +1235,9 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="assignment-actions">
           <span class="chip ${statusClass}">${escapeHtml(statusLabel)}</span>
+          <button type="button" class="ghost-button danger" data-action="delete-assignment">
+            Eliminar
+          </button>
         </div>
       `;
 
@@ -1240,6 +1247,34 @@ document.addEventListener('DOMContentLoaded', () => {
     teacherAssignmentList.innerHTML = '';
     teacherAssignmentList.appendChild(fragment);
     updateTeacherAssignmentCount();
+  }
+
+  function handleTeacherAssignmentClick(event) {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) {
+      return;
+    }
+
+    if (target.dataset.action !== 'delete-assignment') {
+      return;
+    }
+
+    const item = target.closest('.assignment-item');
+    const assignmentId = item?.dataset.assignmentId;
+    if (!assignmentId) {
+      return;
+    }
+
+    const index = assignments.findIndex((entry) => entry.id === assignmentId);
+    if (index === -1) {
+      return;
+    }
+
+    assignments.splice(index, 1);
+    renderTeacherAssignments();
+    renderStudentAssignments();
+    persistWorkspaceState();
+    showToast('La tarea se eliminó correctamente.', 'success');
   }
 
   function renderStudentAssignments() {
@@ -1540,6 +1575,7 @@ document.addEventListener('DOMContentLoaded', () => {
     classResources.forEach((resource) => {
       const item = document.createElement('li');
       item.className = 'task-item assignment-item resource-item';
+      item.dataset.resourceId = resource.id;
 
       const metaParts = [
         `Compartido el ${escapeHtml(formatDateTime(resource.createdAt))}`
@@ -1565,6 +1601,8 @@ document.addEventListener('DOMContentLoaded', () => {
           )}">Ver video</a>`
         );
       }
+
+      actions.push('<button type="button" class="ghost-button danger" data-action="delete-resource">Eliminar</button>');
 
       item.innerHTML = `
         <div class="assignment-body">
@@ -1597,6 +1635,35 @@ document.addEventListener('DOMContentLoaded', () => {
     teacherResourceList.innerHTML = '';
     teacherResourceList.appendChild(fragment);
     updateTeacherResourceCount();
+  }
+
+  function handleTeacherResourceClick(event) {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) {
+      return;
+    }
+
+    if (target.dataset.action !== 'delete-resource') {
+      return;
+    }
+
+    const item = target.closest('.resource-item');
+    const resourceId = item?.dataset.resourceId;
+    if (!resourceId) {
+      return;
+    }
+
+    const index = classResources.findIndex((entry) => entry.id === resourceId);
+    if (index === -1) {
+      return;
+    }
+
+    const [removed] = classResources.splice(index, 1);
+    releaseResourceAssets(removed);
+    renderTeacherResources();
+    renderStudentResources();
+    persistWorkspaceState();
+    showToast('El recurso se eliminó correctamente.', 'success');
   }
 
   function renderStudentResources() {
