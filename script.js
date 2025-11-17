@@ -75,6 +75,36 @@ document.addEventListener('DOMContentLoaded', () => {
     teacher: 'data/docentes.json',
     student: 'data/estudiantes.json'
   };
+  const DEFAULT_DIRECTORY = {
+    teacher: [
+      {
+        email: 'clasico3040@gmail.com',
+        password: 'docente123',
+        name: 'María Elena Rojas',
+        detail: 'Docente de Comunicación'
+      },
+      {
+        email: 'jcarranza@ie3058.edu.pe',
+        password: 'horario456',
+        name: 'Javier Carranza',
+        detail: 'Docente de Matemática'
+      }
+    ],
+    student: [
+      {
+        email: 'karter1314@gmail.com',
+        password: 'alumno123',
+        name: 'Lucía Herrera',
+        detail: 'Estudiante 4.º de secundaria'
+      },
+      {
+        email: 'mmendoza@ie3058.edu.pe',
+        password: 'alumno456',
+        name: 'Miguel Mendoza',
+        detail: 'Estudiante 3.º de secundaria'
+      }
+    ]
+  };
   const DIRECTORY_STORAGE_KEY = 'sesiDirectory';
   const LEGACY_DIRECTORY_STORAGE_KEYS = ['siagiePlusDirectory', 'siseDirectory'];
   const DIRECTORY_DOWNLOAD_NAME = 'directorio-sesi-actualizado.json';
@@ -374,6 +404,17 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    const applyFallbackDirectory = (reason) => {
+      console.warn('No se pudo obtener el padrón externo. Se usará el padrón embebido.', reason);
+      applyDirectory(DEFAULT_DIRECTORY, { persist: true });
+      populateCredentialsFields();
+      persistState();
+      showLoginFeedback(
+        'Se cargó el padrón base incluido en la aplicación. Puedes reemplazar data/docentes.json y data/estudiantes.json cuando uses un servidor local.',
+        'warning'
+      );
+    };
+
     try {
       const [teacherResponse, studentResponse] = await Promise.all([
         fetch(DIRECTORY_PATHS.teacher, { cache: 'no-store' }),
@@ -395,11 +436,7 @@ document.addEventListener('DOMContentLoaded', () => {
       populateCredentialsFields();
       persistState();
     } catch (error) {
-      console.error('No se pudo cargar el padrón de usuarios.', error);
-      showLoginFeedback(
-        'No se pudo cargar el padrón de accesos. Verifica data/docentes.json y data/estudiantes.json.',
-        'error'
-      );
+      applyFallbackDirectory(error);
     }
   }
 

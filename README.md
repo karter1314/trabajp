@@ -14,7 +14,7 @@ Una interfaz moderna para la plataforma SESI, con mejoras de diseño y experienc
 
 ## Uso
 
-1. Abre el archivo `index.html` en tu navegador favorito.
+1. Abre el archivo `index.html` en tu navegador favorito. La aplicación trae un padrón base embebido para que el flujo funcione incluso sin servidor.
 2. Elige el tipo de acceso (docente o estudiante), ingresa el correo institucional almacenado en la base de datos (`data/docentes.json` o `data/estudiantes.json`) y presiona **Acceder**.
    - Docente: `clasico3040@gmail.com` · contraseña `docente123`
    - Estudiante: `karter1314@gmail.com` · contraseña `alumno123`
@@ -32,11 +32,11 @@ Las tareas y recursos compartidos que gestiones desde el rol docente se almacena
 
 ## Base de datos de accesos
 
-- El padrón de cuentas se carga automáticamente desde dos archivos JSON (`data/docentes.json` y `data/estudiantes.json`), pensados para exportarse desde Excel/Sheets (guardar como CSV y convertir a JSON).
+- El padrón de cuentas se carga automáticamente desde dos archivos JSON (`data/docentes.json` y `data/estudiantes.json`), pensados para exportarse desde Excel/Sheets (guardar como CSV y convertir a JSON). Si los archivos no están disponibles o el navegador bloquea su lectura, se usa un padrón base embebido para que el acceso no se vuelva estático.
 - Cada registro puede incluir `email`, `password`, `name`, `detail` e `initials`. La aplicación normaliza los datos y utiliza los valores para personalizar los encabezados de cada rol.
 - Para actualizar la base de accesos, edita `data/docentes.json` o `data/estudiantes.json` directamente (puedes exportar desde Excel como CSV y convertirlo a JSON).
 - Si quieres volver al padrón original, elimina la clave `sesiDirectory` del almacenamiento local del navegador y recarga la página. También puedes limpiar las credenciales guardadas borrando `sesiCredentials`.
-- Si abres el proyecto directamente como archivo (`file://`), algunos navegadores bloquean la lectura del JSON. Usa un servidor local ligero (por ejemplo, Live Server de VS Code o `python -m http.server`).
+- Si abres el proyecto directamente como archivo (`file://`), algunos navegadores bloquean la lectura del JSON. La app ya incluye un padrón base embebido para mantener el login funcional, pero si quieres leer tus propios archivos JSON usa un servidor local ligero (por ejemplo, Live Server de VS Code o `python -m http.server`).
 
 ## Próximos pasos sugeridos
 
