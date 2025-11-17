@@ -9,6 +9,7 @@ Una interfaz moderna para la plataforma SESI, con mejoras de diseño y experienc
 - **Espacio docente** dedicado al envío de tareas con instrucciones claras y un módulo para compartir presentaciones o videos de las clases.
 - **Panel del estudiante** orientado a la consulta de resultados, asistencias y agenda personal, con horario semanal, buzón de tareas y una bandeja de recursos donde se visualizan presentaciones o videos compartidos por los docentes.
 - **Plantillas ampliadas** con 10 docentes y 20 estudiantes de muestra que enriquecen las tablas y permiten visualizar la gestión de aulas más completa.
+- **Estado vivo y persistente**: las tareas enviadas y los recursos compartidos se guardan en el navegador (localStorage) para que permanezcan disponibles tras recargar o volver a abrir la plataforma.
 - **Diseño responsive** pensado para equipos directivos que utilizan tanto escritorio como tabletas.
 
 ## Uso
@@ -20,6 +21,8 @@ Una interfaz moderna para la plataforma SESI, con mejoras de diseño y experienc
 3. Según el perfil seleccionado se mostrará la interfaz dedicada:
 - **Docentes**: ingresan al **Espacio docente**, donde pueden enviar tareas a sus cursos y compartir presentaciones o videos para apoyar cada sesión.
    - **Estudiantes**: visualizan el **Panel del estudiante**, con promedios, asistencias, agenda personal, reproductor de videos compartidos y listado de tareas recibidas por sus docentes.
+
+Las tareas y recursos compartidos que gestiones desde el rol docente se almacenan automáticamente en el navegador. Al recargar la página seguirán disponibles; si deseas limpiar el estado, borra la clave `sesiWorkspaceState` del almacenamiento local.
 
 ## Tecnologías
 

@@ -69,6 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const PLATFORM_NAME = 'SESI';
   const STORAGE_KEY = 'sesiCredentials';
   const LEGACY_STORAGE_KEYS = ['siagiePlusCredentials', 'siseCredentials'];
+  const WORKSPACE_STORAGE_KEY = 'sesiWorkspaceState';
+  const LEGACY_WORKSPACE_KEYS = ['siagiePlusWorkspaceState', 'siseWorkspaceState'];
   const DIRECTORY_PATHS = {
     teacher: 'data/docentes.json',
     student: 'data/estudiantes.json'
@@ -246,6 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let directoryDownloadUrl = '';
 
   restoreSavedState();
+  restoreWorkspaceState();
   ensureActiveRoleAvailable();
   updateRoleUI();
   populateCredentialsFields();
@@ -1016,6 +1019,7 @@ document.addEventListener('DOMContentLoaded', () => {
     );
     renderTeacherAssignments();
     renderStudentAssignments();
+    persistWorkspaceState();
   }
 
   function renderTeacherAssignments() {
@@ -1171,6 +1175,7 @@ document.addEventListener('DOMContentLoaded', () => {
     assignment.completed = !assignment.completed;
     renderStudentAssignments();
     renderTeacherAssignments();
+    persistWorkspaceState();
   }
 
   function showTeacherAssignmentFeedback(message, status) {
@@ -1278,7 +1283,7 @@ document.addEventListener('DOMContentLoaded', () => {
     studentAssignmentSummary.classList.add('warning');
   }
 
-  function handleTeacherResourceSubmit(event) {
+  async function handleTeacherResourceSubmit(event) {
     event.preventDefault();
 
     if (!teacherResourceCourseSelect) {
@@ -1300,6 +1305,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const course = teacherCourses.find((item) => item.id === courseId);
+    const [presentationUrl, videoUrl] = await Promise.all([
+      presentation ? readFileAsDataUrl(presentation) : Promise.resolve(''),
+      video ? readFileAsDataUrl(video) : Promise.resolve('')
+    ]);
+
     const resource = {
       id: `resource-${Date.now()}`,
       courseId,
@@ -1307,9 +1317,9 @@ document.addEventListener('DOMContentLoaded', () => {
       courseGroup: course?.group ?? '',
       createdAt: new Date(),
       presentationName: presentation?.name ?? '',
-      presentationUrl: presentation ? URL.createObjectURL(presentation) : '',
+      presentationUrl,
       videoName: video?.name ?? '',
-      videoUrl: video ? URL.createObjectURL(video) : ''
+      videoUrl
     };
 
     classResources.unshift(resource);
@@ -1333,6 +1343,7 @@ document.addEventListener('DOMContentLoaded', () => {
     );
     renderTeacherResources();
     renderStudentResources();
+    persistWorkspaceState();
   }
 
   function releaseResourceAssets(resource) {
@@ -1340,12 +1351,12 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    if (resource.presentationUrl) {
+    if (resource.presentationUrl && resource.presentationUrl.startsWith('blob:')) {
       URL.revokeObjectURL(resource.presentationUrl);
       resource.presentationUrl = '';
     }
 
-    if (resource.videoUrl) {
+    if (resource.videoUrl && resource.videoUrl.startsWith('blob:')) {
       URL.revokeObjectURL(resource.videoUrl);
       resource.videoUrl = '';
     }
@@ -2338,6 +2349,115 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
       console.warn('No se pudo migrar el padrón institucional guardado.', error);
     }
+  }
+
+  function restoreWorkspaceState() {
+    if (!storage) {
+      return;
+    }
+
+    const raw = readWorkspaceSnapshot();
+    if (!raw) {
+      return;
+    }
+
+    assignments.length = 0;
+    classResources.length = 0;
+
+    const savedAssignments = Array.isArray(raw.assignments) ? raw.assignments : [];
+    savedAssignments.forEach((entry) => {
+      assignments.push({
+        id: entry.id || `assignment-${Date.now()}`,
+        courseId: entry.courseId || '',
+        courseLabel: entry.courseLabel || 'Curso sin asignar',
+        courseGroup: entry.courseGroup || '',
+        title: entry.title || 'Tarea',
+        detail: entry.detail || '',
+        dueDate: entry.dueDate || '',
+        createdAt: entry.createdAt ? new Date(entry.createdAt) : new Date(),
+        completed: Boolean(entry.completed)
+      });
+    });
+
+    const savedResources = Array.isArray(raw.resources) ? raw.resources : [];
+    savedResources.forEach((entry) => {
+      classResources.push({
+        id: entry.id || `resource-${Date.now()}`,
+        courseId: entry.courseId || '',
+        courseLabel: entry.courseLabel || 'Curso sin asignar',
+        courseGroup: entry.courseGroup || '',
+        createdAt: entry.createdAt ? new Date(entry.createdAt) : new Date(),
+        presentationName: entry.presentationName || '',
+        presentationUrl: entry.presentationUrl || '',
+        videoName: entry.videoName || '',
+        videoUrl: entry.videoUrl || ''
+      });
+    });
+  }
+
+  function persistWorkspaceState() {
+    if (!storage) {
+      return;
+    }
+
+    const snapshot = {
+      assignments: assignments.map((assignment) => ({
+        id: assignment.id,
+        courseId: assignment.courseId,
+        courseLabel: assignment.courseLabel,
+        courseGroup: assignment.courseGroup,
+        title: assignment.title,
+        detail: assignment.detail,
+        dueDate: assignment.dueDate,
+        createdAt: assignment.createdAt instanceof Date ? assignment.createdAt.toISOString() : '',
+        completed: Boolean(assignment.completed)
+      })),
+      resources: classResources.map((resource) => ({
+        id: resource.id,
+        courseId: resource.courseId,
+        courseLabel: resource.courseLabel,
+        courseGroup: resource.courseGroup,
+        createdAt: resource.createdAt instanceof Date ? resource.createdAt.toISOString() : '',
+        presentationName: resource.presentationName,
+        presentationUrl: resource.presentationUrl,
+        videoName: resource.videoName,
+        videoUrl: resource.videoUrl
+      }))
+    };
+
+    try {
+      storage.setItem(WORKSPACE_STORAGE_KEY, JSON.stringify(snapshot));
+    } catch (error) {
+      console.warn('No se pudo guardar el estado del aula.', error);
+    }
+  }
+
+  function readWorkspaceSnapshot() {
+    const candidates = [WORKSPACE_STORAGE_KEY, ...LEGACY_WORKSPACE_KEYS];
+
+    for (const key of candidates) {
+      try {
+        const raw = storage.getItem(key);
+        if (!raw) continue;
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          return parsed;
+        }
+      } catch (error) {
+        console.warn('No se pudo leer el estado del aula.', error);
+      }
+    }
+
+    return null;
+  }
+
+  function readFileAsDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result?.toString() || '');
+      reader.onerror = () => reject(reader.error || new Error('No se pudo leer el archivo'));
+      reader.readAsDataURL(file);
+    });
   }
 
   function persistState() {
