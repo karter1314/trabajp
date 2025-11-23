@@ -296,6 +296,46 @@ document.addEventListener('DOMContentLoaded', () => {
   const gradeHistory = [];
   const assignments = [];
   const classResources = [];
+  const defaultAssignmentsSeed = [
+    {
+      courseId: 'comunicacion-2g',
+      courseLabel: 'Comunicación · 2.º Grado',
+      courseGroup: '2.º Primaria',
+      title: 'Comprensión lectora: capítulo 3',
+      detail: 'Lee el capítulo y prepara un resumen de 200 palabras con tu opinión personal.',
+      dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+    },
+    {
+      courseId: 'matematica-3g',
+      courseLabel: 'Matemática · 3.º Grado',
+      courseGroup: '3.º Primaria',
+      title: 'Problemas con fracciones',
+      detail: 'Resuelve la guía adjunta y explica tu procedimiento en cada ejercicio.',
+      dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+    }
+  ];
+
+  const defaultResourcesSeed = [
+    {
+      courseId: 'comunicacion-2g',
+      courseLabel: 'Comunicación · 2.º Grado',
+      courseGroup: '2.º Primaria',
+      presentationName: 'Plan lector - semana 4.pdf',
+      presentationUrl: '',
+      videoName: 'Video de repaso',
+      videoUrl:
+        'https://drive.google.com/uc?export=download&id=1z-HfqDKQ0a-sesi-video-clase'
+    },
+    {
+      courseId: 'matematica-3g',
+      courseLabel: 'Matemática · 3.º Grado',
+      courseGroup: '3.º Primaria',
+      presentationName: 'Guía de fracciones.pptx',
+      presentationUrl: '',
+      videoName: 'Resolución guiada',
+      videoUrl: 'https://drive.google.com/uc?export=download&id=1z-HfqDKQ0a-sesi-mate'
+    }
+  ];
 
   const panelDescriptions = {
     dashboard: 'Visualiza el estado académico y administrativo de tu institución.',
@@ -2846,11 +2886,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function restoreWorkspaceState() {
     if (!storage) {
+      seedWorkspaceDefaults();
       return;
     }
 
     const raw = readWorkspaceSnapshot();
     if (!raw) {
+      seedWorkspaceDefaults();
       return;
     }
 
@@ -2886,6 +2928,46 @@ document.addEventListener('DOMContentLoaded', () => {
         videoUrl: entry.videoUrl || ''
       });
     });
+
+    seedWorkspaceDefaults();
+  }
+
+  function seedWorkspaceDefaults() {
+    const now = Date.now();
+
+    if (!assignments.length && defaultAssignmentsSeed.length) {
+      defaultAssignmentsSeed.forEach((entry, index) => {
+        assignments.push({
+          id: `assignment-seed-${index}`,
+          courseId: entry.courseId,
+          courseLabel: entry.courseLabel,
+          courseGroup: entry.courseGroup,
+          title: entry.title,
+          detail: entry.detail,
+          dueDate: entry.dueDate,
+          createdAt: new Date(now - index * 60 * 60 * 1000),
+          completed: false
+        });
+      });
+    }
+
+    if (!classResources.length && defaultResourcesSeed.length) {
+      defaultResourcesSeed.forEach((entry, index) => {
+        classResources.push({
+          id: `resource-seed-${index}`,
+          courseId: entry.courseId,
+          courseLabel: entry.courseLabel,
+          courseGroup: entry.courseGroup,
+          createdAt: new Date(now - index * 2 * 60 * 60 * 1000),
+          presentationName: entry.presentationName,
+          presentationUrl: entry.presentationUrl,
+          videoName: entry.videoName,
+          videoUrl: entry.videoUrl
+        });
+      });
+    }
+
+    persistWorkspaceState();
   }
 
   function persistWorkspaceState() {
