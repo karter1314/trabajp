@@ -39,6 +39,23 @@ Las tareas y recursos compartidos que gestiones desde el rol docente se almacena
 - Si guardaste un padrón vacío o con errores, la app vuelve a aplicar el padrón embebido automáticamente al iniciar. Si quieres forzar el padrón original manualmente, elimina la clave `sesiDirectory` del almacenamiento local del navegador y recarga la página. También puedes limpiar las credenciales guardadas borrando `sesiCredentials`.
 - Si abres el proyecto directamente como archivo (`file://`), algunos navegadores bloquean la lectura del JSON. La app ya incluye un padrón base embebido para mantener el login funcional, pero si quieres leer tus propios archivos JSON usa un servidor local ligero (por ejemplo, Live Server de VS Code o `python -m http.server`).
 
+## Esquema MySQL sugerido
+
+Para una implementación persistente se incluye `database/mysql_schema.sql`, que define tablas en MySQL 8+ alineadas con las funciones actuales:
+
+- **docentes** y **estudiantes**: almacenan los accesos con email y contraseña (hash SHA2 en los datos de ejemplo), además de datos de perfil.
+- **cursos** y **docente_curso**: representan las cuatro áreas base (Comunicación, Matemáticas, Ciencias y Educación Física) y qué docente dicta cada una.
+- **tareas** y **tareas_estudiantes**: registran los envíos de tareas por curso y el estado de recepción/entrega de cada estudiante.
+- **recursos** y **recursos_eventos**: guardan presentaciones o videos compartidos y un historial opcional de descargas o reproducciones.
+
+Pasos rápidos para cargarlo:
+
+```bash
+mysql -u root -p < database/mysql_schema.sql
+```
+
+El script crea la base `sesi_plataforma` y agrega datos demo compatibles con las credenciales usadas en la interfaz (docente `clasico3040@gmail.com` / `docente123` y estudiante `karter1314@gmail.com` / `alumno123`). Ajusta o reemplaza los hashes de contraseña según tu estrategia de autenticación.
+
 ## Próximos pasos sugeridos
 
 - Integrar autenticación real y conexión con la base de datos institucional.
