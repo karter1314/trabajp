@@ -66,6 +66,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const studentResourceList = document.getElementById('student-resource-list');
   const studentResourceEmpty = document.getElementById('student-resource-empty');
   const studentResourceSummary = document.getElementById('student-resource-summary');
+  const competencyTableBody = document.getElementById('competency-table-body');
+  const boletaDownloadButton = document.getElementById('boleta-download');
+  const boletaSummary = document.getElementById('boleta-summary');
   const PLATFORM_NAME = 'SESI';
   const STORAGE_KEY = 'sesiCredentials';
   const LEGACY_STORAGE_KEYS = ['siagiePlusCredentials', 'siseCredentials'];
@@ -158,10 +161,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const teacherCourses = [
     {
-      id: 'comunicacion-4b',
-      name: 'Comunicación · 4.º Secundaria B',
-      group: '4.º Secundaria B',
-      room: 'Aula 204',
+      id: 'personal-social-2g',
+      name: 'Personal Social · 2.º Grado',
+      group: '2.º Primaria',
+      room: 'Aula 202',
+      students: [
+        { id: 'camila-huaman', name: 'Camila Huamán', grade: 'A' },
+        { id: 'sebastian-palacios', name: 'Sebastián Palacios', grade: 'AD' },
+        { id: 'valeria-giron', name: 'Valeria Girón', grade: 'A' },
+        { id: 'renato-silva', name: 'Renato Silva', grade: 'B' }
+      ]
+    },
+    {
+      id: 'comunicacion-2g',
+      name: 'Comunicación · 2.º Grado',
+      group: '2.º Primaria',
+      room: 'Aula 202',
       students: [
         { id: 'andrea-paredes', name: 'Andrea Paredes', grade: 'AD' },
         { id: 'carlos-ramos', name: 'Carlos Ramos', grade: 'A' },
@@ -170,22 +185,10 @@ document.addEventListener('DOMContentLoaded', () => {
       ]
     },
     {
-      id: 'matematicas-4b',
-      name: 'Matemáticas · 4.º Secundaria B',
-      group: '4.º Secundaria B',
-      room: 'Aula 204',
-      students: [
-        { id: 'diego-herrera', name: 'Diego Herrera', grade: 'B' },
-        { id: 'renato-ibanez', name: 'Renato Ibañez', grade: 'A' },
-        { id: 'gabriel-lopez', name: 'Gabriel López', grade: 'B' },
-        { id: 'ana-castro', name: 'Ana Castro', grade: 'A' }
-      ]
-    },
-    {
-      id: 'ciencias-4b',
-      name: 'Ciencias · 4.º Secundaria B',
-      group: '4.º Secundaria B',
-      room: 'Laboratorio de ciencias',
+      id: 'arte-cultura-2g',
+      name: 'Arte y Cultura · 2.º Grado',
+      group: '2.º Primaria',
+      room: 'Sala de arte',
       students: [
         { id: 'mariana-silva', name: 'Mariana Silva', grade: 'A' },
         { id: 'jorge-vizcarra', name: 'Jorge Vizcarra', grade: 'B' },
@@ -194,18 +197,101 @@ document.addEventListener('DOMContentLoaded', () => {
       ]
     },
     {
-      id: 'educacion-fisica-4b',
-      name: 'Educación Física · 4.º Secundaria B',
-      group: '4.º Secundaria B',
-      room: 'Coliseo escolar',
+      id: 'ingles-2g',
+      name: 'Inglés · 2.º Grado',
+      group: '2.º Primaria',
+      room: 'Aula de idiomas',
       students: [
         { id: 'lucia-herrera', name: 'Lucía Herrera', grade: 'A' },
         { id: 'mateo-fernandez', name: 'Mateo Fernández', grade: 'B' },
         { id: 'ximena-alarcon', name: 'Ximena Alarcón', grade: 'A' },
         { id: 'raul-ordonez', name: 'Raúl Ordoñez', grade: 'AD' }
       ]
+    },
+    {
+      id: 'ciencia-tecnologia-2g',
+      name: 'Ciencia y Tecnología · 2.º Grado',
+      group: '2.º Primaria',
+      room: 'Laboratorio de ciencias',
+      students: [
+        { id: 'diego-herrera', name: 'Diego Herrera', grade: 'B' },
+        { id: 'renato-ibanez', name: 'Renato Ibañez', grade: 'A' },
+        { id: 'gabriel-lopez', name: 'Gabriel López', grade: 'B' },
+        { id: 'ana-castro', name: 'Ana Castro', grade: 'A' }
+      ]
+    },
+    {
+      id: 'educacion-trabajo-2g',
+      name: 'Educación para el Trabajo · 2.º Grado',
+      group: '2.º Primaria',
+      room: 'Taller de proyectos',
+      students: [
+        { id: 'martin-linares', name: 'Martín Linares', grade: 'A' },
+        { id: 'gema-flores', name: 'Gema Flores', grade: 'A' },
+        { id: 'karol-ramirez', name: 'Karol Ramírez', grade: 'B' },
+        { id: 'bryan-diaz', name: 'Bryan Díaz', grade: 'B' }
+      ]
     }
   ];
+
+  const competencyReport = [
+    {
+      area: 'Personal Social',
+      competencies: [
+        { name: 'Construye su identidad', score: 'A' },
+        { name: 'Convive y participa democráticamente', score: 'A' },
+        { name: 'Asume responsablemente la gestión de los recursos económicos', score: 'A' }
+      ]
+    },
+    {
+      area: 'Comunicación',
+      competencies: [
+        { name: 'Se comunica oralmente en su lengua materna', score: 'A' },
+        { name: 'Lee diversos tipos de texto escrito', score: 'AD' },
+        { name: 'Escribe diversos tipos de texto', score: 'A' }
+      ]
+    },
+    {
+      area: 'Arte y Cultura',
+      competencies: [
+        { name: 'Crea proyectos desde los lenguajes artísticos', score: 'AD' },
+        { name: 'Interpreta y comprende manifestaciones artístico-culturales', score: 'A' }
+      ]
+    },
+    {
+      area: 'Inglés',
+      competencies: [{ name: 'Se comunica oralmente en inglés como lengua extranjera', score: 'A' }]
+    },
+    {
+      area: 'Ciencia y Tecnología',
+      competencies: [
+        { name: 'Indaga mediante métodos científicos', score: 'A' },
+        { name: 'Explica el mundo físico basándose en conocimientos científicos', score: 'A' },
+        {
+          name: 'Diseña y construye soluciones tecnológicas para resolver problemas de su entorno',
+          score: 'AD'
+        }
+      ]
+    },
+    {
+      area: 'Educación para el Trabajo',
+      competencies: [
+        { name: 'Gestiona proyectos de emprendimiento económico o social', score: 'A' },
+        { name: 'Gestiona responsablemente los recursos económicos', score: 'A' }
+      ]
+    },
+    {
+      area: 'Evaluación de conducta',
+      competencies: [
+        { name: 'Compromiso y participación en entornos virtuales', score: 'A' },
+        { name: 'Ética digital y ciudadanía responsable', score: 'AD' }
+      ]
+    }
+  ];
+
+  const tutorComment =
+    'Buen año en el manejo de operaciones básicas y producción de textos. Aún requiere mayor práctica para la ' +
+    'multiplicación y división de fracciones.';
 
   const gradeHistory = [];
   const assignments = [];
@@ -398,6 +484,8 @@ document.addEventListener('DOMContentLoaded', () => {
     teacherResourceList?.addEventListener('click', handleTeacherResourceClick);
 
     studentAssignmentList?.addEventListener('click', handleStudentAssignmentClick);
+
+    boletaDownloadButton?.addEventListener('click', downloadBoleta);
 
     document.querySelectorAll('[data-action]').forEach((actionNode) => {
       actionNode.addEventListener('click', (event) => {
@@ -960,6 +1048,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function initializeStudentWorkspace() {
     renderStudentAssignments();
     renderStudentResources();
+    renderCompetencyTable();
   }
 
   function populateGradeCourses() {
@@ -1842,6 +1931,151 @@ document.addEventListener('DOMContentLoaded', () => {
 
     studentResourceSummary.textContent = `${total} ${total === 1 ? 'disponible' : 'disponibles'}`;
     studentResourceSummary.classList.add('success');
+  }
+
+  function renderCompetencyTable() {
+    if (!competencyTableBody) {
+      return;
+    }
+
+    if (!competencyReport.length) {
+      competencyTableBody.innerHTML =
+        '<tr class="empty-state"><td colspan="3">No hay calificaciones registradas todavía.</td></tr>';
+      return;
+    }
+
+    const rows = competencyReport
+      .map((area) => {
+        if (!area.competencies.length) {
+          return '';
+        }
+
+        return area.competencies
+          .map((competency, index) => {
+            const areaCell =
+              index === 0
+                ? `<td rowspan="${area.competencies.length}">${escapeHtml(area.area)}</td>`
+                : '';
+
+            return `
+              <tr>
+                ${areaCell}
+                <td>${escapeHtml(competency.name)}</td>
+                <td><span class="chip ${mapScoreToClass(competency.score)}">${escapeHtml(
+              competency.score
+            )}</span></td>
+              </tr>
+            `;
+          })
+          .join('');
+      })
+      .join('');
+
+    competencyTableBody.innerHTML = rows ||
+      '<tr class="empty-state"><td colspan="3">No hay calificaciones registradas todavía.</td></tr>';
+
+    if (boletaSummary) {
+      const name = (studentName?.textContent || 'tu cuenta estudiantil').trim();
+      boletaSummary.textContent = `Boleta preparada para ${name}. Descárgala en HTML y conviértela a PDF desde tu navegador.`;
+    }
+  }
+
+  function mapScoreToClass(score) {
+    const normalized = (score || '').toUpperCase();
+    if (normalized === 'AD') return 'success';
+    if (normalized === 'A') return 'info';
+    if (normalized === 'B') return 'warning';
+    return 'error';
+  }
+
+  function downloadBoleta() {
+    if (!competencyReport.length) {
+      showToast('Aún no hay boleta para descargar.', 'warning');
+      return;
+    }
+
+    const html = buildBoletaHtml();
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    const studentSlug = (studentName?.textContent || 'estudiante')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/gi, '-')
+      .replace(/^-+|-+$/g, '') || 'boleta';
+
+    link.href = url;
+    link.download = `boleta-${studentSlug}.html`;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1200);
+
+    showToast('Descargando boleta de notas.', 'success');
+  }
+
+  function buildBoletaHtml() {
+    const today = new Date();
+    const studentLabel = (studentName?.textContent || 'Estudiante SESI').trim();
+    const rows = competencyReport
+      .map((area) => {
+        if (!area.competencies.length) return '';
+        const areaRows = area.competencies
+          .map((competency, index) => {
+            const areaCell =
+              index === 0 ? `<td rowspan="${area.competencies.length}">${area.area}</td>` : '';
+            return `
+              <tr>
+                ${areaCell}
+                <td>${competency.name}</td>
+                <td>${competency.score}</td>
+              </tr>
+            `;
+          })
+          .join('');
+        return areaRows;
+      })
+      .join('');
+
+    return `<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Boleta de notas - ${escapeHtml(studentLabel)}</title>
+    <style>
+      body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #111; margin: 24px; }
+      header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+      h1 { margin: 0; color: #7a1231; }
+      .meta { color: #444; margin: 0; }
+      table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+      th, td { border: 1px solid #d9d9d9; padding: 10px; text-align: left; }
+      th { background: #f6eff3; color: #7a1231; }
+      tfoot td { background: #fafafa; font-style: italic; }
+      .comment { margin-top: 16px; padding: 12px; background: #f8f3f5; border: 1px solid #e2cdd6; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>Boleta SESI</h1>
+        <p class="meta">${studentLabel}</p>
+      </div>
+      <div class="meta">${today.toLocaleDateString('es-PE')}</div>
+    </header>
+    <table>
+      <thead>
+        <tr>
+          <th>Área</th>
+          <th>Competencia</th>
+          <th>Nivel</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows}
+      </tbody>
+    </table>
+    <div class="comment">
+      <strong>Comentario del tutor:</strong> ${tutorComment}
+    </div>
+  </body>
+</html>`;
   }
 
   function formatDate(value) {

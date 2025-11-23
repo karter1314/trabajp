@@ -280,18 +280,19 @@
             <div class="grid two-columns stack-on-mobile">
               <article class="card">
                 <header>
-                  <h3>Calificaciones por curso</h3>
+                  <div>
+                    <h3>Calificaciones por curso</h3>
+                    <p class="caption">Competencias alineadas al reporte oficial MINEDU.</p>
+                  </div>
                   <div class="filters">
                     <select>
                       <option>Trimestre 1</option>
                       <option>Trimestre 2</option>
                       <option>Trimestre 3</option>
                     </select>
-                    <select>
-                      <option>Mostrar todo</option>
-                      <option>Competencias destacadas</option>
-                      <option>Competencias por reforzar</option>
-                    </select>
+                    <button class="secondary-button" id="boleta-download" type="button">
+                      Descargar boleta
+                    </button>
                   </div>
                 </header>
                 <table class="data-table compact">
@@ -299,32 +300,14 @@
                     <tr>
                       <th>Área</th>
                       <th>Competencia</th>
-                      <th>Resultado</th>
+                      <th>Nivel</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td>Comunicación</td>
-                      <td>Comprende textos escritos</td>
-                      <td><span class="chip success">AD</span></td>
-                    </tr>
-                    <tr>
-                      <td>Matemáticas</td>
-                      <td>Resuelve problemas</td>
-                      <td><span class="chip info">A</span></td>
-                    </tr>
-                    <tr>
-                      <td>Ciencias</td>
-                      <td>Indaga mediante métodos</td>
-                      <td><span class="chip warning">B</span></td>
-                    </tr>
-                    <tr>
-                      <td>Educación Física</td>
-                      <td>Desarrolla habilidades motrices</td>
-                      <td><span class="chip info">A</span></td>
-                    </tr>
-                  </tbody>
+                  <tbody id="competency-table-body"></tbody>
                 </table>
+                <p class="boleta-summary" id="boleta-summary">
+                  Este reporte resume las competencias claves del periodo y se actualiza con las áreas oficiales de la boleta MINEDU.
+                </p>
               </article>
 
               <article class="card">
@@ -379,29 +362,29 @@
                   <tbody>
                     <tr>
                       <th>08:00</th>
+                      <td>Personal Social</td>
                       <td>Comunicación</td>
-                      <td>Matemáticas</td>
-                      <td>Ciencias</td>
-                      <td>Educación Física</td>
-                      <td>Comunicación</td>
+                      <td>Arte y Cultura</td>
+                      <td>Ciencia y Tecnología</td>
+                      <td>Inglés</td>
                       <td class="muted">Libre</td>
                     </tr>
                     <tr>
                       <th>09:00</th>
-                      <td>Matemáticas</td>
                       <td>Comunicación</td>
-                      <td>Educación Física</td>
-                      <td>Ciencias</td>
-                      <td>Matemáticas</td>
+                      <td>Ciencia y Tecnología</td>
+                      <td>Educación para el Trabajo</td>
+                      <td>Personal Social</td>
+                      <td>Arte y Cultura</td>
                       <td class="muted">Libre</td>
                     </tr>
                     <tr>
                       <th>10:00</th>
-                      <td>Ciencias</td>
-                      <td>Educación Física</td>
+                      <td>Ciencia y Tecnología</td>
+                      <td>Arte y Cultura</td>
+                      <td>Inglés</td>
                       <td>Comunicación</td>
-                      <td>Matemáticas</td>
-                      <td>Ciencias</td>
+                      <td>Educación para el Trabajo</td>
                       <td class="muted">Libre</td>
                     </tr>
                     <tr>
@@ -415,12 +398,12 @@
                     </tr>
                     <tr>
                       <th>12:00</th>
-                      <td>Educación Física</td>
-                      <td>Ciencias</td>
-                      <td>Matemáticas</td>
+                      <td>Educación para el Trabajo</td>
+                      <td>Personal Social</td>
                       <td>Comunicación</td>
-                      <td>Educación Física</td>
-                      <td class="muted">Club deportivo</td>
+                      <td>Inglés</td>
+                      <td>Ciencia y Tecnología</td>
+                      <td class="muted">Club de ciencias</td>
                     </tr>
                     <tr>
                       <th>13:00</th>
@@ -429,7 +412,7 @@
                       <td>Planificación</td>
                       <td>Planificación</td>
                       <td>Planificación</td>
-                      <td class="muted">Club deportivo</td>
+                      <td class="muted">Club de ciencias</td>
                     </tr>
                     <tr>
                       <th>14:00</th>

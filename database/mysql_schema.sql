@@ -149,10 +149,12 @@ ON DUPLICATE KEY UPDATE
 
 INSERT INTO cursos (codigo, nombre, nivel, seccion, turno)
 VALUES
-  ('COM-4B', 'Comunicación', '4.º Secundaria', 'B', 'Mañana'),
-  ('MAT-4B', 'Matemáticas', '4.º Secundaria', 'B', 'Mañana'),
-  ('CIE-4B', 'Ciencias', '4.º Secundaria', 'B', 'Mañana'),
-  ('EFI-4B', 'Educación Física', '4.º Secundaria', 'B', 'Mañana')
+  ('PS-2G', 'Personal Social', '2.º Grado', 'A', 'Mañana'),
+  ('COM-2G', 'Comunicación', '2.º Grado', 'A', 'Mañana'),
+  ('ART-2G', 'Arte y Cultura', '2.º Grado', 'A', 'Mañana'),
+  ('ING-2G', 'Inglés', '2.º Grado', 'A', 'Mañana'),
+  ('CYT-2G', 'Ciencia y Tecnología', '2.º Grado', 'A', 'Mañana'),
+  ('EPT-2G', 'Educación para el Trabajo', '2.º Grado', 'A', 'Mañana')
 ON DUPLICATE KEY UPDATE
   nombre = VALUES(nombre),
   nivel = VALUES(nivel),
@@ -164,25 +166,25 @@ INSERT INTO docente_curso (docente_id, curso_id)
 SELECT d.id, c.id
 FROM docentes d
 JOIN cursos c ON (
-  (d.email = 'clasico3040@gmail.com' AND c.codigo IN ('COM-4B', 'EFI-4B'))
-  OR (d.email = 'jcarranza@ie3058.edu.pe' AND c.codigo IN ('MAT-4B', 'CIE-4B'))
+  (d.email = 'clasico3040@gmail.com' AND c.codigo IN ('PS-2G', 'COM-2G', 'ART-2G'))
+  OR (d.email = 'jcarranza@ie3058.edu.pe' AND c.codigo IN ('CYT-2G', 'ING-2G', 'EPT-2G'))
 )
 ON DUPLICATE KEY UPDATE docente_id = docente_id;
 
 -- Tareas iniciales
-INSERT INTO tareas (docente_id, curso_id, titulo, detalle, fecha_entrega)
-SELECT d.id, c.id, 'Lectura y resumen', 'Leer el capítulo 3 y preparar un resumen de una página.', DATE_ADD(CURDATE(), INTERVAL 7 DAY)
-FROM docentes d JOIN cursos c ON d.email = 'clasico3040@gmail.com' AND c.codigo = 'COM-4B'
-UNION ALL
-SELECT d.id, c.id, 'Práctica de ejercicios', 'Resolver la guía de ecuaciones cuadráticas.', DATE_ADD(CURDATE(), INTERVAL 5 DAY)
-FROM docentes d JOIN cursos c ON d.email = 'jcarranza@ie3058.edu.pe' AND c.codigo = 'MAT-4B'
-ON DUPLICATE KEY UPDATE titulo = VALUES(titulo);
+  INSERT INTO tareas (docente_id, curso_id, titulo, detalle, fecha_entrega)
+  SELECT d.id, c.id, 'Lectura y resumen', 'Leer el capítulo 3 y preparar un resumen de una página.', DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+  FROM docentes d JOIN cursos c ON d.email = 'clasico3040@gmail.com' AND c.codigo = 'COM-2G'
+  UNION ALL
+  SELECT d.id, c.id, 'Práctica de ejercicios', 'Resolver la guía de ecuaciones cuadráticas.', DATE_ADD(CURDATE(), INTERVAL 5 DAY)
+  FROM docentes d JOIN cursos c ON d.email = 'jcarranza@ie3058.edu.pe' AND c.codigo = 'CYT-2G'
+  ON DUPLICATE KEY UPDATE titulo = VALUES(titulo);
 
--- Recursos iniciales
-INSERT INTO recursos (docente_id, curso_id, titulo, tipo, nombre_archivo, url_archivo, mime_type)
-SELECT d.id, c.id, 'Presentación de la semana', 'presentacion', 'semana-uno.pdf', 'https://example.com/semana-uno.pdf', 'application/pdf'
-FROM docentes d JOIN cursos c ON d.email = 'clasico3040@gmail.com' AND c.codigo = 'COM-4B'
-UNION ALL
-SELECT d.id, c.id, 'Video de laboratorio', 'video', 'experimento.mp4', 'https://example.com/experimento.mp4', 'video/mp4'
-FROM docentes d JOIN cursos c ON d.email = 'jcarranza@ie3058.edu.pe' AND c.codigo = 'CIE-4B'
-ON DUPLICATE KEY UPDATE titulo = VALUES(titulo);
+  -- Recursos iniciales
+  INSERT INTO recursos (docente_id, curso_id, titulo, tipo, nombre_archivo, url_archivo, mime_type)
+  SELECT d.id, c.id, 'Presentación de la semana', 'presentacion', 'semana-uno.pdf', 'https://example.com/semana-uno.pdf', 'application/pdf'
+  FROM docentes d JOIN cursos c ON d.email = 'clasico3040@gmail.com' AND c.codigo = 'COM-2G'
+  UNION ALL
+  SELECT d.id, c.id, 'Video de laboratorio', 'video', 'experimento.mp4', 'https://example.com/experimento.mp4', 'video/mp4'
+  FROM docentes d JOIN cursos c ON d.email = 'jcarranza@ie3058.edu.pe' AND c.codigo = 'CYT-2G'
+  ON DUPLICATE KEY UPDATE titulo = VALUES(titulo);

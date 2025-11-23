@@ -908,6 +908,12 @@ footer {
   color: var(--text-muted);
 }
 
+.boleta-summary {
+  margin-top: 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
 .schedule-table {
   width: 100%;
   border-collapse: collapse;
