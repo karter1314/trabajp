@@ -39,6 +39,26 @@ Las tareas y recursos compartidos que gestiones desde el rol docente se almacena
 - Si guardaste un padrón vacío o con errores, la app vuelve a aplicar el padrón embebido automáticamente al iniciar. Si quieres forzar el padrón original manualmente, elimina la clave `sesiDirectory` del almacenamiento local del navegador y recarga la página. También puedes limpiar las credenciales guardadas borrando `sesiCredentials`.
 - Si abres el proyecto directamente como archivo (`file://`), algunos navegadores bloquean la lectura del JSON. La app ya incluye un padrón base embebido para mantener el login funcional, pero si quieres leer tus propios archivos JSON usa un servidor local ligero (por ejemplo, Live Server de VS Code o `python -m http.server`).
 
+## Recuperación de contraseña con Gmail
+
+La opción “¿Olvidaste tu contraseña?” ahora envía un enlace de restablecimiento real al correo institucional de la cuenta (por ejemplo, `clasico3040@gmail.com`) usando Gmail como proveedor SMTP.
+
+1. Instala dependencias y arranca el servidor API + estáticos:
+
+   ```bash
+   npm install
+   GMAIL_USER="tu_cuenta@gmail.com" GMAIL_PASS="tu_contraseña_de_aplicación" npm start
+   ```
+
+   - Usa una **contraseña de aplicación** de Gmail (no la contraseña normal). Activa la verificación en 2 pasos en Gmail y genera la clave de 16 dígitos.
+   - El servidor (`server.js`) expone `http://localhost:3000/api/auth/request-reset`, valida que el correo exista en `data/docentes.json` o `data/estudiantes.json` y envía el enlace. También sirve los archivos estáticos para evitar problemas de CORS.
+
+2. Abre `http://localhost:3000` y solicita el enlace desde “¿Olvidaste tu contraseña?” en la pantalla de acceso. El mensaje llegará al Gmail configurado para la cuenta registrada.
+
+3. Si quieres validar manualmente un token, puedes llamar a `POST /api/auth/validate-token` con `{ "token": "..." }`. Los tokens expiran en 20 minutos.
+
+> Asegúrate de que las direcciones en `data/docentes.json` y `data/estudiantes.json` correspondan a correos reales; de lo contrario, Gmail rechazará el envío.
+
 ## Esquema MySQL sugerido
 
 Para una implementación persistente se incluye `database/mysql_schema.sql`, que define tablas en MySQL 8+ alineadas con las funciones actuales:

@@ -710,6 +710,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     event?.preventDefault();
 
+    if (action === 'forgot-password') {
+      triggerPasswordReset();
+      return;
+    }
+
     const actionMessages = {
       'help-center': {
         text: 'Redirigiendo al centro de ayuda SESI. Mientras tanto, puedes escribir al soporte.',
@@ -742,6 +747,36 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast(payload.text, payload.tone);
     } else {
       showToast('Acción rápida registrada.', 'info');
+    }
+  }
+
+  async function triggerPasswordReset() {
+    const email = emailInput?.value?.trim();
+    const role = loginRoleInput?.value || 'teacher';
+
+    if (!email) {
+      showLoginFeedback('Ingresa tu correo institucional para enviar el enlace de recuperación.', 'error');
+      showToast('Añade tu correo institucional antes de solicitar el enlace.', 'error');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/auth/request-reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, role })
+      });
+
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(payload.message || 'No se pudo enviar el correo de recuperación.');
+      }
+
+      showLoginFeedback(payload.message || 'Revisa tu bandeja para continuar con el restablecimiento.', 'success');
+      showToast(payload.message || 'Correo de restablecimiento enviado.', 'success', 4800);
+    } catch (error) {
+      showLoginFeedback(error.message || 'No pudimos contactar el servicio de correo.', 'error');
+      showToast(error.message || 'No pudimos contactar el servicio de correo.', 'error');
     }
   }
 
