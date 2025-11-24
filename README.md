@@ -7,7 +7,7 @@ Una interfaz moderna para la plataforma SESI, con mejoras de diseño y experienc
 - **Pantalla de acceso renovada** con diseño gradiente, tarjetas informativas y soporte para recordatorio de dispositivo.
 - **Accesos diferenciados** que redirigen a espacios independientes para docentes y estudiantes, recordando las credenciales de cada perfil.
 - **Espacio docente** dedicado al envío de tareas con instrucciones claras y un módulo para compartir presentaciones o videos de las clases, con opción de eliminar envíos si ya no son necesarios.
-- **Panel del estudiante** orientado a la consulta de resultados, asistencias y agenda personal, con horario semanal, buzón de tareas y una bandeja de recursos donde se visualizan presentaciones o videos compartidos por los docentes.
+- **Panel del estudiante** orientado a la consulta de tareas, agenda personal, horario semanal y bandeja de recursos donde se visualizan presentaciones o videos compartidos por los docentes.
 - **Calificaciones por competencias** alineadas al formato oficial (Personal Social, Comunicación, Arte y Cultura, Inglés, Ciencia y Tecnología y Educación para el Trabajo) con descarga rápida de la boleta en HTML para imprimirla como PDF.
 - **Texto legible en negro** en todos los módulos (acceso, panel docente y panel estudiante) para garantizar contraste y lectura clara sobre fondos claros.
 - **Plantillas ampliadas** con 10 docentes y 20 estudiantes de muestra que enriquecen las tablas y permiten visualizar la gestión de aulas más completa.
@@ -23,7 +23,7 @@ Una interfaz moderna para la plataforma SESI, con mejoras de diseño y experienc
    - Estudiante: `karter1314@gmail.com` · contraseña `alumno123`
 3. Según el perfil seleccionado se mostrará la interfaz dedicada:
 - **Docentes**: ingresan al **Espacio docente**, donde pueden enviar tareas a sus cursos y compartir presentaciones o videos para apoyar cada sesión.
-   - **Estudiantes**: visualizan el **Panel del estudiante**, con promedios, asistencias, agenda personal, reproductor de videos compartidos y listado de tareas recibidas por sus docentes.
+  - **Estudiantes**: visualizan el **Panel del estudiante**, con agenda personal, reproductor de videos compartidos y listado de tareas recibidas por sus docentes.
 
 La bandeja de tareas y recursos se inicializa con ejemplos listos para editar o eliminar. Así, incluso en la primera carga todo se muestra activo y con botones funcionales sin necesidad de agregar contenido manualmente.
 
