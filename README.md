@@ -9,6 +9,7 @@ Una interfaz moderna para la plataforma SESI, con mejoras de diseño y experienc
 - **Espacio docente** dedicado al envío de tareas con instrucciones claras y un módulo para compartir presentaciones o videos de las clases, con opción de eliminar envíos si ya no son necesarios.
 - **Panel del estudiante** orientado a la consulta de tareas, agenda personal, horario semanal y bandeja de recursos donde se visualizan presentaciones o videos compartidos por los docentes.
 - **Calificaciones por competencias** alineadas al formato oficial (Personal Social, Comunicación, Arte y Cultura, Inglés, Ciencia y Tecnología y Educación para el Trabajo) con descarga rápida de la boleta en HTML para imprimirla como PDF.
+- **Estado de boleta inconcluso**: el selector ahora muestra los 4 bimestres y la descarga indica que el periodo sigue en curso hasta completar el ciclo.
 - **Texto legible en negro** en todos los módulos (acceso, panel docente y panel estudiante) para garantizar contraste y lectura clara sobre fondos claros.
 - **Plantillas ampliadas** con 10 docentes y 20 estudiantes de muestra que enriquecen las tablas y permiten visualizar la gestión de aulas más completa.
 - **Estado vivo y persistente**: las tareas enviadas y los recursos compartidos se guardan en el navegador (localStorage) para que permanezcan disponibles tras recargar o volver a abrir la plataforma.

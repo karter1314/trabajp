@@ -261,12 +261,14 @@
                   <div>
                     <h3>Calificaciones por curso</h3>
                     <p class="caption">Competencias alineadas al reporte oficial MINEDU.</p>
+                    <span class="chip warning" aria-live="polite">Inconcluso · 4 bimestres en curso</span>
                   </div>
                   <div class="filters">
-                    <select>
-                      <option>Trimestre 1</option>
-                      <option>Trimestre 2</option>
-                      <option>Trimestre 3</option>
+                    <select aria-label="Selecciona el bimestre">
+                      <option>Bimestre 1</option>
+                      <option>Bimestre 2</option>
+                      <option>Bimestre 3</option>
+                      <option>Bimestre 4</option>
                     </select>
                     <button class="secondary-button" id="boleta-download" type="button">
                       Descargar boleta
@@ -284,7 +286,7 @@
                   <tbody id="competency-table-body"></tbody>
                 </table>
                 <p class="boleta-summary" id="boleta-summary">
-                  Este reporte resume las competencias claves del periodo y se actualiza con las áreas oficiales de la boleta MINEDU.
+                  Boleta inconclusa: 4 bimestres en progreso. El reporte se actualizará cuando avance el periodo.
                 </p>
               </article>
 

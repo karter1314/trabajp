@@ -2016,7 +2016,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (boletaSummary) {
       const name = (studentName?.textContent || 'tu cuenta estudiantil').trim();
-      boletaSummary.textContent = `Boleta preparada para ${name}. Descárgala en HTML y conviértela a PDF desde tu navegador.`;
+      boletaSummary.textContent =
+        `Boleta inconclusa: 4 bimestres en progreso para ${name}. Descárgala en HTML y conviértela a PDF desde tu navegador.`;
     }
   }
 
@@ -2112,6 +2113,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </tbody>
     </table>
     <div class="comment">
+      <strong>Estado:</strong> Inconcluso · 4 bimestres en curso.<br />
       <strong>Comentario del tutor:</strong> ${tutorComment}
     </div>
   </body>
