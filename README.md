@@ -8,8 +8,8 @@ Una interfaz moderna para la plataforma SESI, con mejoras de diseño y experienc
 - **Accesos diferenciados** que redirigen a espacios independientes para docentes y estudiantes, recordando las credenciales de cada perfil.
 - **Espacio docente** dedicado al envío de tareas con instrucciones claras y un módulo para compartir presentaciones o videos de las clases, con opción de eliminar envíos si ya no son necesarios.
 - **Panel del estudiante** orientado a la consulta de tareas, agenda personal, horario semanal y bandeja de recursos donde se visualizan presentaciones o videos compartidos por los docentes.
-- **Calificaciones por competencias** alineadas al formato oficial (Personal Social, Comunicación, Arte y Cultura, Inglés, Ciencia y Tecnología y Educación para el Trabajo) con descarga rápida de la boleta en HTML para imprimirla como PDF.
-- **Estado de boleta inconcluso**: el selector ahora muestra los 4 bimestres y la descarga indica que el periodo sigue en curso hasta completar el ciclo.
+- **Calificaciones por competencias** sobre las cuatro áreas activas del curso (Comunicación, Matemática, Ciencia y Tecnología, Educación Física), con descarga rápida de la boleta en HTML para imprimirla como PDF.
+- **Estado de boleta inconcluso**: el selector muestra los 4 bimestres; cada uno trae combinaciones variadas de niveles (AD, A, B y C) para que los avances no se vean idénticos y el ciclo siga en progreso.
 - **Texto legible en negro** en todos los módulos (acceso, panel docente y panel estudiante) para garantizar contraste y lectura clara sobre fondos claros.
 - **Plantillas ampliadas** con 10 docentes y 20 estudiantes de muestra que enriquecen las tablas y permiten visualizar la gestión de aulas más completa.
 - **Estado vivo y persistente**: las tareas enviadas y los recursos compartidos se guardan en el navegador (localStorage) para que permanezcan disponibles tras recargar o volver a abrir la plataforma.
@@ -28,7 +28,7 @@ Una interfaz moderna para la plataforma SESI, con mejoras de diseño y experienc
 
 La bandeja de tareas y recursos se inicializa con ejemplos listos para editar o eliminar. Así, incluso en la primera carga todo se muestra activo y con botones funcionales sin necesidad de agregar contenido manualmente.
 
-   Desde el panel de calificaciones, los estudiantes pueden descargar su boleta de notas en formato HTML (compatible para imprimir o guardar como PDF) con las competencias de Personal Social, Comunicación, Arte y Cultura, Inglés, Ciencia y Tecnología y Educación para el Trabajo.
+   Desde el panel de calificaciones, los estudiantes pueden descargar su boleta de notas en formato HTML (compatible para imprimir o guardar como PDF) con las competencias de Comunicación, Matemática, Ciencia y Tecnología y Educación Física según el bimestre seleccionado.
 
 Las tareas y recursos compartidos que gestiones desde el rol docente se almacenan automáticamente en el navegador. Al recargar la página seguirán disponibles; si deseas limpiar el estado, borra la clave `sesiWorkspaceState` del almacenamiento local.
 
@@ -71,7 +71,7 @@ La opción “¿Olvidaste tu contraseña?” ahora envía un enlace de restablec
 Para una implementación persistente se incluye `database/mysql_schema.sql`, que define tablas en MySQL 8+ alineadas con las funciones actuales:
 
 - **docentes** y **estudiantes**: almacenan los accesos con email y contraseña (hash SHA2 en los datos de ejemplo), además de datos de perfil.
-- **cursos** y **docente_curso**: representan las áreas de la boleta MINEDU (Personal Social, Comunicación, Arte y Cultura, Inglés, Ciencia y Tecnología y Educación para el Trabajo) y qué docente dicta cada una.
+- **cursos** y **docente_curso**: representan las áreas de la boleta activa (Comunicación, Matemática, Ciencia y Tecnología y Educación Física) y qué docente dicta cada una.
 - **tareas** y **tareas_estudiantes**: registran los envíos de tareas por curso y el estado de recepción/entrega de cada estudiante.
 - **recursos** y **recursos_eventos**: guardan presentaciones o videos compartidos y un historial opcional de descargas o reproducciones.
 

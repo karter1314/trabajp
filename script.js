@@ -67,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const studentResourceEmpty = document.getElementById('student-resource-empty');
   const studentResourceSummary = document.getElementById('student-resource-summary');
   const competencyTableBody = document.getElementById('competency-table-body');
+  const boletaTermSelect = document.getElementById('boleta-term');
   const boletaDownloadButton = document.getElementById('boleta-download');
   const boletaSummary = document.getElementById('boleta-summary');
   const PLATFORM_NAME = 'SESI';
@@ -234,60 +235,138 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
-  const competencyReport = [
-    {
-      area: 'Personal Social',
-      competencies: [
-        { name: 'Construye su identidad', score: 'A' },
-        { name: 'Convive y participa democráticamente', score: 'A' },
-        { name: 'Asume responsablemente la gestión de los recursos económicos', score: 'A' }
-      ]
-    },
-    {
-      area: 'Comunicación',
-      competencies: [
-        { name: 'Se comunica oralmente en su lengua materna', score: 'A' },
-        { name: 'Lee diversos tipos de texto escrito', score: 'AD' },
-        { name: 'Escribe diversos tipos de texto', score: 'A' }
-      ]
-    },
-    {
-      area: 'Arte y Cultura',
-      competencies: [
-        { name: 'Crea proyectos desde los lenguajes artísticos', score: 'AD' },
-        { name: 'Interpreta y comprende manifestaciones artístico-culturales', score: 'A' }
-      ]
-    },
-    {
-      area: 'Inglés',
-      competencies: [{ name: 'Se comunica oralmente en inglés como lengua extranjera', score: 'A' }]
-    },
-    {
-      area: 'Ciencia y Tecnología',
-      competencies: [
-        { name: 'Indaga mediante métodos científicos', score: 'A' },
-        { name: 'Explica el mundo físico basándose en conocimientos científicos', score: 'A' },
-        {
-          name: 'Diseña y construye soluciones tecnológicas para resolver problemas de su entorno',
-          score: 'AD'
-        }
-      ]
-    },
-    {
-      area: 'Educación para el Trabajo',
-      competencies: [
-        { name: 'Gestiona proyectos de emprendimiento económico o social', score: 'A' },
-        { name: 'Gestiona responsablemente los recursos económicos', score: 'A' }
-      ]
-    },
-    {
-      area: 'Evaluación de conducta',
-      competencies: [
-        { name: 'Compromiso y participación en entornos virtuales', score: 'A' },
-        { name: 'Ética digital y ciudadanía responsable', score: 'AD' }
-      ]
-    }
-  ];
+  const competencyReportsByTerm = {
+    'Bimestre 1': [
+      {
+        area: 'Comunicación',
+        competencies: [
+          { name: 'Se comunica oralmente en su lengua materna', score: 'AD' },
+          { name: 'Lee diversos tipos de texto escrito', score: 'A' },
+          { name: 'Escribe diversos tipos de texto', score: 'B' }
+        ]
+      },
+      {
+        area: 'Matemática',
+        competencies: [
+          { name: 'Resuelve problemas de cantidad', score: 'A' },
+          { name: 'Resuelve problemas de regularidad, equivalencia y cambio', score: 'B' },
+          { name: 'Resuelve problemas de forma, movimiento y localización', score: 'A' }
+        ]
+      },
+      {
+        area: 'Ciencia y Tecnología',
+        competencies: [
+          { name: 'Indaga mediante métodos científicos', score: 'A' },
+          { name: 'Explica el mundo físico basándose en conocimientos científicos', score: 'AD' }
+        ]
+      },
+      {
+        area: 'Educación Física',
+        competencies: [
+          { name: 'Se desenvuelve de manera autónoma', score: 'B' },
+          { name: 'Asume una vida saludable', score: 'A' }
+        ]
+      }
+    ],
+    'Bimestre 2': [
+      {
+        area: 'Comunicación',
+        competencies: [
+          { name: 'Se comunica oralmente en su lengua materna', score: 'A' },
+          { name: 'Lee diversos tipos de texto escrito', score: 'B' },
+          { name: 'Escribe diversos tipos de texto', score: 'C' }
+        ]
+      },
+      {
+        area: 'Matemática',
+        competencies: [
+          { name: 'Resuelve problemas de cantidad', score: 'AD' },
+          { name: 'Resuelve problemas de regularidad, equivalencia y cambio', score: 'B' },
+          { name: 'Resuelve problemas de forma, movimiento y localización', score: 'B' }
+        ]
+      },
+      {
+        area: 'Ciencia y Tecnología',
+        competencies: [
+          { name: 'Indaga mediante métodos científicos', score: 'B' },
+          { name: 'Explica el mundo físico basándose en conocimientos científicos', score: 'A' }
+        ]
+      },
+      {
+        area: 'Educación Física',
+        competencies: [
+          { name: 'Se desenvuelve de manera autónoma', score: 'A' },
+          { name: 'Asume una vida saludable', score: 'B' }
+        ]
+      }
+    ],
+    'Bimestre 3': [
+      {
+        area: 'Comunicación',
+        competencies: [
+          { name: 'Se comunica oralmente en su lengua materna', score: 'B' },
+          { name: 'Lee diversos tipos de texto escrito', score: 'A' },
+          { name: 'Escribe diversos tipos de texto', score: 'AD' }
+        ]
+      },
+      {
+        area: 'Matemática',
+        competencies: [
+          { name: 'Resuelve problemas de cantidad', score: 'B' },
+          { name: 'Resuelve problemas de regularidad, equivalencia y cambio', score: 'C' },
+          { name: 'Resuelve problemas de forma, movimiento y localización', score: 'A' }
+        ]
+      },
+      {
+        area: 'Ciencia y Tecnología',
+        competencies: [
+          { name: 'Indaga mediante métodos científicos', score: 'A' },
+          { name: 'Explica el mundo físico basándose en conocimientos científicos', score: 'B' }
+        ]
+      },
+      {
+        area: 'Educación Física',
+        competencies: [
+          { name: 'Se desenvuelve de manera autónoma', score: 'C' },
+          { name: 'Asume una vida saludable', score: 'B' }
+        ]
+      }
+    ],
+    'Bimestre 4': [
+      {
+        area: 'Comunicación',
+        competencies: [
+          { name: 'Se comunica oralmente en su lengua materna', score: 'A' },
+          { name: 'Lee diversos tipos de texto escrito', score: 'AD' },
+          { name: 'Escribe diversos tipos de texto', score: 'B' }
+        ]
+      },
+      {
+        area: 'Matemática',
+        competencies: [
+          { name: 'Resuelve problemas de cantidad', score: 'B' },
+          { name: 'Resuelve problemas de regularidad, equivalencia y cambio', score: 'A' },
+          { name: 'Resuelve problemas de forma, movimiento y localización', score: 'C' }
+        ]
+      },
+      {
+        area: 'Ciencia y Tecnología',
+        competencies: [
+          { name: 'Indaga mediante métodos científicos', score: 'B' },
+          { name: 'Explica el mundo físico basándose en conocimientos científicos', score: 'B' }
+        ]
+      },
+      {
+        area: 'Educación Física',
+        competencies: [
+          { name: 'Se desenvuelve de manera autónoma', score: 'A' },
+          { name: 'Asume una vida saludable', score: 'A' }
+        ]
+      }
+    ]
+  };
+
+  let currentBoletaTerm = 'Bimestre 1';
 
   const tutorComment =
     'Buen año en el manejo de operaciones básicas y producción de textos. Aún requiere mayor práctica para la ' +
@@ -524,6 +603,11 @@ document.addEventListener('DOMContentLoaded', () => {
     teacherResourceList?.addEventListener('click', handleTeacherResourceClick);
 
     studentAssignmentList?.addEventListener('click', handleStudentAssignmentClick);
+
+    boletaTermSelect?.addEventListener('change', () => {
+      currentBoletaTerm = boletaTermSelect.value || 'Bimestre 1';
+      renderCompetencyTable();
+    });
 
     boletaDownloadButton?.addEventListener('click', downloadBoleta);
 
@@ -1973,18 +2057,24 @@ document.addEventListener('DOMContentLoaded', () => {
     studentResourceSummary.classList.add('success');
   }
 
+  function getCurrentCompetencyReport() {
+    return competencyReportsByTerm[currentBoletaTerm] || [];
+  }
+
   function renderCompetencyTable() {
     if (!competencyTableBody) {
       return;
     }
 
-    if (!competencyReport.length) {
+    const report = getCurrentCompetencyReport();
+
+    if (!report.length) {
       competencyTableBody.innerHTML =
         '<tr class="empty-state"><td colspan="3">No hay calificaciones registradas todavía.</td></tr>';
       return;
     }
 
-    const rows = competencyReport
+    const rows = report
       .map((area) => {
         if (!area.competencies.length) {
           return '';
@@ -2017,7 +2107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (boletaSummary) {
       const name = (studentName?.textContent || 'tu cuenta estudiantil').trim();
       boletaSummary.textContent =
-        `Boleta inconclusa: 4 bimestres en progreso para ${name}. Descárgala en HTML y conviértela a PDF desde tu navegador.`;
+        `Boleta inconclusa: ${currentBoletaTerm} en progreso para ${name}. 4 bimestres totales seguirán actualizándose.`;
     }
   }
 
@@ -2030,12 +2120,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function downloadBoleta() {
-    if (!competencyReport.length) {
+    const report = getCurrentCompetencyReport();
+
+    if (!report.length) {
       showToast('Aún no hay boleta para descargar.', 'warning');
       return;
     }
 
-    const html = buildBoletaHtml();
+    const html = buildBoletaHtml(report);
     const blob = new Blob([html], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -2052,10 +2144,10 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast('Descargando boleta de notas.', 'success');
   }
 
-  function buildBoletaHtml() {
+  function buildBoletaHtml(report) {
     const today = new Date();
     const studentLabel = (studentName?.textContent || 'Estudiante SESI').trim();
-    const rows = competencyReport
+    const rows = report
       .map((area) => {
         if (!area.competencies.length) return '';
         const areaRows = area.competencies
@@ -2098,7 +2190,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <h1>Boleta SESI</h1>
         <p class="meta">${studentLabel}</p>
       </div>
-      <div class="meta">${today.toLocaleDateString('es-PE')}</div>
+      <div class="meta">${currentBoletaTerm} · ${today.toLocaleDateString('es-PE')}</div>
     </header>
     <table>
       <thead>
