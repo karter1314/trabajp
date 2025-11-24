@@ -75,45 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const LEGACY_STORAGE_KEYS = ['siagiePlusCredentials', 'siseCredentials'];
   const WORKSPACE_STORAGE_KEY = 'sesiWorkspaceState';
   const LEGACY_WORKSPACE_KEYS = ['siagiePlusWorkspaceState', 'siseWorkspaceState'];
-  const DIRECTORY_PATHS = {
-    teacher: 'data/docentes.json',
-    student: 'data/estudiantes.json'
-  };
   const DEFAULT_DIRECTORY = {
-    teacher: [
-      {
-        email: 'benjaaaaasss@gmail.com',
-        password: 'docente123',
-        name: 'Acuña Felix Benjamin',
-        detail: 'Docente'
-      },
-      {
-        email: 'gianvicente22zz@gmail.com',
-        password: 'docente123',
-        name: 'Vicente Zacarías Gianmarco',
-        detail: 'Docente'
-      },
-      {
-        email: 'bj210806@gmail.com',
-        password: 'docente123',
-        name: 'Cardenas Palacios Brayan',
-        detail: 'Docente'
-      }
-    ],
-    student: [
-      {
-        email: 'karter1314@gmail.com',
-        password: 'alumno123',
-        name: 'Lucía Herrera',
-        detail: 'Estudiante 4.º de secundaria'
-      },
-      {
-        email: 'mmendoza@ie3058.edu.pe',
-        password: 'alumno456',
-        name: 'Miguel Mendoza',
-        detail: 'Estudiante 3.º de secundaria'
-      }
-    ]
+    teacher: [],
+    student: []
   };
   const DIRECTORY_STORAGE_KEY = 'sesiDirectory';
   const LEGACY_DIRECTORY_STORAGE_KEYS = ['siagiePlusDirectory', 'siseDirectory'];
@@ -625,8 +589,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function loadAccessDirectory() {
-    // Aplica de inmediato el padrón embebido para evitar que la pantalla quede estática
-    // si la lectura de los JSON locales falla o tarda demasiado.
     applyDirectory(DEFAULT_DIRECTORY);
     populateCredentialsFields();
     persistState();
@@ -636,43 +598,6 @@ document.addEventListener('DOMContentLoaded', () => {
       applyDirectory(storedDirectory, { persist: true, preferExisting: true });
       populateCredentialsFields();
       persistState();
-    } else {
-      persistDirectory();
-    }
-
-    const applyFallbackDirectory = (reason) => {
-      console.warn('No se pudo obtener el padrón externo. Se usará el padrón embebido.', reason);
-      if (!hasDirectoryRecords(accessDirectory)) {
-        applyDirectory(DEFAULT_DIRECTORY, { persist: true });
-      }
-      showLoginFeedback(
-        'Se cargó el padrón base incluido en la aplicación. Puedes reemplazar data/docentes.json y data/estudiantes.json cuando uses un servidor local.',
-        'warning'
-      );
-    };
-
-    try {
-      const [teacherResponse, studentResponse] = await Promise.all([
-        fetch(DIRECTORY_PATHS.teacher, { cache: 'no-store' }),
-        fetch(DIRECTORY_PATHS.student, { cache: 'no-store' })
-      ]);
-
-      if (!teacherResponse.ok || !studentResponse.ok) {
-        throw new Error(
-          `Estado inesperado: docentes ${teacherResponse.status} / estudiantes ${studentResponse.status}`
-        );
-      }
-
-      const payload = {
-        teacher: await teacherResponse.json(),
-        student: await studentResponse.json()
-      };
-
-      applyDirectory(payload, { persist: true, preferExisting: true });
-      populateCredentialsFields();
-      persistState();
-    } catch (error) {
-      applyFallbackDirectory(error);
     }
   }
 
@@ -857,30 +782,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const directory = accessDirectory[activeRole] ?? [];
-    if (!directory.length) {
-      const sourceFile = activeRole === 'teacher' ? 'data/docentes.json' : 'data/estudiantes.json';
-      showLoginFeedback(
-        `No hay cuentas registradas para este rol en la base de datos. Revisa ${sourceFile}.`,
-        'error'
-      );
-      return false;
-    }
-
     const matchedAccount = directory.find(
       (account) =>
         account.emailNormalized === enteredEmail &&
         (account.password ? account.password === enteredPassword : true)
     );
 
-    if (!matchedAccount) {
-      showLoginFeedback(
-        'Las credenciales no coinciden con el padrón institucional registrado para este acceso.',
-        'error'
-      );
-      return false;
+    if (matchedAccount) {
+      updateRoleMetadataFromAccount(activeRole, matchedAccount);
+      return true;
     }
 
-    updateRoleMetadataFromAccount(activeRole, matchedAccount);
+    const fallbackAccount = {
+      email: enteredEmail,
+      name: emailInput.value.trim(),
+      detail: activeRole === 'teacher' ? 'Docente' : 'Estudiante'
+    };
+
+    updateRoleMetadataFromAccount(activeRole, fallbackAccount);
+    showLoginFeedback('Acceso con credenciales personalizadas. Integra tu base cuando esté lista.', 'success');
     return true;
   }
 
