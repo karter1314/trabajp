@@ -14,7 +14,7 @@ Una interfaz moderna para la plataforma SESI, con mejoras de diseño y experienc
 - **Plantillas de muestra** con docentes y estudiantes preconfigurados para que puedas probar el flujo de aula desde el primer uso.
 - **Estado vivo y persistente**: las tareas enviadas y los recursos compartidos se guardan en el navegador (localStorage) para que permanezcan disponibles tras recargar o volver a abrir la plataforma.
 - **Diseño responsive** pensado para equipos directivos que utilizan tanto escritorio como tabletas.
-- **Botones activos**: accesos rápidos (centro de ayuda, mesa de partes, tutoría y restablecimiento de contraseña) muestran confirmaciones inmediatas para que la interfaz no quede estática.
+- **Botones activos**: accesos rápidos (centro de ayuda, mesa de partes y restablecimiento de contraseña) muestran confirmaciones inmediatas para que la interfaz no quede estática.
 
 ## Uso
 

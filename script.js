@@ -942,18 +942,6 @@ document.addEventListener('DOMContentLoaded', () => {
         text: 'Tu solicitud será enviada a mesa de partes y recibirás respuesta por correo institucional.',
         tone: 'success'
       },
-      'request-meeting': {
-        text: 'Se registró tu pedido de reunión. Tutoría confirmará horario disponible.',
-        tone: 'success'
-      },
-      'contact-tutor': {
-        text: 'Mensaje enviado al tutor. Revisa tu bandeja para la confirmación.',
-        tone: 'info'
-      },
-      'contact-support': {
-        text: 'Se notificó a psicopedagogía. Te contactarán con los siguientes pasos.',
-        tone: 'info'
-      },
       'forgot-password': {
         text: 'Te enviaremos un correo con el enlace para restablecer tu contraseña.',
         tone: 'warning'

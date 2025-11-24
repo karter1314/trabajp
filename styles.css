@@ -1,5 +1,5 @@
 :root {
-  --bg: #fff5f5;
+  --bg: linear-gradient(135deg, rgba(181, 18, 27, 0.14) 0%, rgba(210, 46, 46, 0.12) 40%, #fff3f3 100%);
   --surface: #ffffff;
   --primary: #b5121b;
   --primary-dark: #7d0d14;
@@ -65,7 +65,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   padding: clamp(2rem, 4vw, 3.5rem);
-  background: linear-gradient(135deg, #ffe2e2 0%, #ffcdd2 45%, #fff4f4 100%);
+  background: linear-gradient(135deg, #b5121b 0%, #d33b3b 40%, #ffe5e5 100%);
   color: #000;
 }
 
