@@ -11,7 +11,7 @@ Una interfaz moderna para la plataforma SESI, con mejoras de diseño y experienc
 - **Calificaciones por competencias** sobre las cuatro áreas activas del curso (Comunicación, Matemática, Ciencia y Tecnología, Educación Física), con descarga rápida de la boleta en HTML para imprimirla como PDF.
 - **Estado de boleta inconcluso**: el selector muestra los 4 bimestres; cada uno trae combinaciones variadas de niveles (AD, A, B y C) para que los avances no se vean idénticos y el ciclo siga en progreso.
 - **Texto legible en negro** en todos los módulos (acceso, panel docente y panel estudiante) para garantizar contraste y lectura clara sobre fondos claros.
-- **Plantillas ampliadas** con 10 docentes y 20 estudiantes de muestra que enriquecen las tablas y permiten visualizar la gestión de aulas más completa.
+- **Plantillas de muestra** con docentes y estudiantes preconfigurados para que puedas probar el flujo de aula desde el primer uso.
 - **Estado vivo y persistente**: las tareas enviadas y los recursos compartidos se guardan en el navegador (localStorage) para que permanezcan disponibles tras recargar o volver a abrir la plataforma.
 - **Diseño responsive** pensado para equipos directivos que utilizan tanto escritorio como tabletas.
 - **Botones activos**: accesos rápidos (centro de ayuda, mesa de partes, tutoría y restablecimiento de contraseña) muestran confirmaciones inmediatas para que la interfaz no quede estática.
@@ -20,7 +20,7 @@ Una interfaz moderna para la plataforma SESI, con mejoras de diseño y experienc
 
 1. Abre el archivo `index.html` en tu navegador favorito. La aplicación precarga un padrón base embebido desde el inicio para que el flujo funcione incluso sin servidor o antes de que se lean los JSON externos.
 2. Elige el tipo de acceso (docente o estudiante) y presiona **Acceder**: los campos se rellenan con la cuenta de ejemplo para que el inicio no se quede estático.
-   - Docente: `clasico3040@gmail.com` · contraseña `docente123`
+   - Docente: `benjaaaaasss@gmail.com` · contraseña `docente123`
    - Estudiante: `karter1314@gmail.com` · contraseña `alumno123`
 3. Según el perfil seleccionado se mostrará la interfaz dedicada:
 - **Docentes**: ingresan al **Espacio docente**, donde pueden enviar tareas a sus cursos y compartir presentaciones o videos para apoyar cada sesión.
@@ -48,7 +48,7 @@ Las tareas y recursos compartidos que gestiones desde el rol docente se almacena
 
 ## Recuperación de contraseña con Gmail
 
-La opción “¿Olvidaste tu contraseña?” ahora envía un enlace de restablecimiento real al correo institucional de la cuenta (por ejemplo, `clasico3040@gmail.com`) usando Gmail como proveedor SMTP.
+La opción “¿Olvidaste tu contraseña?” ahora envía un enlace de restablecimiento real al correo institucional de la cuenta (por ejemplo, `benjaaaaasss@gmail.com`) usando Gmail como proveedor SMTP.
 
 1. Instala dependencias y arranca el servidor API + estáticos:
 
@@ -68,20 +68,7 @@ La opción “¿Olvidaste tu contraseña?” ahora envía un enlace de restablec
 
 ## Esquema MySQL sugerido
 
-Para una implementación persistente se incluye `database/mysql_schema.sql`, que define tablas en MySQL 8+ alineadas con las funciones actuales:
-
-- **docentes** y **estudiantes**: almacenan los accesos con email y contraseña (hash SHA2 en los datos de ejemplo), además de datos de perfil.
-- **cursos** y **docente_curso**: representan las áreas de la boleta activa (Comunicación, Matemática, Ciencia y Tecnología y Educación Física) y qué docente dicta cada una.
-- **tareas** y **tareas_estudiantes**: registran los envíos de tareas por curso y el estado de recepción/entrega de cada estudiante.
-- **recursos** y **recursos_eventos**: guardan presentaciones o videos compartidos y un historial opcional de descargas o reproducciones.
-
-Pasos rápidos para cargarlo:
-
-```bash
-mysql -u root -p < database/mysql_schema.sql
-```
-
-El script crea la base `sesi_plataforma` y agrega datos demo compatibles con las credenciales usadas en la interfaz (docente `clasico3040@gmail.com` / `docente123` y estudiante `karter1314@gmail.com` / `alumno123`). Ajusta o reemplaza los hashes de contraseña según tu estrategia de autenticación.
+> El flujo sigue siendo simulado en frontend: si deseas una base real, puedes crear tus propias tablas en MySQL o cualquier motor similar siguiendo los campos de los JSON de padrones y los envíos de tareas/recursos.
 
 ## Próximos pasos sugeridos
 
