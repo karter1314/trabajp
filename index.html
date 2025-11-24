@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; script-src 'self'; upgrade-insecure-requests"
+    />
+    <title>SESI Plataforma Educativa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="watermark" aria-hidden="true"></div>
+    <div id="app">
+      <div class="login-screen" id="login-screen">
+        <div class="login-content">
+          <div class="login-hero">
+            <div
+              class="brand-logo"
+              data-brand="logo"
+              role="img"
+              aria-label="Escudo institucional SESI"
+            ></div>
+            <h1 data-brand="name">SESI</h1>
+            <p>
+              Gestiona matrículas, registros académicos y reportes institucionales
+              con una experiencia moderna, ágil e intuitiva.
+            </p>
+            <ul>
+              <li>Panel de seguimiento con indicadores clave</li>
+              <li>Gestión unificada de estudiantes y docentes</li>
+              <li>Automatización de procesos con alertas inteligentes</li>
+            </ul>
+          </div>
+          <form class="login-form" id="login-form" novalidate>
+            <h2>Selecciona tu acceso</h2>
+            <div class="role-switcher" role="tablist">
+              <button
+                type="button"
+                class="role-tab active"
+                data-role="teacher"
+                aria-selected="true"
+              >
+                Docentes
+              </button>
+              <button type="button" class="role-tab" data-role="student">
+                Estudiantes
+              </button>
+            </div>
+            <div class="role-intro" id="role-intro">
+              <h3 id="role-heading">Acceso docente</h3>
+              <p id="role-description">
+                Envía tareas y comparte materiales con tus aulas asignadas.
+              </p>
+            </div>
+            <input type="hidden" name="role" id="login-role" value="teacher" />
+            <label class="field">
+              <span>Correo institucional</span>
+              <input
+                type="email"
+                required
+                placeholder="usuario@ie.gob.pe"
+                autocomplete="username"
+              />
+            </label>
+            <label class="field">
+              <span>Contraseña</span>
+              <input
+                type="password"
+                required
+                placeholder="••••••••"
+                autocomplete="current-password"
+              />
+            </label>
+            <label class="remember">
+              <input type="checkbox" />
+              <span>Recordar dispositivo</span>
+            </label>
+            <button type="submit" class="primary-button" id="login-submit">
+              Acceder como docente
+            </button>
+            <p class="form-feedback" id="login-feedback" aria-live="assertive"></p>
+            <a href="#" class="link" data-action="forgot-password">¿Olvidaste tu contraseña?</a>
+          </form>
+        </div>
+        <footer>
+          <small>
+            Dirección Regional de Educación · Plataforma
+            <span data-brand="name">SESI</span>
+          </small>
+        </footer>
+      </div>
+
+      <div class="role-layout" id="teacher-layout" hidden>
+        <header class="role-topbar">
+          <div class="role-identity">
+            <span class="avatar" id="teacher-avatar">MR</span>
+            <div>
+              <strong id="teacher-name">María Elena Rojas</strong>
+              <small id="teacher-detail">Docente de Comunicación</small>
+            </div>
+          </div>
+          <div class="role-actions">
+            <button class="ghost-button" data-action="help-center">Centro de ayuda</button>
+            <button class="secondary-button" data-logout>Salir</button>
+          </div>
+        </header>
+        <main class="role-main">
+          <section class="panel active" id="teacher-hub">
+            <div class="panel-header">
+              <div>
+                <h2>Espacio docente</h2>
+                <p>
+                  Envía tareas y comparte presentaciones o videos con tus aulas asignadas.
+                </p>
+              </div>
+            </div>
+            <div class="grid two-columns stack-on-mobile">
+              <article class="card">
+                <header>
+                  <h3>Envía tareas a tus estudiantes</h3>
+                  <span class="chip info" id="teacher-assignment-count">Sin tareas</span>
+                </header>
+                <form id="teacher-assignment-form" class="stacked-form" autocomplete="off">
+                  <label class="field form-field">
+                    <span>Curso</span>
+                    <select id="teacher-assignment-course" required></select>
+                  </label>
+                  <label class="field form-field">
+                    <span>Título de la tarea</span>
+                    <input
+                      type="text"
+                      id="teacher-assignment-title"
+                      name="assignmentTitle"
+                      placeholder="Ej. Ensayo de comprensión lectora"
+                      required
+                    />
+                  </label>
+                  <label class="field form-field">
+                    <span>Indicaciones para el estudiante</span>
+                    <textarea
+                      id="teacher-assignment-detail"
+                      name="assignmentDetail"
+                      rows="3"
+                      placeholder="Especifica los criterios de evaluación y recursos de apoyo"
+                    ></textarea>
+                  </label>
+                  <div class="grid two-columns compact">
+                    <label class="field form-field">
+                      <span>Fecha de entrega</span>
+                      <input type="date" id="teacher-assignment-due" name="assignmentDue" />
+                    </label>
+                    <div class="field form-field helper">
+                      <span>Recordatorio</span>
+                      <p>Comparte detalles claros para que tu aula complete la actividad a tiempo.</p>
+                    </div>
+                  </div>
+                  <div class="form-actions">
+                    <button type="submit" class="primary-button">Enviar tarea</button>
+                    <span
+                      class="form-feedback"
+                      id="teacher-assignment-feedback"
+                      aria-live="polite"
+                    ></span>
+                  </div>
+                </form>
+                <div class="card-subsection">
+                  <h4>Tareas enviadas</h4>
+                  <ul id="teacher-assignment-list" class="task-list"></ul>
+                  <p id="teacher-assignment-empty" class="empty-state">
+                    Aún no has enviado tareas a tus cursos.
+                  </p>
+                </div>
+              </article>
+
+              <article class="card">
+                <header>
+                  <h3>Comparte videos y presentaciones</h3>
+                  <span class="chip info" id="teacher-resource-count">Sin recursos</span>
+                </header>
+                <form id="teacher-resource-form" class="stacked-form" autocomplete="off">
+                  <label class="field form-field">
+                    <span>Curso</span>
+                    <select id="teacher-resource-course" required></select>
+                  </label>
+                  <label class="field form-field">
+                    <span>Presentación (PPT, PDF)</span>
+                    <input
+                      type="file"
+                      id="teacher-resource-presentation"
+                      name="resourcePresentation"
+                      accept=".ppt,.pptx,.pdf"
+                    />
+                  </label>
+                  <label class="field form-field">
+                    <span>Video de la clase</span>
+                    <input
+                      type="file"
+                      id="teacher-resource-video"
+                      name="resourceVideo"
+                      accept="video/*"
+                    />
+                  </label>
+                  <div class="form-actions">
+                    <button type="submit" class="primary-button">Compartir recurso</button>
+                    <span
+                      class="form-feedback"
+                      id="teacher-resource-feedback"
+                      aria-live="polite"
+                    ></span>
+                  </div>
+                </form>
+                <div class="card-subsection">
+                  <h4>Materiales compartidos</h4>
+                  <ul id="teacher-resource-list" class="task-list resource-list"></ul>
+                  <p id="teacher-resource-empty" class="empty-state">
+                    Todavía no has compartido presentaciones o videos.
+                  </p>
+                </div>
+              </article>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <div class="role-layout" id="student-layout" hidden>
+        <header class="role-topbar">
+          <div class="role-identity">
+            <span class="avatar" id="student-avatar">LH</span>
+            <div>
+              <strong id="student-name">Lucía Herrera</strong>
+              <small id="student-detail">Estudiante 4.º de secundaria</small>
+            </div>
+          </div>
+          <div class="role-actions">
+            <button class="ghost-button" data-action="student-ticket">Mesa de partes</button>
+            <button class="secondary-button" data-logout>Salir</button>
+          </div>
+        </header>
+        <main class="role-main">
+          <section class="panel active" id="student-overview">
+            <div class="panel-header">
+              <div>
+                <h2>Panel del estudiante</h2>
+                <p>
+                  Consulta tus tareas activas, el material compartido y la agenda próxima para tu aula.
+                </p>
+              </div>
+            </div>
+
+            <div class="grid two-columns stack-on-mobile">
+              <article class="card">
+                <header>
+                  <div>
+                    <h3>Calificaciones por curso</h3>
+                    <p class="caption">Competencias alineadas al reporte oficial MINEDU.</p>
+                    <span class="chip warning" aria-live="polite">Inconcluso · 4 bimestres en curso</span>
+                  </div>
+                  <div class="filters">
+                    <select id="boleta-term" aria-label="Selecciona el bimestre">
+                      <option value="Bimestre 1">Bimestre 1</option>
+                      <option value="Bimestre 2">Bimestre 2</option>
+                      <option value="Bimestre 3">Bimestre 3</option>
+                      <option value="Bimestre 4">Bimestre 4</option>
+                    </select>
+                    <button class="secondary-button" id="boleta-download" type="button">
+                      Descargar boleta
+                    </button>
+                  </div>
+                </header>
+                <table class="data-table compact">
+                  <thead>
+                    <tr>
+                      <th>Área</th>
+                      <th>Competencia</th>
+                      <th>Nivel</th>
+                    </tr>
+                  </thead>
+                  <tbody id="competency-table-body"></tbody>
+                </table>
+                <p class="boleta-summary" id="boleta-summary">
+                  Boleta inconclusa: 4 bimestres en progreso. El reporte se actualizará cuando avance el periodo.
+                </p>
+              </article>
+
+              <article class="card">
+                <header>
+                  <h3>Agenda próxima</h3>
+                  <span class="chip info">Esta semana</span>
+                </header>
+                <ul class="timeline compact">
+                  <li>
+                    <span class="tag info">Evaluación</span>
+                    <div>
+                      <strong>Exposición de historia</strong>
+                      <p>Jueves 10:30 · Aula 304</p>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="tag success">Actividad</span>
+                    <div>
+                      <strong>Club de ciencias</strong>
+                      <p>Viernes 16:00 · Laboratorio</p>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="tag warning">Recordatorio</span>
+                    <div>
+                      <strong>Entrega de bitácora STEAM</strong>
+                      <p>Lunes 8:00 · Secretaría académica</p>
+                    </div>
+                  </li>
+                </ul>
+              </article>
+            </div>
+
+            <div class="grid two-columns stack-on-mobile">
+              <article class="card schedule-matrix" aria-labelledby="student-weekly-heading">
+                <header>
+                  <h3 id="student-weekly-heading">Horario semanal</h3>
+                  <span class="chip success">Aula 4.º B</span>
+                </header>
+                <table class="schedule-table">
+                  <thead>
+                    <tr>
+                      <th>Hora</th>
+                      <th>Lunes</th>
+                      <th>Martes</th>
+                      <th>Miércoles</th>
+                      <th>Jueves</th>
+                      <th>Viernes</th>
+                      <th>Sábado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>08:00</th>
+                      <td>Personal Social</td>
+                      <td>Comunicación</td>
+                      <td>Arte y Cultura</td>
+                      <td>Ciencia y Tecnología</td>
+                      <td>Inglés</td>
+                      <td class="muted">Libre</td>
+                    </tr>
+                    <tr>
+                      <th>09:00</th>
+                      <td>Comunicación</td>
+                      <td>Ciencia y Tecnología</td>
+                      <td>Educación para el Trabajo</td>
+                      <td>Personal Social</td>
+                      <td>Arte y Cultura</td>
+                      <td class="muted">Libre</td>
+                    </tr>
+                    <tr>
+                      <th>10:00</th>
+                      <td>Ciencia y Tecnología</td>
+                      <td>Arte y Cultura</td>
+                      <td>Inglés</td>
+                      <td>Comunicación</td>
+                      <td>Educación para el Trabajo</td>
+                      <td class="muted">Libre</td>
+                    </tr>
+                    <tr>
+                      <th>11:00</th>
+                      <td>Receso</td>
+                      <td>Receso</td>
+                      <td>Receso</td>
+                      <td>Receso</td>
+                      <td>Receso</td>
+                      <td class="muted">Libre</td>
+                    </tr>
+                    <tr>
+                      <th>12:00</th>
+                      <td>Educación para el Trabajo</td>
+                      <td>Personal Social</td>
+                      <td>Comunicación</td>
+                      <td>Inglés</td>
+                      <td>Ciencia y Tecnología</td>
+                      <td class="muted">Club de ciencias</td>
+                    </tr>
+                    <tr>
+                      <th>13:00</th>
+                      <td>Planificación</td>
+                      <td>Planificación</td>
+                      <td>Planificación</td>
+                      <td>Planificación</td>
+                      <td>Planificación</td>
+                      <td class="muted">Club de ciencias</td>
+                    </tr>
+                    <tr>
+                      <th>14:00</th>
+                      <td>Libre</td>
+                      <td>Libre</td>
+                      <td>Libre</td>
+                      <td>Libre</td>
+                      <td>Libre</td>
+                      <td class="muted">Libre</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </article>
+
+              <article class="card" aria-labelledby="student-assignment-heading">
+                <header>
+                  <h3 id="student-assignment-heading">Tareas enviadas por tus docentes</h3>
+                  <span class="chip info" id="student-assignment-summary">Sin tareas</span>
+                </header>
+                <div class="card-subsection">
+                  <ul id="student-assignment-list" class="task-list"></ul>
+                  <p id="student-assignment-empty" class="empty-state">
+                    Tus docentes aún no han enviado tareas. Mantente atento a las
+                    próximas indicaciones.
+                  </p>
+                </div>
+              </article>
+
+              <article class="card" aria-labelledby="student-resource-heading">
+                <header>
+                  <h3 id="student-resource-heading">Recursos compartidos</h3>
+                  <span class="chip info" id="student-resource-summary">Sin recursos</span>
+                </header>
+                <div class="card-subsection">
+                  <ul id="student-resource-list" class="task-list resource-list"></ul>
+                  <p id="student-resource-empty" class="empty-state">
+                    Aún no tienes presentaciones ni videos compartidos.
+                  </p>
+                </div>
+              </article>
+            </div>
+
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

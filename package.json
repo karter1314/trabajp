@@ -1,0 +1,16 @@
+{
+  "name": "sesi-plataforma",
+  "version": "1.0.0",
+  "description": "Frontend SESI con API de recuperación de contraseña vía Gmail",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check script.js",
+    "server:check": "node --check server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "nodemailer": "^6.9.13"
+  }
+}
